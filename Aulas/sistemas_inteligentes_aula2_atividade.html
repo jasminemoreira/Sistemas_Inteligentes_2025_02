@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade Prática - Estatística Básica para IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 82, 204, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #0052cc, #003d99);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 82, 204, 0.3);
+        }
+
+        .stats-badge {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #0052cc, #003d99);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+
+        .step-container {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border-left: 6px solid #0052cc;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0, 82, 204, 0.1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #0052cc, #003d99);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0, 82, 204, 0.3);
+        }
+
+        .step-title {
+            color: #0052cc;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .step-description {
+            color: #444;
+            line-height: 1.7;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .theory-box {
+            background: rgba(75, 192, 192, 0.1);
+            border: 2px solid rgba(75, 192, 192, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .theory-box h4 {
+            color: #4bc0c0;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-left: 4px solid #0052cc;
+            position: relative;
+        }
+
+        .code-header {
+            background: #2d2d2d;
+            color: #ffffff;
+            padding: 10px 20px;
+            margin: -25px -25px 15px -25px;
+            border-radius: 12px 12px 0 0;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-button {
+            background: #0052cc;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .copy-button:hover {
+            background: #003d99;
+        }
+
+        .output-example {
+            background: rgba(76, 175, 80, 0.1);
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        .output-header {
+            color: #388e3c;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #0052cc, #003d99);
+            color: white;
+            padding: 25px;
+            border-radius: 16px;
+            margin: 25px 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 25px rgba(0, 82, 204, 0.3);
+        }
+
+        .highlight-box h4 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid rgba(255, 193, 7, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .warning-box h4 {
+            color: #f57c00;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-panel {
+            background: rgba(33, 150, 243, 0.1);
+            border: 2px solid rgba(33, 150, 243, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .info-panel h4 {
+            color: #1976d2;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #0052cc, #003d99);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 82, 204, 0.3);
+            margin: 10px 10px 10px 0;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 82, 204, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .list {
+            margin: 15px 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .list li {
+            color: #444;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .list li::before {
+            content: '▶';
+            color: #0052cc;
+            position: absolute;
+            left: 0;
+            font-size: 14px;
+            top: 2px;
+        }
+
+        .explanation-box {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #0052cc;
+        }
+
+        .explanation-box h5 {
+            color: #0052cc;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .explanation-box p {
+            color: #555;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .formula-box {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(0, 82, 204, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .formula {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #0052cc;
+            font-family: 'Times New Roman', serif;
+            margin-bottom: 10px;
+        }
+
+        .formula-small {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #0052cc;
+            font-family: 'Times New Roman', serif;
+            margin: 5px 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .step-container {
+                padding: 20px;
+            }
+
+            .code-block {
+                padding: 15px;
+                font-size: 12px;
+            }
+
+            .step-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .step-number {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+
+            .step-title {
+                font-size: 1.3rem;
+            }
+        }
+
+        .syntax-keyword { color: #569cd6; }
+        .syntax-string { color: #ce9178; }
+        .syntax-comment { color: #6a9955; }
+        .syntax-number { color: #b5cea8; }
+        .syntax-function { color: #dcdcaa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="badge">📊 Atividade Prática - Aula 2</div>
+            <h1 class="title">Estatística Básica para IA</h1>
+            <p class="subtitle">Análise exploratória e fundamentos estatísticos aplicados a dados reais</p>
+        </div>
+
+        <div class="highlight-box">
+            <h4>🎯 Objetivo da Atividade</h4>
+            <p>Aplicar todos os conceitos de estatística básica da aula 2 em um dataset real de vendas de e-commerce. Você irá calcular medidas de tendência central, dispersão, analisar distribuições, criar visualizações e interpretar correlações - preparando os dados para futuros algoritmos de IA.</p>
+        </div>
+
+        <div class="info-panel">
+            <h4>📝 Antes de Começar</h4>
+            <p>Acesse <strong>colab.research.google.com</strong> e crie um novo notebook. Renomeie para "Aula2_Estatistica_IA_[SeuNome]". Execute cada bloco de código em sequência, observando os resultados e interpretando os insights estatísticos.</p>
+        </div>
+
+        <!-- Passo 1: Setup e Geração dos Dados -->
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h2 class="step-title">Setup e Geração de Dados</h2>
+            </div>
+            <div class="stats-badge">🔧 Preparação do Ambiente</div>
+            <p class="step-description">Vamos começar preparando nosso ambiente e criando um dataset sintético de vendas de e-commerce com 5.000 transações. Este dataset servirá como base para aplicarmos todos os conceitos estatísticos da aula.</p>
+            
+            <div class="theory-box">
+                <h4>💡 Por que Dados Sintéticos?</h4>
+                <p>Dados sintéticos nos permitem controlar as características estatísticas do dataset (distribuições, correlações, outliers) para demonstrar conceitos específicos. Em projetos reais, você aplicará as mesmas técnicas em dados do mundo real.</p>
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📦 Importações e Configuração</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># -*- coding: utf-8 -*-</span>
+<span class="syntax-comment">"""
+# Sistemas Inteligentes - Aula 2: Estatística Básica para IA
+## Atividade Prática: Análise Exploratória de Dados de E-commerce
+
+**Objetivo:** Aplicar conceitos de estatística descritiva, visualização 
+e análise de correlações em dados reais para preparação de modelos de IA
+"""</span>
+
+<span class="syntax-comment"># Importações necessárias</span>
+<span class="syntax-keyword">import</span> pandas <span class="syntax-keyword">as</span> pd
+<span class="syntax-keyword">import</span> numpy <span class="syntax-keyword">as</span> np
+<span class="syntax-keyword">import</span> matplotlib.pyplot <span class="syntax-keyword">as</span> plt
+<span class="syntax-keyword">import</span> seaborn <span class="syntax-keyword">as</span> sns
+<span class="syntax-keyword">from</span> datetime <span class="syntax-keyword">import</span> datetime, timedelta
+<span class="syntax-keyword">from</span> scipy <span class="syntax-keyword">import</span> stats
+<span class="syntax-keyword">import</span> warnings
+warnings.filterwarnings(<span class="syntax-string">'ignore'</span>)
+
+<span class="syntax-comment"># Configuração para visualizações mais bonitas</span>
+plt.style.use(<span class="syntax-string">'seaborn-v0_8-darkgrid'</span>)
+sns.set_palette(<span class="syntax-string">"husl"</span>)
+plt.rcParams[<span class="syntax-string">'figure.figsize'</span>] = (<span class="syntax-number">12</span>, <span class="syntax-number">8</span>)
+plt.rcParams[<span class="syntax-string">'font.size'</span>] = <span class="syntax-number">10</span>
+
+<span class="syntax-comment"># Semente para reprodutibilidade</span>
+np.random.seed(<span class="syntax-number">42</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"✅ Bibliotecas carregadas!"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"📊 Configurações de visualização aplicadas!"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"🎲 Semente definida para reprodutibilidade!"</span>)</code></pre>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🏪 Geração do Dataset de E-commerce</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># Gerando dataset sintético de e-commerce</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"🔄 Gerando dataset de vendas de e-commerce..."</span>)
+
+n_transacoes = <span class="syntax-number">5000</span>
+
+<span class="syntax-comment"># Definir parâmetros para diferentes distribuições</span>
+dados_vendas = {
+    <span class="syntax-comment"># ID único para cada transação</span>
+    <span class="syntax-string">'transaction_id'</span>: [<span class="syntax-string">f'TXN{i:05d}'</span> <span class="syntax-keyword">for</span> i <span class="syntax-keyword">in</span> <span class="syntax-function">range</span>(<span class="syntax-number">1</span>, n_transacoes + <span class="syntax-number">1</span>)],
+    
+    <span class="syntax-comment"># Idade dos clientes (distribuição normal)</span>
+    <span class="syntax-string">'customer_age'</span>: np.random.normal(<span class="syntax-number">35</span>, <span class="syntax-number">12</span>, n_transacoes).astype(int),
+    
+    <span class="syntax-comment"># Renda mensal (distribuição log-normal para simular realidade)</span>
+    <span class="syntax-string">'monthly_income'</span>: np.random.lognormal(np.log(<span class="syntax-number">4000</span>), <span class="syntax-number">0.5</span>, n_transacoes),
+    
+    <span class="syntax-comment"># Valor da compra (correlacionado com renda + ruído)</span>
+    <span class="syntax-string">'purchase_amount'</span>: [],
+    
+    <span class="syntax-comment"># Categoria do produto</span>
+    <span class="syntax-string">'product_category'</span>: np.random.choice(
+        [<span class="syntax-string">'Eletrônicos'</span>, <span class="syntax-string">'Roupas'</span>, <span class="syntax-string">'Casa'</span>, <span class="syntax-string">'Livros'</span>, <span class="syntax-string">'Esportes'</span>], 
+        size=n_transacoes, 
+        p=[<span class="syntax-number">0.3</span>, <span class="syntax-number">0.25</span>, <span class="syntax-number">0.2</span>, <span class="syntax-number">0.15</span>, <span class="syntax-number">0.1</span>]
+    ),
+    
+    <span class="syntax-comment"># Gênero</span>
+    <span class="syntax-string">'gender'</span>: np.random.choice([<span class="syntax-string">'M'</span>, <span class="syntax-string">'F'</span>], size=n_transacoes, p=[<span class="syntax-number">0.48</span>, <span class="syntax-number">0.52</span>]),
+    
+    <span class="syntax-comment"># Estado (simulando distribuição brasileira)</span>
+    <span class="syntax-string">'state'</span>: np.random.choice(
+        [<span class="syntax-string">'SP'</span>, <span class="syntax-string">'RJ'</span>, <span class="syntax-string">'MG'</span>, <span class="syntax-string">'RS'</span>, <span class="syntax-string">'PR'</span>, <span class="syntax-string">'SC'</span>, <span class="syntax-string">'BA'</span>, <span class="syntax-string">'GO'</span>], 
+        size=n_transacoes,
+        p=[<span class="syntax-number">0.35</span>, <span class="syntax-number">0.15</span>, <span class="syntax-number">0.12</span>, <span class="syntax-number">0.1</span>, <span class="syntax-number">0.08</span>, <span class="syntax-number">0.08</span>, <span class="syntax-number">0.07</span>, <span class="syntax-number">0.05</span>]
+    ),
+    
+    <span class="syntax-comment"># Avaliação do produto (1-5)</span>
+    <span class="syntax-string">'product_rating'</span>: np.random.choice([<span class="syntax-number">1</span>, <span class="syntax-number">2</span>, <span class="syntax-number">3</span>, <span class="syntax-number">4</span>, <span class="syntax-number">5</span>], size=n_transacoes, p=[<span class="syntax-number">0.05</span>, <span class="syntax-number">0.1</span>, <span class="syntax-number">0.2</span>, <span class="syntax-number">0.35</span>, <span class="syntax-number">0.3</span>]),
+    
+    <span class="syntax-comment"># Tempo de entrega em dias</span>
+    <span class="syntax-string">'delivery_days'</span>: np.random.exponential(<span class="syntax-number">3</span>, n_transacoes)
+}
+
+<span class="syntax-comment"># Criar valor de compra correlacionado com renda e categoria</span>
+<span class="syntax-keyword">for</span> i <span class="syntax-keyword">in</span> <span class="syntax-function">range</span>(n_transacoes):
+    base_amount = dados_vendas[<span class="syntax-string">'monthly_income'</span>][i] * <span class="syntax-number">0.1</span>  <span class="syntax-comment"># 10% da renda base</span>
+    
+    <span class="syntax-comment"># Ajustar por categoria</span>
+    category_multiplier = {
+        <span class="syntax-string">'Eletrônicos'</span>: <span class="syntax-number">2.5</span>, <span class="syntax-string">'Roupas'</span>: <span class="syntax-number">1.2</span>, <span class="syntax-string">'Casa'</span>: <span class="syntax-number">1.8</span>, 
+        <span class="syntax-string">'Livros'</span>: <span class="syntax-number">0.3</span>, <span class="syntax-string">'Esportes'</span>: <span class="syntax-number">1.5</span>
+    }
+    
+    multiplier = category_multiplier[dados_vendas[<span class="syntax-string">'product_category'</span>][i]]
+    amount = base_amount * multiplier + np.random.normal(<span class="syntax-number">0</span>, <span class="syntax-number">50</span>)  <span class="syntax-comment"># Adicionar ruído</span>
+    dados_vendas[<span class="syntax-string">'purchase_amount'</span>].append(<span class="syntax-function">max</span>(<span class="syntax-number">10</span>, amount))  <span class="syntax-comment"># Mínimo R$ 10</span>
+
+<span class="syntax-comment"># Limpar idades para faixa realista</span>
+dados_vendas[<span class="syntax-string">'customer_age'</span>] = np.clip(dados_vendas[<span class="syntax-string">'customer_age'</span>], <span class="syntax-number">18</span>, <span class="syntax-number">80</span>)
+
+<span class="syntax-comment"># Arredondar valores monetários</span>
+dados_vendas[<span class="syntax-string">'monthly_income'</span>] = np.round(dados_vendas[<span class="syntax-string">'monthly_income'</span>], <span class="syntax-number">2</span>)
+dados_vendas[<span class="syntax-string">'purchase_amount'</span>] = np.round(dados_vendas[<span class="syntax-string">'purchase_amount'</span>], <span class="syntax-number">2</span>)
+dados_vendas[<span class="syntax-string">'delivery_days'</span>] = np.round(dados_vendas[<span class="syntax-string">'delivery_days'</span>], <span class="syntax-number">1</span>)
+
+<span class="syntax-comment"># Criar DataFrame</span>
+df = pd.DataFrame(dados_vendas)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Dataset criado com {len(df):,} transações!"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📊 Colunas: {list(df.columns)}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📋 Primeiras 5 linhas:"</span>)
+<span class="syntax-function">print</span>(df.head())</code></pre>
+            </div>
+
+            <div class="explanation-box">
+                <h5>🔍 Dataset Criado:</h5>
+                <p><strong>5.000 transações</strong> com características realistas: idades normalmente distribuídas, renda log-normal (como na realidade), valores de compra correlacionados com renda e categoria. Este mix permite demonstrar diferentes conceitos estatísticos.</p>
+            </div>
+
+            <div class="output-example">
+                <div class="output-header">📤 Saída esperada:</div>
+                ✅ Dataset criado com 5,000 transações!<br>
+                📊 Colunas: ['transaction_id', 'customer_age', 'monthly_income', 'purchase_amount', ...]<br>
+                📋 Primeiras 5 linhas: [DataFrame com as primeiras transações]
+            </div>
+        </div>
+
+        <!-- Passo 2: Estatística Descritiva -->
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h2 class="step-title">Estatística Descritiva Completa</h2>
+            </div>
+            <div class="stats-badge">📊 Medidas de Posição e Dispersão</div>
+            <p class="step-description">Agora vamos calcular <strong>todas as medidas estatísticas</strong> vistas na aula: tendência central (média, mediana, moda), dispersão (desvio padrão, variância, amplitude) e outras métricas importantes para entender nossos dados.</p>
+            
+            <div class="theory-box">
+                <h4>📚 Recapitulando os Conceitos</h4>
+                <p><strong>Tendência Central:</strong> Onde os dados se concentram | <strong>Dispersão:</strong> Quão espalhados estão | <strong>Distribuição:</strong> Como se comportam | <strong>Objetivo:</strong> Conhecer profundamente os dados antes de aplicar IA</p>
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📊 Análise Descritiva Automática</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-function">print</span>(<span class="syntax-string">"📊 ANÁLISE ESTATÍSTICA DESCRITIVA"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 50</span>)
+
+<span class="syntax-comment"># 1. Informações gerais do dataset</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📋 INFORMAÇÕES GERAIS:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Número de linhas: {df.shape[0]:,}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Número de colunas: {df.shape[1]}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Memória utilizada: {df.memory_usage(deep=True).sum() / 1024:.1f} KB"</span>)
+
+<span class="syntax-comment"># 2. Verificar tipos de dados e valores faltantes</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🔍 QUALIDADE DOS DADOS:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Valores faltantes por coluna:"</span>)
+missing_data = df.isnull().<span class="syntax-function">sum</span>()
+<span class="syntax-keyword">for</span> col, missing <span class="syntax-keyword">in</span> missing_data.items():
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"     - {col}: {missing} ({missing/len(df)*100:.1f}%)"</span>)
+
+<span class="syntax-comment"># 3. Estatísticas descritivas para variáveis numéricas</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n📊 ESTATÍSTICAS DESCRITIVAS (Variáveis Numéricas):"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   Usando o método .describe():"</span>)
+<span class="syntax-function">print</span>(df.describe().round(<span class="syntax-number">2</span>))
+
+<span class="syntax-comment"># 4. Análise de variáveis categóricas</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n📈 DISTRIBUIÇÃO DAS VARIÁVEIS CATEGÓRICAS:"</span>)
+
+categorical_cols = [<span class="syntax-string">'product_category'</span>, <span class="syntax-string">'gender'</span>, <span class="syntax-string">'state'</span>]
+<span class="syntax-keyword">for</span> col <span class="syntax-keyword">in</span> categorical_cols:
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"\n   {col.upper()}:"</span>)
+    counts = df[col].value_counts()
+    percentages = df[col].value_counts(normalize=<span class="syntax-keyword">True</span>) * <span class="syntax-number">100</span>
+    
+    <span class="syntax-keyword">for</span> value, count, pct <span class="syntax-keyword">in</span> <span class="syntax-function">zip</span>(counts.index, counts.values, percentages.values):
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"     {value}: {count:,} ({pct:.1f}%)"</span>)</code></pre>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🧮 Cálculos Manuais das Medidas Estatísticas</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># Calcular medidas estatísticas manualmente para demonstrar os conceitos</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🧮 CALCULANDO MEDIDAS ESTATÍSTICAS MANUALMENTE:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"=" * 60</span>)
+
+<span class="syntax-comment"># Vamos focar na variável 'purchase_amount' para demonstrar os cálculos</span>
+valores = df[<span class="syntax-string">'purchase_amount'</span>]
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📊 ANÁLISE DA VARIÁVEL: VALOR DE COMPRA (purchase_amount)"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"-" * 60</span>)
+
+<span class="syntax-comment"># 1. MEDIDAS DE TENDÊNCIA CENTRAL</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n1️⃣ MEDIDAS DE TENDÊNCIA CENTRAL:"</span>)
+
+<span class="syntax-comment"># Média</span>
+media = valores.mean()
+media_manual = valores.<span class="syntax-function">sum</span>() / <span class="syntax-function">len</span>(valores)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   📊 Média:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Pandas: R$ {media:.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Manual: R$ {media_manual:.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Fórmula: Σx/n = {valores.sum():.2f}/{len(valores)} = {media_manual:.2f}"</span>)
+
+<span class="syntax-comment"># Mediana</span>
+mediana = valores.median()
+valores_ordenados = valores.sort_values()
+n = <span class="syntax-function">len</span>(valores_ordenados)
+<span class="syntax-keyword">if</span> n % <span class="syntax-number">2</span> == <span class="syntax-number">0</span>:
+    mediana_manual = (valores_ordenados.iloc[n//<span class="syntax-number">2</span>-<span class="syntax-number">1</span>] + valores_ordenados.iloc[n//<span class="syntax-number">2</span>]) / <span class="syntax-number">2</span>
+<span class="syntax-keyword">else</span>:
+    mediana_manual = valores_ordenados.iloc[n//<span class="syntax-number">2</span>]
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n   📊 Mediana:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Pandas: R$ {mediana:.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Manual: R$ {mediana_manual:.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Posição: ({n//2-1} + {n//2})/2 = posições {n//2-1} e {n//2}"</span>)
+
+<span class="syntax-comment"># Moda</span>
+moda = valores.mode()
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n   📊 Moda:"</span>)
+<span class="syntax-keyword">if</span> <span class="syntax-function">len</span>(moda) > <span class="syntax-number">0</span>:
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"      • Valor mais frequente: R$ {moda.iloc[0]:.2f}"</span>)
+    freq_moda = (valores == moda.iloc[<span class="syntax-number">0</span>]).<span class="syntax-function">sum</span>()
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"      • Frequência: {freq_moda} vezes ({freq_moda/len(valores)*100:.2f}%)"</span>)
+<span class="syntax-keyword">else</span>:
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"      • Não há moda clara (distribuição muito dispersa)"</span>)
+
+<span class="syntax-comment"># 2. MEDIDAS DE DISPERSÃO</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n2️⃣ MEDIDAS DE DISPERSÃO:"</span>)
+
+<span class="syntax-comment"># Amplitude</span>
+amplitude = valores.<span class="syntax-function">max</span>() - valores.<span class="syntax-function">min</span>()
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   📏 Amplitude:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Valor: R$ {amplitude:.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Cálculo: {valores.max():.2f} - {valores.min():.2f} = {amplitude:.2f}"</span>)
+
+<span class="syntax-comment"># Variância</span>
+variancia = valores.var()
+variancia_manual = ((valores - media) ** <span class="syntax-number">2</span>).<span class="syntax-function">sum</span>() / (<span class="syntax-function">len</span>(valores) - <span class="syntax-number">1</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n   📊 Variância:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Pandas: {variancia:.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Manual: {variancia_manual:.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Fórmula: Σ(x-x̄)²/(n-1)"</span>)
+
+<span class="syntax-comment"># Desvio Padrão</span>
+desvio_padrao = valores.std()
+desvio_padrao_manual = np.sqrt(variancia_manual)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n   📊 Desvio Padrão:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Pandas: R$ {desvio_padrao:.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Manual: R$ {desvio_padrao_manual:.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Fórmula: √variância = √{variancia:.2f} = {desvio_padrao:.2f}"</span>)
+
+<span class="syntax-comment"># Coeficiente de Variação</span>
+cv = (desvio_padrao / media) * <span class="syntax-number">100</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n   📊 Coeficiente de Variação:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Valor: {cv:.2f}%"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Cálculo: (σ/μ) × 100 = ({desvio_padrao:.2f}/{media:.2f}) × 100 = {cv:.2f}%"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"      • Interpretação: {'Alta variabilidade' if cv > 30 else 'Variabilidade moderada' if cv > 15 else 'Baixa variabilidade'}"</span>)</code></pre>
+            </div>
+
+            <div class="explanation-box">
+                <h5>🔍 Cálculos Manuais vs Automáticos:</h5>
+                <p>Demonstramos como calcular manualmente cada medida estatística para reforçar o entendimento dos conceitos. <strong>Pandas/NumPy</strong> fazem esses cálculos automaticamente, mas é importante entender a matemática por trás. O <strong>coeficiente de variação</strong> é especialmente útil para comparar variabilidade entre variáveis com escalas diferentes.</p>
+            </div>
+        </div>
+
+        <!-- Passo 3: Análise de Distribuições -->
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h2 class="step-title">Análise de Distribuições</h2>
+            </div>
+            <div class="stats-badge">📊 Padrões e Distribuições</div>
+            <p class="step-description">Vamos identificar que tipo de <strong>distribuição</strong> nossos dados seguem. Como visto na aula, isso é fundamental para escolher algoritmos de IA adequados e fazer suposições corretas sobre os dados.</p>
+            
+            <div class="theory-box">
+                <h4>📊 Tipos de Distribuição</h4>
+                <p><strong>Normal:</strong> Simétrica, formato sino | <strong>Assimétrica:</strong> Cauda longa em um lado | <strong>Uniforme:</strong> Valores igualmente distribuídos | <strong>Bimodal:</strong> Dois picos | <strong>Exponencial:</strong> Decresce rapidamente</p>
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📊 Análise Visual das Distribuições</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-function">print</span>(<span class="syntax-string">"📊 ANÁLISE DE DISTRIBUIÇÕES"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 40</span>)
+
+<span class="syntax-comment"># Criar subplots para análise visual</span>
+fig, axes = plt.subplots(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, figsize=(<span class="syntax-number">18</span>, <span class="syntax-number">12</span>))
+fig.suptitle(<span class="syntax-string">'Análise de Distribuições - E-commerce Dataset'</span>, fontsize=<span class="syntax-number">16</span>, fontweight=<span class="syntax-string">'bold'</span>)
+
+<span class="syntax-comment"># 1. Idade dos clientes</span>
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].hist(df[<span class="syntax-string">'customer_age'</span>], bins=<span class="syntax-number">30</span>, alpha=<span class="syntax-number">0.7</span>, color=<span class="syntax-string">'skyblue'</span>, edgecolor=<span class="syntax-string">'black'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].axvline(df[<span class="syntax-string">'customer_age'</span>].mean(), color=<span class="syntax-string">'red'</span>, linestyle=<span class="syntax-string">'--'</span>, label=<span class="syntax-string">f'Média: {df["customer_age"].mean():.1f}'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].axvline(df[<span class="syntax-string">'customer_age'</span>].median(), color=<span class="syntax-string">'green'</span>, linestyle=<span class="syntax-string">'--'</span>, label=<span class="syntax-string">f'Mediana: {df["customer_age"].median():.1f}'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">'Distribuição: Idade dos Clientes'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_xlabel(<span class="syntax-string">'Idade (anos)'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_ylabel(<span class="syntax-string">'Frequência'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].legend()
+
+<span class="syntax-comment"># 2. Renda mensal (distribuição log-normal)</span>
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].hist(df[<span class="syntax-string">'monthly_income'</span>], bins=<span class="syntax-number">50</span>, alpha=<span class="syntax-number">0.7</span>, color=<span class="syntax-string">'lightcoral'</span>, edgecolor=<span class="syntax-string">'black'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].axvline(df[<span class="syntax-string">'monthly_income'</span>].mean(), color=<span class="syntax-string">'red'</span>, linestyle=<span class="syntax-string">'--'</span>, label=<span class="syntax-string">f'Média: R${df["monthly_income"].mean():.0f}'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].axvline(df[<span class="syntax-string">'monthly_income'</span>].median(), color=<span class="syntax-string">'green'</span>, linestyle=<span class="syntax-string">'--'</span>, label=<span class="syntax-string">f'Mediana: R${df["monthly_income"].median():.0f}'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">'Distribuição: Renda Mensal'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_xlabel(<span class="syntax-string">'Renda (R$)'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_ylabel(<span class="syntax-string">'Frequência'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].legend()
+
+<span class="syntax-comment"># 3. Valor de compra</span>
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].hist(df[<span class="syntax-string">'purchase_amount'</span>], bins=<span class="syntax-number">40</span>, alpha=<span class="syntax-number">0.7</span>, color=<span class="syntax-string">'lightgreen'</span>, edgecolor=<span class="syntax-string">'black'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].axvline(df[<span class="syntax-string">'purchase_amount'</span>].mean(), color=<span class="syntax-string">'red'</span>, linestyle=<span class="syntax-string">'--'</span>, label=<span class="syntax-string">f'Média: R${df["purchase_amount"].mean():.0f}'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].axvline(df[<span class="syntax-string">'purchase_amount'</span>].median(), color=<span class="syntax-string">'green'</span>, linestyle=<span class="syntax-string">'--'</span>, label=<span class="syntax-string">f'Mediana: R${df["purchase_amount"].median():.0f}'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].set_title(<span class="syntax-string">'Distribuição: Valor de Compra'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].set_xlabel(<span class="syntax-string">'Valor (R$)'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].set_ylabel(<span class="syntax-string">'Frequência'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].legend()
+
+<span class="syntax-comment"># 4. Avaliação do produto (distribuição discreta)</span>
+rating_counts = df[<span class="syntax-string">'product_rating'</span>].value_counts().sort_index()
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].bar(rating_counts.index, rating_counts.values, alpha=<span class="syntax-number">0.7</span>, color=<span class="syntax-string">'gold'</span>, edgecolor=<span class="syntax-string">'black'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">'Distribuição: Avaliação do Produto'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_xlabel(<span class="syntax-string">'Avaliação (1-5 estrelas)'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_ylabel(<span class="syntax-string">'Frequência'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_xticks([<span class="syntax-number">1</span>, <span class="syntax-number">2</span>, <span class="syntax-number">3</span>, <span class="syntax-number">4</span>, <span class="syntax-number">5</span>])
+
+<span class="syntax-comment"># 5. Tempo de entrega (distribuição exponencial)</span>
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].hist(df[<span class="syntax-string">'delivery_days'</span>], bins=<span class="syntax-number">40</span>, alpha=<span class="syntax-number">0.7</span>, color=<span class="syntax-string">'purple'</span>, edgecolor=<span class="syntax-string">'black'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].axvline(df[<span class="syntax-string">'delivery_days'</span>].mean(), color=<span class="syntax-string">'red'</span>, linestyle=<span class="syntax-string">'--'</span>, label=<span class="syntax-string">f'Média: {df["delivery_days"].mean():.1f} dias'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].axvline(df[<span class="syntax-string">'delivery_days'</span>].median(), color=<span class="syntax-string">'green'</span>, linestyle=<span class="syntax-string">'--'</span>, label=<span class="syntax-string">f'Mediana: {df["delivery_days"].median():.1f} dias'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">'Distribuição: Tempo de Entrega'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_xlabel(<span class="syntax-string">'Dias'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_ylabel(<span class="syntax-string">'Frequência'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].legend()
+
+<span class="syntax-comment"># 6. Categoria de produtos (distribuição categórica)</span>
+category_counts = df[<span class="syntax-string">'product_category'</span>].value_counts()
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].bar(category_counts.index, category_counts.values, alpha=<span class="syntax-number">0.7</span>, color=<span class="syntax-string">'orange'</span>, edgecolor=<span class="syntax-string">'black'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_title(<span class="syntax-string">'Distribuição: Categorias de Produto'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_xlabel(<span class="syntax-string">'Categoria'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_ylabel(<span class="syntax-string">'Frequência'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].tick_params(axis=<span class="syntax-string">'x'</span>, rotation=<span class="syntax-number">45</span>)
+
+plt.tight_layout()
+plt.show()
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n🎯 INTERPRETAÇÃO DAS DISTRIBUIÇÕES:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"-" * 40</span>)</code></pre>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🔬 Testes de Normalidade</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># Testar normalidade das distribuições</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n🔬 TESTES DE NORMALIDADE (Shapiro-Wilk):"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"-" * 50</span>)
+
+numerical_vars = [<span class="syntax-string">'customer_age'</span>, <span class="syntax-string">'monthly_income'</span>, <span class="syntax-string">'purchase_amount'</span>, <span class="syntax-string">'delivery_days'</span>]
+
+<span class="syntax-keyword">for</span> var <span class="syntax-keyword">in</span> numerical_vars:
+    <span class="syntax-comment"># Amostra menor para o teste (Shapiro-Wilk tem limite)</span>
+    sample = df[var].sample(<span class="syntax-number">1000</span>, random_state=<span class="syntax-number">42</span>) <span class="syntax-keyword">if</span> <span class="syntax-function">len</span>(df) > <span class="syntax-number">1000</span> <span class="syntax-keyword">else</span> df[var]
+    
+    statistic, p_value = stats.shapiro(sample)
+    
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"\n📊 {var.upper().replace('_', ' ')}:"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • Estatística: {statistic:.6f}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • P-valor: {p_value:.6f}"</span>)
+    
+    <span class="syntax-keyword">if</span> p_value > <span class="syntax-number">0.05</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   • ✅ Distribuição NORMAL (p > 0.05)"</span>)
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   • 🤖 IA: Pode usar algoritmos que assumem normalidade"</span>)
+    <span class="syntax-keyword">else</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   • ❌ Distribuição NÃO-NORMAL (p ≤ 0.05)"</span>)
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   • 🤖 IA: Considerar transformações ou algoritmos não-paramétricos"</span>)
+    
+    <span class="syntax-comment"># Calcular assimetria e curtose</span>
+    skewness = stats.skew(df[var])
+    kurtosis = stats.kurtosis(df[var])
+    
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • Assimetria: {skewness:.3f} "</span>, end=<span class="syntax-string">""</span>)
+    <span class="syntax-keyword">if</span> <span class="syntax-function">abs</span>(skewness) < <span class="syntax-number">0.5</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">"(Aproximadamente simétrica)"</span>)
+    <span class="syntax-keyword">elif</span> skewness > <span class="syntax-number">0</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">"(Assimétrica à direita)"</span>)
+    <span class="syntax-keyword">else</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">"(Assimétrica à esquerda)"</span>)
+    
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • Curtose: {kurtosis:.3f} "</span>, end=<span class="syntax-string">""</span>)
+    <span class="syntax-keyword">if</span> <span class="syntax-function">abs</span>(kurtosis) < <span class="syntax-number">0.5</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">"(Normal)"</span>)
+    <span class="syntax-keyword">elif</span> kurtosis > <span class="syntax-number">0</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">"(Leptocúrtica - mais pontiaguda)"</span>)
+    <span class="syntax-keyword">else</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">"(Platicúrtica - mais achatada)"</span>)</code></pre>
+            </div>
+
+            <div class="explanation-box">
+                <h5>🔍 Análise de Distribuições:</h5>
+                <p><strong>Idade:</strong> Próxima à normal (gerada propositalmente) | <strong>Renda:</strong> Log-normal (realista) - média > mediana | <strong>Compras:</strong> Influenciada pela renda | <strong>Avaliações:</strong> Concentrada em valores altos | <strong>Entrega:</strong> Exponencial (maioria rápida, alguns demoram) | Os testes de normalidade orientam escolha de algoritmos de IA.</p>
+            </div>
+        </div>
+
+        <!-- Passo 4: Análise de Correlações -->
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <h2 class="step-title">Análise de Correlações</h2>
+            </div>
+            <div class="stats-badge">🔗 Relações entre Variáveis</div>
+            <p class="step-description">Agora vamos descobrir como as variáveis se relacionam entre si através da <strong>análise de correlação</strong>. Como visto na aula, isso é fundamental para feature engineering e seleção de variáveis em modelos de IA.</p>
+            
+            <div class="theory-box">
+                <h4>🔗 Tipos de Correlação</h4>
+                <p><strong>Pearson:</strong> Relação linear (-1 a +1) | <strong>Spearman:</strong> Relação monotônica | <strong>Kendall:</strong> Baseada em ranks | <strong>Interpretação:</strong> |r| > 0.7 forte, 0.3-0.7 moderada, < 0.3 fraca</p>
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🔗 Matriz de Correlação</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-function">print</span>(<span class="syntax-string">"🔗 ANÁLISE DE CORRELAÇÕES"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 40</span>)
+
+<span class="syntax-comment"># Selecionar apenas variáveis numéricas</span>
+numeric_cols = [<span class="syntax-string">'customer_age'</span>, <span class="syntax-string">'monthly_income'</span>, <span class="syntax-string">'purchase_amount'</span>, <span class="syntax-string">'product_rating'</span>, <span class="syntax-string">'delivery_days'</span>]
+df_numeric = df[numeric_cols]
+
+<span class="syntax-comment"># Calcular matriz de correlação Pearson</span>
+correlation_matrix = df_numeric.corr()
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"📊 MATRIZ DE CORRELAÇÃO (Pearson):"</span>)
+<span class="syntax-function">print</span>(correlation_matrix.round(<span class="syntax-number">3</span>))
+
+<span class="syntax-comment"># Criar heatmap da correlação</span>
+plt.figure(figsize=(<span class="syntax-number">12</span>, <span class="syntax-number">8</span>))
+mask = np.triu(np.ones_like(correlation_matrix, dtype=bool))  <span class="syntax-comment"># Máscara para mostrar só metade</span>
+
+sns.heatmap(correlation_matrix, 
+            mask=mask,
+            annot=<span class="syntax-keyword">True</span>, 
+            cmap=<span class="syntax-string">'RdBu_r'</span>, 
+            center=<span class="syntax-number">0</span>,
+            square=<span class="syntax-keyword">True</span>,
+            linewidths=<span class="syntax-number">0.5</span>,
+            fmt=<span class="syntax-string">'.3f'</span>,
+            cbar_kws={<span class="syntax-string">"shrink"</span>: <span class="syntax-number">0.8</span>})
+
+plt.title(<span class="syntax-string">'Matriz de Correlação - Dataset E-commerce'</span>, fontsize=<span class="syntax-number">14</span>, fontweight=<span class="syntax-string">'bold'</span>)
+plt.tight_layout()
+plt.show()
+
+<span class="syntax-comment"># Identificar correlações mais fortes</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎯 PRINCIPAIS CORRELAÇÕES ENCONTRADAS:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"-" * 50</span>)
+
+<span class="syntax-comment"># Converter matriz para lista de pares ordenados</span>
+correlations = []
+<span class="syntax-keyword">for</span> i <span class="syntax-keyword">in</span> <span class="syntax-function">range</span>(<span class="syntax-function">len</span>(correlation_matrix.columns)):
+    <span class="syntax-keyword">for</span> j <span class="syntax-keyword">in</span> <span class="syntax-function">range</span>(i+<span class="syntax-number">1</span>, <span class="syntax-function">len</span>(correlation_matrix.columns)):
+        var1 = correlation_matrix.columns[i]
+        var2 = correlation_matrix.columns[j]
+        corr_value = correlation_matrix.iloc[i, j]
+        correlations.append((var1, var2, corr_value))
+
+<span class="syntax-comment"># Ordenar por valor absoluto da correlação</span>
+correlations_sorted = <span class="syntax-function">sorted</span>(correlations, key=<span class="syntax-keyword">lambda</span> x: <span class="syntax-function">abs</span>(x[<span class="syntax-number">2</span>]), reverse=<span class="syntax-keyword">True</span>)
+
+<span class="syntax-keyword">for</span> var1, var2, corr_value <span class="syntax-keyword">in</span> correlations_sorted:
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"📊 {var1.replace('_', ' ').title()} ↔ {var2.replace('_', ' ').title()}:"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • Correlação: {corr_value:.3f}"</span>)
+    
+    <span class="syntax-keyword">if</span> <span class="syntax-function">abs</span>(corr_value) >= <span class="syntax-number">0.7</span>:
+        strength = <span class="syntax-string">"🔴 FORTE"</span>
+        ai_insight = <span class="syntax-string">"Redundância potencial - considerar feature selection"</span>
+    <span class="syntax-keyword">elif</span> <span class="syntax-function">abs</span>(corr_value) >= <span class="syntax-number">0.3</span>:
+        strength = <span class="syntax-string">"🟡 MODERADA"</span>
+        ai_insight = <span class="syntax-string">"Relação útil para modelos preditivos"</span>
+    <span class="syntax-keyword">else</span>:
+        strength = <span class="syntax-string">"🟢 FRACA"</span>
+        ai_insight = <span class="syntax-string">"Variáveis independentes - bom para diversidade"</span>
+    
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • Intensidade: {strength}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • 🤖 Para IA: {ai_insight}"</span>)
+    <span class="syntax-function">print</span>()
+</code></pre>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📊 Scatter Plots das Principais Correlações</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># Criar scatter plots das correlações mais interessantes</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"📊 VISUALIZANDO CORRELAÇÕES COM SCATTER PLOTS"</span>)
+
+fig, axes = plt.subplots(<span class="syntax-number">2</span>, <span class="syntax-number">2</span>, figsize=(<span class="syntax-number">15</span>, <span class="syntax-number">10</span>))
+fig.suptitle(<span class="syntax-string">'Análise de Correlações - Scatter Plots'</span>, fontsize=<span class="syntax-number">16</span>, fontweight=<span class="syntax-string">'bold'</span>)
+
+<span class="syntax-comment"># 1. Renda vs Valor de Compra (esperamos correlação forte)</span>
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].scatter(df[<span class="syntax-string">'monthly_income'</span>], df[<span class="syntax-string">'purchase_amount'</span>], alpha=<span class="syntax-number">0.6</span>, color=<span class="syntax-string">'blue'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_xlabel(<span class="syntax-string">'Renda Mensal (R$)'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_ylabel(<span class="syntax-string">'Valor de Compra (R$)'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">f'Renda × Compra (r = {df["monthly_income"].corr(df["purchase_amount"]):.3f})'</span>)
+
+<span class="syntax-comment"># Adicionar linha de tendência</span>
+z = np.polyfit(df[<span class="syntax-string">'monthly_income'</span>], df[<span class="syntax-string">'purchase_amount'</span>], <span class="syntax-number">1</span>)
+p = np.poly1d(z)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].plot(df[<span class="syntax-string">'monthly_income'</span>], p(df[<span class="syntax-string">'monthly_income'</span>]), <span class="syntax-string">"r--"</span>, alpha=<span class="syntax-number">0.8</span>)
+
+<span class="syntax-comment"># 2. Idade vs Renda</span>
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].scatter(df[<span class="syntax-string">'customer_age'</span>], df[<span class="syntax-string">'monthly_income'</span>], alpha=<span class="syntax-number">0.6</span>, color=<span class="syntax-string">'green'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_xlabel(<span class="syntax-string">'Idade (anos)'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_ylabel(<span class="syntax-string">'Renda Mensal (R$)'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">f'Idade × Renda (r = {df["customer_age"].corr(df["monthly_income"]):.3f})'</span>)
+
+<span class="syntax-comment"># 3. Avaliação vs Tempo de Entrega</span>
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].scatter(df[<span class="syntax-string">'delivery_days'</span>], df[<span class="syntax-string">'product_rating'</span>], alpha=<span class="syntax-number">0.6</span>, color=<span class="syntax-string">'red'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_xlabel(<span class="syntax-string">'Tempo de Entrega (dias)'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_ylabel(<span class="syntax-string">'Avaliação do Produto'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">f'Entrega × Avaliação (r = {df["delivery_days"].corr(df["product_rating"]):.3f})'</span>)
+
+<span class="syntax-comment"># 4. Idade vs Valor de Compra</span>
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].scatter(df[<span class="syntax-string">'customer_age'</span>], df[<span class="syntax-string">'purchase_amount'</span>], alpha=<span class="syntax-number">0.6</span>, color=<span class="syntax-string">'purple'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_xlabel(<span class="syntax-string">'Idade (anos)'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_ylabel(<span class="syntax-string">'Valor de Compra (R$)'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">f'Idade × Compra (r = {df["customer_age"].corr(df["purchase_amount"]):.3f})'</span>)
+
+plt.tight_layout()
+plt.show()
+
+<span class="syntax-comment"># Calcular correlações não-paramétricas</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🔬 COMPARANDO TIPOS DE CORRELAÇÃO:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"-" * 50</span>)
+
+var1, var2 = <span class="syntax-string">'monthly_income'</span>, <span class="syntax-string">'purchase_amount'</span>
+pearson_corr = df[var1].corr(df[var2])
+spearman_corr = df[var1].corr(df[var2], method=<span class="syntax-string">'spearman'</span>)
+kendall_corr = df[var1].corr(df[var2], method=<span class="syntax-string">'kendall'</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📊 RENDA × VALOR DE COMPRA:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Pearson (linear): {pearson_corr:.3f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Spearman (monotônica): {spearman_corr:.3f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Kendall (rank): {kendall_corr:.3f}"</span>)
+
+<span class="syntax-keyword">if</span> <span class="syntax-function">abs</span>(pearson_corr - spearman_corr) < <span class="syntax-number">0.1</span>:
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • ✅ Relação linear forte (correlações similares)"</span>)
+<span class="syntax-keyword">else</span>:
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • ⚠️ Relação não-linear detectada (diferença significativa)"</span>)</code></pre>
+            </div>
+
+            <div class="explanation-box">
+                <h5>🔍 Insights das Correlações:</h5>
+                <p><strong>Renda × Compra:</strong> Correlação forte esperada (criada propositalmente) | <strong>Tempo × Avaliação:</strong> Possível correlação negativa (entrega rápida = melhor avaliação) | <strong>Comparação de Métodos:</strong> Pearson vs Spearman revela se relação é linear | <strong>Para IA:</strong> Correlações fortes podem indicar multicolinearidade - considerar feature selection</p>
+            </div>
+        </div>
+
+        <!-- Passo 5: Detecção de Outliers -->
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <h2 class="step-title">Detecção e Tratamento de Outliers</h2>
+            </div>
+            <div class="stats-badge">🔍 Valores Atípicos</div>
+            <p class="step-description">Outliers podem impactar significativamente modelos de IA. Vamos identificá-los usando métodos estatísticos (IQR, Z-score) e visuais (box plots) como visto na aula.</p>
+            
+            <div class="theory-box">
+                <h4>🎯 Métodos de Detecção</h4>
+                <p><strong>IQR Method:</strong> Q1 - 1.5×IQR e Q3 + 1.5×IQR | <strong>Z-Score:</strong> |z| > 3 | <strong>Visual:</strong> Box plots e scatter plots | <strong>Tratamento:</strong> Remover, transformar ou manter dependendo do contexto</p>
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🔍 Detecção de Outliers</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-function">print</span>(<span class="syntax-string">"🔍 DETECÇÃO DE OUTLIERS"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 40</span>)
+
+<span class="syntax-comment"># Função para detectar outliers pelo método IQR</span>
+<span class="syntax-keyword">def</span> <span class="syntax-function">detect_outliers_iqr</span>(data, column):
+    Q1 = data[column].quantile(<span class="syntax-number">0.25</span>)
+    Q3 = data[column].quantile(<span class="syntax-number">0.75</span>)
+    IQR = Q3 - Q1
+    
+    lower_bound = Q1 - <span class="syntax-number">1.5</span> * IQR
+    upper_bound = Q3 + <span class="syntax-number">1.5</span> * IQR
+    
+    outliers = data[(data[column] < lower_bound) | (data[column] > upper_bound)]
+    
+    <span class="syntax-keyword">return</span> outliers, lower_bound, upper_bound, Q1, Q3, IQR
+
+<span class="syntax-comment"># Função para detectar outliers pelo método Z-Score</span>
+<span class="syntax-keyword">def</span> <span class="syntax-function">detect_outliers_zscore</span>(data, column, threshold=<span class="syntax-number">3</span>):
+    z_scores = np.<span class="syntax-function">abs</span>(stats.zscore(data[column]))
+    outliers = data[z_scores > threshold]
+    <span class="syntax-keyword">return</span> outliers, z_scores
+
+<span class="syntax-comment"># Analisar outliers para cada variável numérica</span>
+<span class="syntax-keyword">for</span> column <span class="syntax-keyword">in</span> [<span class="syntax-string">'customer_age'</span>, <span class="syntax-string">'monthly_income'</span>, <span class="syntax-string">'purchase_amount'</span>, <span class="syntax-string">'delivery_days'</span>]:
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"\n📊 ANÁLISE DE OUTLIERS: {column.upper().replace('_', ' ')}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"-" * 60</span>)
+    
+    <span class="syntax-comment"># Método IQR</span>
+    outliers_iqr, lower_bound, upper_bound, Q1, Q3, IQR = detect_outliers_iqr(df, column)
+    
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"🔢 MÉTODO IQR:"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • Q1 (25%): {Q1:.2f}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • Q3 (75%): {Q3:.2f}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • IQR: {IQR:.2f}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • Limite inferior: {lower_bound:.2f}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • Limite superior: {upper_bound:.2f}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • Outliers encontrados: {len(outliers_iqr)} ({len(outliers_iqr)/len(df)*100:.1f}%)"</span>)
+    
+    <span class="syntax-comment"># Método Z-Score</span>
+    outliers_zscore, z_scores = detect_outliers_zscore(df, column)
+    
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"\n🔢 MÉTODO Z-SCORE:"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • Z-score médio: {np.mean(z_scores):.2f}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • Z-score máximo: {np.max(z_scores):.2f}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • Outliers (|z| > 3): {len(outliers_zscore)} ({len(outliers_zscore)/len(df)*100:.1f}%)"</span>)
+    
+    <span class="syntax-comment"># Mostrar alguns exemplos de outliers</span>
+    <span class="syntax-keyword">if</span> <span class="syntax-function">len</span>(outliers_iqr) > <span class="syntax-number">0</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"\n📋 EXEMPLOS DE OUTLIERS (IQR):"</span>)
+        examples = outliers_iqr.head(<span class="syntax-number">5</span>)[[<span class="syntax-string">'transaction_id'</span>, column]]
+        <span class="syntax-keyword">for</span> _, row <span class="syntax-keyword">in</span> examples.iterrows():
+            <span class="syntax-function">print</span>(<span class="syntax-string">f"   • {row['transaction_id']}: {row[column]:.2f}"</span>)
+
+<span class="syntax-comment"># Criar visualizações dos outliers</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n📊 VISUALIZANDO OUTLIERS COM BOX PLOTS"</span>)
+
+fig, axes = plt.subplots(<span class="syntax-number">2</span>, <span class="syntax-number">2</span>, figsize=(<span class="syntax-number">15</span>, <span class="syntax-number">10</span>))
+fig.suptitle(<span class="syntax-string">'Detecção de Outliers - Box Plots'</span>, fontsize=<span class="syntax-number">16</span>, fontweight=<span class="syntax-string">'bold'</span>)
+
+variables = [<span class="syntax-string">'customer_age'</span>, <span class="syntax-string">'monthly_income'</span>, <span class="syntax-string">'purchase_amount'</span>, <span class="syntax-string">'delivery_days'</span>]
+positions = [(<span class="syntax-number">0</span>,<span class="syntax-number">0</span>), (<span class="syntax-number">0</span>,<span class="syntax-number">1</span>), (<span class="syntax-number">1</span>,<span class="syntax-number">0</span>), (<span class="syntax-number">1</span>,<span class="syntax-number">1</span>)]
+
+<span class="syntax-keyword">for</span> var, pos <span class="syntax-keyword">in</span> <span class="syntax-function">zip</span>(variables, positions):
+    axes[pos].boxplot(df[var], vert=<span class="syntax-keyword">True</span>)
+    axes[pos].set_title(<span class="syntax-string">f'{var.replace("_", " ").title()}'</span>)
+    axes[pos].set_ylabel(<span class="syntax-string">'Valor'</span>)
+    axes[pos].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+plt.tight_layout()
+plt.show()</code></pre>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>⚗️ Estratégias de Tratamento de Outliers</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-
