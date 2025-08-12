@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade Prática - Aplicações Práticas para IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 82, 204, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #0052cc, #003d99);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 82, 204, 0.3);
+        }
+
+        .checkpoint-badge {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #0052cc, #003d99);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+
+        .part-container {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border-left: 6px solid #0052cc;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0, 82, 204, 0.1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .part-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .part-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .part-number {
+            background: linear-gradient(135deg, #0052cc, #003d99);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0, 82, 204, 0.3);
+        }
+
+        .part-title {
+            color: #0052cc;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .part-description {
+            color: #444;
+            line-height: 1.7;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .scenario-box {
+            background: rgba(75, 192, 192, 0.1);
+            border: 2px solid rgba(75, 192, 192, 0.3);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .scenario-box h4 {
+            color: #4bc0c0;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-left: 4px solid #0052cc;
+            position: relative;
+        }
+
+        .code-header {
+            background: #2d2d2d;
+            color: #ffffff;
+            padding: 10px 20px;
+            margin: -25px -25px 15px -25px;
+            border-radius: 12px 12px 0 0;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-button {
+            background: #0052cc;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .copy-button:hover {
+            background: #003d99;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #0052cc, #003d99);
+            color: white;
+            padding: 25px;
+            border-radius: 16px;
+            margin: 25px 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 25px rgba(0, 82, 204, 0.3);
+        }
+
+        .highlight-box h4 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkpoint-box {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin: 25px 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+        }
+
+        .checkpoint-box h4 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(0, 82, 204, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #0052cc, #003d99);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 82, 204, 0.1);
+        }
+
+        .card h5 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #0052cc;
+            margin-bottom: 15px;
+        }
+
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid rgba(255, 193, 7, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .warning-box h4 {
+            color: #f57c00;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 82, 204, 0.1);
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .checklist li::before {
+            content: '☐';
+            position: absolute;
+            left: 0;
+            color: #0052cc;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .output-example {
+            background: rgba(76, 175, 80, 0.1);
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        .output-header {
+            color: #388e3c;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #0052cc, #003d99);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 82, 204, 0.3);
+            margin: 10px 10px 10px 0;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 82, 204, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .part-container {
+                padding: 20px;
+            }
+
+            .code-block {
+                padding: 15px;
+                font-size: 12px;
+            }
+
+            .part-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .part-number {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+
+            .part-title {
+                font-size: 1.3rem;
+            }
+        }
+
+        .syntax-keyword { color: #569cd6; }
+        .syntax-string { color: #ce9178; }
+        .syntax-comment { color: #6a9955; }
+        .syntax-number { color: #b5cea8; }
+        .syntax-function { color: #dcdcaa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="badge">🏭 Atividade Prática - Aula 3</div>
+            <h1 class="title">Aplicações Práticas para IA</h1>
+            <p class="subtitle">Do problema de negócio aos insights acionáveis - Aplicando estatística em casos reais</p>
+        </div>
+
+        <div class="highlight-box">
+            <h4>🎯 Objetivo da Atividade</h4>
+            <p>Nesta atividade, você vai aplicar todos os conceitos estatísticos aprendidos em um <strong>caso real de otimização de estoque</strong>, similar ao da Magazine Luiza apresentado na aula. Você construirá um pipeline completo de análise que servirá como modelo para seu projeto final, culminando na preparação para o <strong>Checkpoint 1</strong>.</p>
+        </div>
+
+        <div class="checkpoint-box">
+            <h4>🎯 Checkpoint 1 - Entrega de Hoje</h4>
+            <p><strong>Ao final desta atividade, você deverá entregar:</strong></p>
+            <ul style="margin-top: 15px; padding-left: 20px;">
+                <li>✅ Jupyter notebook com análise completa do caso proposto</li>
+                <li>✅ Definição clara do problema para seu projeto pessoal</li>
+                <li>✅ Dataset escolhido e justificativa</li>
+                <li>✅ Análise exploratória inicial</li>
+                <li>✅ Slides para apresentação de 5 minutos</li>
+            </ul>
+        </div>
+
+        <!-- Parte 1: Caso Prático - Otimização de Estoque -->
+        <div class="part-container">
+            <div class="part-header">
+                <div class="part-number">1</div>
+                <h2 class="part-title">Caso Prático: Otimização de Estoque E-commerce</h2>
+            </div>
+            <p class="part-description">Vamos simular um problema real de uma empresa de e-commerce que precisa otimizar seu estoque para reduzir custos e evitar rupturas. Você aplicará estatística descritiva, análise de distribuições e correlações para gerar insights acionáveis.</p>
+            
+            <div class="scenario-box">
+                <h4>🏪 Contexto do Problema</h4>
+                <p><strong>Empresa:</strong> TechStore Brasil - E-commerce de eletrônicos</p>
+                <p><strong>Desafio:</strong> Alto custo de estoque parado (35% dos produtos) vs. frequentes rupturas (20% das vendas perdidas)</p>
+                <p><strong>Objetivo:</strong> Identificar padrões de demanda para otimizar reposição de estoque</p>
+                <p><strong>Dados:</strong> 6 meses de vendas (Jan-Jun 2024) com 15.000 transações</p>
+                <p><strong>Meta:</strong> Reduzir estoque parado em 40% e ruptura em 50%</p>
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🏪 Setup do Caso TechStore</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># -*- coding: utf-8 -*-</span>
+<span class="syntax-comment">"""
+# Sistemas Inteligentes - Aula 3: Aplicações Práticas
+## Caso: TechStore Brasil - Otimização de Estoque
+
+**Problema de Negócio:** Como reduzir estoque parado e rupturas usando dados?
+**Técnicas:** Estatística descritiva, análise de sazonalidade, correlações
+**Objetivo:** Gerar insights para algoritmos de IA de previsão de demanda
+"""</span>
+
+<span class="syntax-keyword">import</span> pandas <span class="syntax-keyword">as</span> pd
+<span class="syntax-keyword">import</span> numpy <span class="syntax-keyword">as</span> np
+<span class="syntax-keyword">import</span> matplotlib.pyplot <span class="syntax-keyword">as</span> plt
+<span class="syntax-keyword">import</span> seaborn <span class="syntax-keyword">as</span> sns
+<span class="syntax-keyword">from</span> datetime <span class="syntax-keyword">import</span> datetime, timedelta
+<span class="syntax-keyword">from</span> scipy <span class="syntax-keyword">import</span> stats
+<span class="syntax-keyword">import</span> warnings
+warnings.filterwarnings(<span class="syntax-string">'ignore'</span>)
+
+<span class="syntax-comment"># Configurações</span>
+plt.style.use(<span class="syntax-string">'seaborn-v0_8-darkgrid'</span>)
+sns.set_palette(<span class="syntax-string">"Set2"</span>)
+plt.rcParams[<span class="syntax-string">'figure.figsize'</span>] = (<span class="syntax-number">14</span>, <span class="syntax-number">8</span>)
+np.random.seed(<span class="syntax-number">42</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"🏪 TECHSTORE BRASIL - ANÁLISE DE ESTOQUE"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 50</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"📊 Ambiente configurado!"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"🎯 Objetivo: Otimizar estoque usando estatística"</span>)</code></pre>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📊 Geração dos Dados da TechStore</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># Gerar dataset realista de vendas de eletrônicos</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"🔄 Gerando dados de vendas TechStore (Jan-Jun 2024)..."</span>)
+
+n_vendas = <span class="syntax-number">15000</span>
+<span class="syntax-comment"># Produtos da TechStore</span>
+produtos = {
+    <span class="syntax-string">'Smartphone'</span>: {<span class="syntax-string">'preco_medio'</span>: <span class="syntax-number">800</span>, <span class="syntax-string">'sazonalidade'</span>: [<span class="syntax-number">1.2</span>, <span class="syntax-number">0.9</span>, <span class="syntax-number">1.1</span>, <span class="syntax-number">1.0</span>, <span class="syntax-number">0.8</span>, <span class="syntax-number">1.3</span>]},
+    <span class="syntax-string">'Notebook'</span>: {<span class="syntax-string">'preco_medio'</span>: <span class="syntax-number">2500</span>, <span class="syntax-string">'sazonalidade'</span>: [<span class="syntax-number">0.8</span>, <span class="syntax-number">1.4</span>, <span class="syntax-number">1.2</span>, <span class="syntax-number">0.9</span>, <span class="syntax-number">0.7</span>, <span class="syntax-number">1.1</span>]},
+    <span class="syntax-string">'Tablet'</span>: {<span class="syntax-string">'preco_medio'</span>: <span class="syntax-number">600</span>, <span class="syntax-string">'sazonalidade'</span>: [<span class="syntax-number">1.0</span>, <span class="syntax-number">1.1</span>, <span class="syntax-number">0.9</span>, <span class="syntax-number">1.2</span>, <span class="syntax-number">1.0</span>, <span class="syntax-number">0.8</span>]},
+    <span class="syntax-string">'Smartwatch'</span>: {<span class="syntax-string">'preco_medio'</span>: <span class="syntax-number">400</span>, <span class="syntax-string">'sazonalidade'</span>: [<span class="syntax-number">1.1</span>, <span class="syntax-number">0.8</span>, <span class="syntax-number">1.3</span>, <span class="syntax-number">1.0</span>, <span class="syntax-number">1.2</span>, <span class="syntax-number">0.9</span>]},
+    <span class="syntax-string">'Fone Bluetooth'</span>: {<span class="syntax-string">'preco_medio'</span>: <span class="syntax-number">150</span>, <span class="syntax-string">'sazonalidade'</span>: [<span class="syntax-number">0.9</span>, <span class="syntax-number">1.0</span>, <span class="syntax-number">1.1</span>, <span class="syntax-number">1.3</span>, <span class="syntax-number">1.2</span>, <span class="syntax-number">1.0</span>]}
+}
+
+<span class="syntax-comment"># Gerar datas com padrões realistas</span>
+start_date = datetime(<span class="syntax-number">2024</span>, <span class="syntax-number">1</span>, <span class="syntax-number">1</span>)
+end_date = datetime(<span class="syntax-number">2024</span>, <span class="syntax-number">6</span>, <span class="syntax-number">30</span>)
+dates = pd.date_range(start_date, end_date, freq=<span class="syntax-string">'D'</span>)
+
+vendas_data = []
+product_id = <span class="syntax-number">1</span>
+
+<span class="syntax-keyword">for</span> date <span class="syntax-keyword">in</span> dates:
+    <span class="syntax-comment"># Mais vendas em fins de semana e menos vendas em segundas</span>
+    day_multiplier = <span class="syntax-number">1.3</span> <span class="syntax-keyword">if</span> date.weekday() >= <span class="syntax-number">5</span> <span class="syntax-keyword">else</span> <span class="syntax-number">0.7</span> <span class="syntax-keyword">if</span> date.weekday() == <span class="syntax-number">0</span> <span class="syntax-keyword">else</span> <span class="syntax-number">1.0</span>
+    
+    <span class="syntax-comment"># Vendas por produto no dia</span>
+    <span class="syntax-keyword">for</span> produto, info <span class="syntax-keyword">in</span> produtos.items():
+        month_idx = date.month - <span class="syntax-number">1</span>
+        seasonal_factor = info[<span class="syntax-string">'sazonalidade'</span>][month_idx]
+        
+        <span class="syntax-comment"># Número de vendas do produto no dia</span>
+        base_vendas = np.random.poisson(<span class="syntax-number">4</span>)  <span class="syntax-comment"># Média 4 vendas/dia por produto</span>
+        daily_sales = <span class="syntax-function">int</span>(base_vendas * day_multiplier * seasonal_factor)
+        
+        <span class="syntax-keyword">for</span> _ <span class="syntax-keyword">in</span> <span class="syntax-function">range</span>(daily_sales):
+            <span class="syntax-keyword">if</span> <span class="syntax-function">len</span>(vendas_data) >= n_vendas:
+                <span class="syntax-keyword">break</span>
+                
+            <span class="syntax-comment"># Gerar venda individual</span>
+            preco_base = info[<span class="syntax-string">'preco_medio'</span>]
+            preco_final = preco_base + np.random.normal(<span class="syntax-number">0</span>, preco_base * <span class="syntax-number">0.1</span>)  <span class="syntax-comment"># Variação ±10%</span>
+            
+            venda = {
+                <span class="syntax-string">'product_id'</span>: <span class="syntax-string">f'PROD_{product_id:05d}'</span>,
+                <span class="syntax-string">'product_name'</span>: produto,
+                <span class="syntax-string">'sale_date'</span>: date,
+                <span class="syntax-string">'sale_price'</span>: <span class="syntax-function">max</span>(<span class="syntax-number">50</span>, preco_final),  <span class="syntax-comment"># Preço mínimo R$ 50</span>
+                <span class="syntax-string">'quantity'</span>: np.random.choice([<span class="syntax-number">1</span>, <span class="syntax-number">2</span>, <span class="syntax-number">3</span>], p=[<span class="syntax-number">0.7</span>, <span class="syntax-number">0.25</span>, <span class="syntax-number">0.05</span>]),
+                <span class="syntax-string">'customer_segment'</span>: np.random.choice([<span class="syntax-string">'Premium'</span>, <span class="syntax-string">'Standard'</span>, <span class="syntax-string">'Budget'</span>], p=[<span class="syntax-number">0.2</span>, <span class="syntax-number">0.5</span>, <span class="syntax-number">0.3</span>]),
+                <span class="syntax-string">'sales_channel'</span>: np.random.choice([<span class="syntax-string">'Online'</span>, <span class="syntax-string">'App'</span>, <span class="syntax-string">'Loja Física'</span>], p=[<span class="syntax-number">0.5</span>, <span class="syntax-number">0.3</span>, <span class="syntax-number">0.2</span>]),
+                <span class="syntax-string">'region'</span>: np.random.choice([<span class="syntax-string">'Sudeste'</span>, <span class="syntax-string">'Sul'</span>, <span class="syntax-string">'Nordeste'</span>, <span class="syntax-string">'Norte'</span>, <span class="syntax-string">'Centro-Oeste'</span>], 
+                                         p=[<span class="syntax-number">0.45</span>, <span class="syntax-number">0.25</span>, <span class="syntax-number">0.15</span>, <span class="syntax-number">0.08</span>, <span class="syntax-number">0.07</span>])
+            }
+            
+            <span class="syntax-comment"># Calcular revenue</span>
+            venda[<span class="syntax-string">'revenue'</span>] = venda[<span class="syntax-string">'sale_price'</span>] * venda[<span class="syntax-string">'quantity'</span>]
+            
+            vendas_data.append(venda)
+            product_id += <span class="syntax-number">1</span>
+    
+    <span class="syntax-keyword">if</span> <span class="syntax-function">len</span>(vendas_data) >= n_vendas:
+        <span class="syntax-keyword">break</span>
+
+<span class="syntax-comment"># Criar DataFrame</span>
+df_vendas = pd.DataFrame(vendas_data[:n_vendas])
+
+<span class="syntax-comment"># Adicionar variáveis derivadas</span>
+df_vendas[<span class="syntax-string">'month'</span>] = df_vendas[<span class="syntax-string">'sale_date'</span>].dt.month
+df_vendas[<span class="syntax-string">'weekday'</span>] = df_vendas[<span class="syntax-string">'sale_date'</span>].dt.weekday
+df_vendas[<span class="syntax-string">'week_number'</span>] = df_vendas[<span class="syntax-string">'sale_date'</span>].dt.isocalendar().week
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Dataset TechStore criado!"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📊 {len(df_vendas):,} vendas registradas"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📅 Período: {df_vendas['sale_date'].min().strftime('%d/%m/%Y')} a {df_vendas['sale_date'].max().strftime('%d/%m/%Y')}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"💰 Receita total: R$ {df_vendas['revenue'].sum():,.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n📋 Primeiras 5 vendas:"</span>)
+<span class="syntax-function">print</span>(df_vendas.head())</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 2: Análise Exploratória Direcionada -->
+        <div class="part-container">
+            <div class="part-header">
+                <div class="part-number">2</div>
+                <h2 class="part-title">Análise Exploratória Direcionada ao Negócio</h2>
+            </div>
+            <p class="part-description">Agora vamos aplicar <strong>estatística descritiva</strong> com foco no problema de negócio. Cada análise será direcionada para gerar insights sobre padrões de demanda, sazonalidade e comportamento de estoque.</p>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📊 Análise 1: Padrões de Demanda por Produto</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-function">print</span>(<span class="syntax-string">"📊 ANÁLISE 1: PADRÕES DE DEMANDA"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 40</span>)
+
+<span class="syntax-comment"># 1. Análise por produto</span>
+demanda_produto = df_vendas.groupby(<span class="syntax-string">'product_name'</span>).agg({
+    <span class="syntax-string">'quantity'</span>: [<span class="syntax-string">'sum'</span>, <span class="syntax-string">'mean'</span>, <span class="syntax-string">'std'</span>, <span class="syntax-string">'count'</span>],
+    <span class="syntax-string">'revenue'</span>: [<span class="syntax-string">'sum'</span>, <span class="syntax-string">'mean'</span>],
+    <span class="syntax-string">'sale_price'</span>: [<span class="syntax-string">'mean'</span>, <span class="syntax-string">'std'</span>]
+}).round(<span class="syntax-number">2</span>)
+
+demanda_produto.columns = [<span class="syntax-string">'_'</span>.join(col).strip() <span class="syntax-keyword">for</span> col <span class="syntax-keyword">in</span> demanda_produto.columns]
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"📋 ESTATÍSTICAS POR PRODUTO:"</span>)
+<span class="syntax-function">print</span>(demanda_produto)
+
+<span class="syntax-comment"># Calcular coeficiente de variação da demanda (importante para estoque)</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎯 VARIABILIDADE DA DEMANDA (Coeficiente de Variação):"</span>)
+<span class="syntax-keyword">for</span> produto <span class="syntax-keyword">in</span> df_vendas[<span class="syntax-string">'product_name'</span>].unique():
+    produto_data = df_vendas[df_vendas[<span class="syntax-string">'product_name'</span>] == produto][<span class="syntax-string">'quantity'</span>]
+    cv = (produto_data.std() / produto_data.mean()) * <span class="syntax-number">100</span>
+    
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   {produto}: {cv:.1f}% "</span>, end=<span class="syntax-string">""</span>)
+    <span class="syntax-keyword">if</span> cv > <span class="syntax-number">50</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">"🔴 ALTA (Estoque de segurança maior)"</span>)
+    <span class="syntax-keyword">elif</span> cv > <span class="syntax-number">30</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">"🟡 MODERADA (Monitorar padrões)"</span>)
+    <span class="syntax-keyword">else</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">"🟢 BAIXA (Demanda previsível)"</span>)
+
+<span class="syntax-comment"># Visualização da demanda</span>
+fig, axes = plt.subplots(<span class="syntax-number">2</span>, <span class="syntax-number">2</span>, figsize=(<span class="syntax-number">16</span>, <span class="syntax-number">10</span>))
+fig.suptitle(<span class="syntax-string">'TechStore - Análise de Demanda por Produto'</span>, fontsize=<span class="syntax-number">16</span>, fontweight=<span class="syntax-string">'bold'</span>)
+
+<span class="syntax-comment"># Quantidade vendida por produto</span>
+vendas_por_produto = df_vendas.groupby(<span class="syntax-string">'product_name'</span>)[<span class="syntax-string">'quantity'</span>].<span class="syntax-function">sum</span>().sort_values(ascending=<span class="syntax-keyword">False</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].bar(vendas_por_produto.index, vendas_por_produto.values, color=<span class="syntax-string">'skyblue'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">'Volume Total de Vendas'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_ylabel(<span class="syntax-string">'Unidades Vendidas'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].tick_params(axis=<span class="syntax-string">'x'</span>, rotation=<span class="syntax-number">45</span>)
+
+<span class="syntax-comment"># Revenue por produto</span>
+revenue_por_produto = df_vendas.groupby(<span class="syntax-string">'product_name'</span>)[<span class="syntax-string">'revenue'</span>].<span class="syntax-function">sum</span>().sort_values(ascending=<span class="syntax-keyword">False</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].bar(revenue_por_produto.index, revenue_por_produto.values, color=<span class="syntax-string">'lightgreen'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">'Revenue por Produto'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_ylabel(<span class="syntax-string">'Revenue (R$)'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].tick_params(axis=<span class="syntax-string">'x'</span>, rotation=<span class="syntax-number">45</span>)
+
+<span class="syntax-comment"># Distribuição de preços por produto</span>
+df_vendas.boxplot(column=<span class="syntax-string">'sale_price'</span>, by=<span class="syntax-string">'product_name'</span>, ax=axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>])
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">'Distribuição de Preços'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_xlabel(<span class="syntax-string">'Produto'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].tick_params(axis=<span class="syntax-string">'x'</span>, rotation=<span class="syntax-number">45</span>)
+
+<span class="syntax-comment"># Quantidade por transação</span>
+df_vendas.boxplot(column=<span class="syntax-string">'quantity'</span>, by=<span class="syntax-string">'product_name'</span>, ax=axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>])
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">'Distribuição de Quantidades'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_xlabel(<span class="syntax-string">'Produto'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].tick_params(axis=<span class="syntax-string">'x'</span>, rotation=<span class="syntax-number">45</span>)
+
+plt.tight_layout()
+plt.show()</code></pre>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📅 Análise 2: Padrões Temporais e Sazonalidade</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-function">print</span>(<span class="syntax-string">f"\n📅 ANÁLISE 2: SAZONALIDADE E PADRÕES TEMPORAIS"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 50</span>)
+
+<span class="syntax-comment"># Vendas por mês</span>
+vendas_mensais = df_vendas.groupby([<span class="syntax-string">'month'</span>, <span class="syntax-string">'product_name'</span>])[<span class="syntax-string">'quantity'</span>].<span class="syntax-function">sum</span>().reset_index()
+vendas_mensais_pivot = vendas_mensais.pivot(index=<span class="syntax-string">'month'</span>, columns=<span class="syntax-string">'product_name'</span>, values=<span class="syntax-string">'quantity'</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"📊 VENDAS MENSAIS POR PRODUTO:"</span>)
+<span class="syntax-function">print</span>(vendas_mensais_pivot)
+
+<span class="syntax-comment"># Calcular índice de sazonalidade</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎯 ÍNDICE DE SAZONALIDADE (média mensal / média geral):"</span>)
+<span class="syntax-keyword">for</span> produto <span class="syntax-keyword">in</span> vendas_mensais_pivot.columns:
+    media_geral = vendas_mensais_pivot[produto].mean()
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"\n{produto}:"</span>)
+    <span class="syntax-keyword">for</span> mes, vendas <span class="syntax-keyword">in</span> vendas_mensais_pivot[produto].items():
+        indice = vendas / media_geral
+        mes_nome = [<span class="syntax-string">'Jan'</span>, <span class="syntax-string">'Fev'</span>, <span class="syntax-string">'Mar'</span>, <span class="syntax-string">'Abr'</span>, <span class="syntax-string">'Mai'</span>, <span class="syntax-string">'Jun'</span>][mes-<span class="syntax-number">1</span>]
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"  {mes_nome}: {indice:.2f} "</span>, end=<span class="syntax-string">""</span>)
+        <span class="syntax-keyword">if</span> indice > <span class="syntax-number">1.2</span>:
+            <span class="syntax-function">print</span>(<span class="syntax-string">"🔥 ALTA DEMANDA"</span>)
+        <span class="syntax-keyword">elif</span> indice < <span class="syntax-number">0.8</span>:
+            <span class="syntax-function">print</span>(<span class="syntax-string">"❄️ BAIXA DEMANDA"</span>)
+        <span class="syntax-keyword">else</span>:
+            <span class="syntax-function">print</span>(<span class="syntax-string">"⚪ NORMAL"</span>)
+
+<span class="syntax-comment"># Análise por dia da semana</span>
+vendas_por_dia = df_vendas.groupby(<span class="syntax-string">'weekday'</span>)[<span class="syntax-string">'quantity'</span>].<span class="syntax-function">sum</span>()
+dias_semana = [<span class="syntax-string">'Segunda'</span>, <span class="syntax-string">'Terça'</span>, <span class="syntax-string">'Quarta'</span>, <span class="syntax-string">'Quinta'</span>, <span class="syntax-string">'Sexta'</span>, <span class="syntax-string">'Sábado'</span>, <span class="syntax-string">'Domingo'</span>]
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n📅 PADRÃO SEMANAL:"</span>)
+<span class="syntax-keyword">for</span> i, vendas <span class="syntax-keyword">in</span> vendas_por_dia.items():
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"  {dias_semana[i]}: {vendas} unidades"</span>)
+
+<span class="syntax-comment"># Visualização temporal</span>
+fig, axes = plt.subplots(<span class="syntax-number">2</span>, <span class="syntax-number">2</span>, figsize=(<span class="syntax-number">16</span>, <span class="syntax-number">10</span>))
+fig.suptitle(<span class="syntax-string">'TechStore - Análise Temporal'</span>, fontsize=<span class="syntax-number">16</span>, fontweight=<span class="syntax-string">'bold'</span>)
+
+<span class="syntax-comment"># Vendas por mês (heatmap)</span>
+sns.heatmap(vendas_mensais_pivot.T, annot=<span class="syntax-keyword">True</span>, fmt=<span class="syntax-string">'.0f'</span>, cmap=<span class="syntax-string">'YlOrRd'</span>, ax=axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>])
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">'Sazonalidade por Produto'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_xlabel(<span class="syntax-string">'Mês'</span>)
+
+<span class="syntax-comment"># Vendas diárias</span>
+vendas_diarias = df_vendas.groupby(<span class="syntax-string">'sale_date'</span>)[<span class="syntax-string">'quantity'</span>].<span class="syntax-function">sum</span>()
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].plot(vendas_diarias.index, vendas_diarias.values, color=<span class="syntax-string">'blue'</span>, alpha=<span class="syntax-number">0.7</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">'Vendas Diárias'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_ylabel(<span class="syntax-string">'Unidades'</span>)
+
+<span class="syntax-comment"># Padrão semanal</span>
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].bar([dias_semana[i] <span class="syntax-keyword">for</span> i <span class="syntax-keyword">in</span> vendas_por_dia.index], vendas_por_dia.values, color=<span class="syntax-string">'orange'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">'Padrão Semanal'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_ylabel(<span class="syntax-string">'Unidades Vendidas'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].tick_params(axis=<span class="syntax-string">'x'</span>, rotation=<span class="syntax-number">45</span>)
+
+<span class="syntax-comment"># Revenue semanal por canal</span>
+revenue_canal = df_vendas.groupby([<span class="syntax-string">'weekday'</span>, <span class="syntax-string">'sales_channel'</span>])[<span class="syntax-string">'revenue'</span>].<span class="syntax-function">sum</span>().reset_index()
+revenue_pivot = revenue_canal.pivot(index=<span class="syntax-string">'weekday'</span>, columns=<span class="syntax-string">'sales_channel'</span>, values=<span class="syntax-string">'revenue'</span>)
+revenue_pivot.plot(kind=<span class="syntax-string">'bar'</span>, stacked=<span class="syntax-keyword">True</span>, ax=axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>])
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">'Revenue por Canal e Dia'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_xlabel(<span class="syntax-string">'Dia da Semana'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].legend(title=<span class="syntax-string">'Canal'</span>)
+
+plt.tight_layout()
+plt.show()</code></pre>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Insights para Gestão de Estoque</h4>
+                <p><strong>Produtos com alta variabilidade</strong> precisam de estoque de segurança maior<br>
+                <strong>Padrões sazonais</strong> permitem planejar compras antecipadamente<br>
+                <strong>Dias da semana</strong> afetam demanda - ajustar reposição accordingly<br>
+                <strong>Canais diferentes</strong> têm padrões distintos - estoque por canal</p>
+            </div>
+        </div>
+
+        <!-- Parte 3: Correlações e Insights -->
+        <div class="part-container">
+            <div class="part-header">
+                <div class="part-number">3</div>
+                <h2 class="part-title">Correlações e Insights para IA</h2>
+            </div>
+            <p class="part-description">Vamos identificar <strong>correlações</strong> que podem orientar algoritmos de previsão de demanda e otimização de estoque.</p>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🔗 Análise de Correlações para Estoque</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-function">print</span>(<span class="syntax-string">"🔗 ANÁLISE 3: CORRELAÇÕES PARA ALGORITMOS DE IA"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 50</span>)
+
+<span class="syntax-comment"># Preparar dados para correlação</span>
+df_corr = df_vendas.copy()
+df_corr[<span class="syntax-string">'is_weekend'</span>] = (df_corr[<span class="syntax-string">'weekday'</span>] >= <span class="syntax-number">5</span>).astype(int)
+df_corr[<span class="syntax-string">'is_premium'</span>] = (df_corr[<span class="syntax-string">'customer_segment'</span>] == <span class="syntax-string">'Premium'</span>).astype(int)
+df_corr[<span class="syntax-string">'is_online'</span>] = (df_corr[<span class="syntax-string">'sales_channel'</span>] == <span class="syntax-string">'Online'</span>).astype(int)
+
+<span class="syntax-comment"># Selecionar variáveis numéricas relevantes</span>
+numeric_vars = [<span class="syntax-string">'quantity'</span>, <span class="syntax-string">'sale_price'</span>, <span class="syntax-string">'revenue'</span>, <span class="syntax-string">'month'</span>, <span class="syntax-string">'weekday'</span>, 
+               <span class="syntax-string">'is_weekend'</span>, <span class="syntax-string">'is_premium'</span>, <span class="syntax-string">'is_online'</span>]
+
+correlation_matrix = df_corr[numeric_vars].corr()
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"📊 MATRIZ DE CORRELAÇÃO:"</span>)
+<span class="syntax-function">print</span>(correlation_matrix.round(<span class="syntax-number">3</span>))
+
+<span class="syntax-comment"># Visualizar correlações</span>
+plt.figure(figsize=(<span class="syntax-number">12</span>, <span class="syntax-number">8</span>))
+mask = np.triu(np.ones_like(correlation_matrix, dtype=bool))
+sns.heatmap(correlation_matrix, mask=mask, annot=<span class="syntax-keyword">True</span>, cmap=<span class="syntax-string">'RdBu_r'</span>, center=<span class="syntax-number">0</span>,
+            square=<span class="syntax-keyword">True</span>, linewidths=<span class="syntax-number">0.5</span>, fmt=<span class="syntax-string">'.3f'</span>)
+plt.title(<span class="syntax-string">'Correlações - TechStore Dataset'</span>, fontsize=<span class="syntax-number">14</span>, fontweight=<span class="syntax-string">'bold'</span>)
+plt.tight_layout()
+plt.show()
+
+<span class="syntax-comment"># Identificar correlações importantes para estoque</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎯 CORRELAÇÕES RELEVANTES PARA IA:"</span>)
+
+important_correlations = [
+    (<span class="syntax-string">'quantity'</span>, <span class="syntax-string">'is_weekend'</span>, <span class="syntax-string">"Fim de semana afeta demanda?"</span>),
+    (<span class="syntax-string">'quantity'</span>, <span class="syntax-string">'month'</span>, <span class="syntax-string">"Há sazonalidade mensal?"</span>),
+    (<span class="syntax-string">'sale_price'</span>, <span class="syntax-string">'quantity'</span>, <span class="syntax-string">"Preço afeta quantidade vendida?"</span>),
+    (<span class="syntax-string">'revenue'</span>, <span class="syntax-string">'is_premium'</span>, <span class="syntax-string">"Cliente premium gera mais revenue?"</span>),
+    (<span class="syntax-string">'quantity'</span>, <span class="syntax-string">'is_online'</span>, <span class="syntax-string">"Canal online vende mais?"</span>)
+]
+
+<span class="syntax-keyword">for</span> var1, var2, question <span class="syntax-keyword">in</span> important_correlations:
+    corr_value = correlation_matrix.loc[var1, var2]
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"\n❓ {question}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   📊 Correlação {var1} × {var2}: {corr_value:.3f}"</span>)
+    
+    <span class="syntax-keyword">if</span> <span class="syntax-function">abs</span>(corr_value) >= <span class="syntax-number">0.3</span>:
+        strength = <span class="syntax-string">"forte"</span> <span class="syntax-keyword">if</span> <span class="syntax-function">abs</span>(corr_value) >= <span class="syntax-number">0.7</span> <span class="syntax-keyword">else</span> <span class="syntax-string">"moderada"</span>
+        direction = <span class="syntax-string">"positiva"</span> <span class="syntax-keyword">if</span> corr_value > <span class="syntax-number">0</span> <span class="syntax-keyword">else</span> <span class="syntax-string">"negativa"</span>
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   ✅ Correlação {strength} {direction} - ÚTIL para algoritmos de IA"</span>)
+    <span class="syntax-keyword">else</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   ⚪ Correlação fraca - variáveis independentes"</span>)
+
+<span class="syntax-comment"># Análise específica por produto</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n📱 ANÁLISE POR PRODUTO - SMARTPHONE vs NOTEBOOK:"</span>)
+
+smartphone_data = df_vendas[df_vendas[<span class="syntax-string">'product_name'</span>] == <span class="syntax-string">'Smartphone'</span>]
+notebook_data = df_vendas[df_vendas[<span class="syntax-string">'product_name'</span>] == <span class="syntax-string">'Notebook'</span>]
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"Smartphone - Correlação quantidade × mês: {smartphone_data['quantity'].corr(smartphone_data['month']):.3f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"Notebook - Correlação quantidade × mês: {notebook_data['quantity'].corr(notebook_data['month']):.3f}"</span>)
+
+<span class="syntax-comment"># Insights para algoritmos de ML</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🤖 INSIGHTS PARA ALGORITMOS DE IA:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"-" * 40</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📊 Features importantes para modelos de previsão:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Mês (sazonalidade)"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Dia da semana (padrão semanal)"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Tipo de produto (comportamentos diferentes)"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Canal de venda (padrões distintos)"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Segmento de cliente (diferentes volumes)"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎯 Algoritmos recomendados:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Séries temporais (ARIMA, Prophet) para sazonalidade"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Random Forest para capturar interações não-lineares"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Clustering para segmentar produtos similares"</span>)</code></pre>
+            </div>
+        </div>
+
+        <!-- Síntese e Próximos Passos -->
+        <div class="highlight-box">
+            <h4>🎯 Síntese da Atividade</h4>
+            <p><strong>Parabéns!</strong> Você aplicou com sucesso os conceitos estatísticos da aula 2 em um problema real de otimização de estoque. Os insights gerados demonstram como a estatística é fundamental para preparar dados para algoritmos de IA.</p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h5>📚 O que Aprendemos</h5>
+                <ul style="padding-left: 20px;">
+                    <li>Análise estatística direcionada ao negócio</li>
+                    <li>Identificação de padrões de sazonalidade</li>
+                    <li>Correlações relevantes para IA</li>
+                    <li>Pipeline completo de análise</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h5>🔗 Conexão com IA</h5>
+                <ul style="padding-left: 20px;">
+                    <li>Features importantes identificadas</li>
+                    <li>Variáveis preditivas descobertas</li>
+                    <li>Padrões para algoritmos de ML</li>
+                    <li>Preparação para próxima unidade</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h5>🚀 Próxima Aula (19/08)</h5>
+                <ul style="padding-left: 20px;">
+                    <li><strong>Unidade II:</strong> Algoritmos de ML</li>
+                    <li>Aplicar algoritmos nos dados</li>
+                    <li>K-Means para segmentação</li>
+                    <li>Regressão para previsão</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h5>📝 Para Casa</h5>
+                <ul style="padding-left: 20px;">
+                    <li>Revisar conceitos de ML básico</li>
+                    <li>Pensar em seu projeto pessoal</li>
+                    <li>Ler capítulo 4 do livro</li>
+                    <li>Explorar datasets interessantes</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="#" class="button">📊 Salvar Análise Completa</a>
+            <a href="#" class="button" style="background: linear-gradient(135deg, #28a745, #1e7e34);">🚀 Preparar Próxima Aula</a>
+        </div>
+    </div>
+
+    <script>
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('code').textContent;
+            
+            navigator.clipboard.writeText(code).then(function() {
+                button.textContent = 'Copiado!';
+                button.style.background = '#28a745';
+                
+                setTimeout(function() {
+                    button.textContent = 'Copiar';
+                    button.style.background = '#0052cc';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
