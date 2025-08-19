@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistemas Inteligentes - Aula 4</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover { transform: translateY(-3px); }
+
+        .card h3 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin: 25px 0;
+        }
+
+        .highlight-box h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #e8e8e8;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .code-header {
+            background: #2d2d2d;
+            color: #fff;
+            padding: 8px 16px;
+            margin: -20px -20px 12px -20px;
+            border-radius: 12px 12px 0 0;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        .step-indicator {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .checkpoint-box {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 25px;
+            border-radius: 16px;
+            margin: 25px 0;
+        }
+
+        .checkpoint-box h3 {
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .dataset-info {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .dataset-info h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .concept-box {
+            background: rgba(118, 75, 162, 0.1);
+            border: 2px solid rgba(118, 75, 162, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .concept-box h4 {
+            color: #764ba2;
+            margin-bottom: 10px;
+        }
+
+        .syntax-keyword { color: #569cd6; }
+        .syntax-string { color: #ce9178; }
+        .syntax-comment { color: #6a9955; }
+        .syntax-number { color: #b5cea8; }
+        .syntax-function { color: #dcdcaa; }
+
+        @media (max-width: 768px) {
+            .container { padding: 20px; margin: 10px; }
+            .title { font-size: 2.2rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="badge">🚀 Aula 4 - 19/08</div>
+            <h1 class="title">Algoritmos de ML na Prática</h1>
+            <p class="subtitle">Da teoria à implementação: K-Means para segmentação de clientes</p>
+        </div>
+
+        <div class="highlight-box">
+            <h3>🎯 Objetivo da Aula</h3>
+            <p>Hoje vamos <strong>integrar</strong> tudo que aprendemos nas aulas anteriores (fundamentos de IA, estatística e análise exploratória) e aplicar nosso <strong>primeiro algoritmo de Machine Learning</strong>: o K-Means. Usaremos um dataset real de e-commerce para segmentar clientes e gerar insights acionáveis para o negócio.</p>
+        </div>
+
+        <div class="checkpoint-box">
+            <h3>🎯 Checkpoint 2 - Próxima Aula (02/09)</h3>
+            <p><strong>Entrega:</strong> Implementação de algoritmos básicos de ML + Análise exploratória completa<br>
+            <strong>Hoje fazemos:</strong> Preparação completa para o Checkpoint 2</p>
+        </div>
+
+        <!-- Parte 1: Contexto e Dataset -->
+        <div class="section">
+            <h2><span class="step-indicator">1</span>Contexto: E-commerce Global</h2>
+            <p>Vamos trabalhar com um dataset real de um marketplace online com dados de clientes de diferentes países. Nosso objetivo é aplicar <strong>K-Means clustering</strong> para segmentar clientes e desenvolver estratégias de marketing personalizadas.</p>
+            
+            <div class="dataset-info">
+                <h4>📊 Dataset: Online Retail (UCI)</h4>
+                <p><strong>Fonte:</strong> UCI Machine Learning Repository<br>
+                <strong>Dados:</strong> 540,000+ transações de loja online (Reino Unido)<br>
+                <strong>Período:</strong> 01/12/2010 a 09/12/2011<br>
+                <strong>Variáveis:</strong> InvoiceNo, StockCode, Description, Quantity, InvoiceDate, UnitPrice, CustomerID, Country</p>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🔧 Setup e Importação do Dataset</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># Sistemas Inteligentes - Aula 4: K-Means na Prática
+# Dataset: Online Retail - Segmentação de Clientes</span>
+
+<span class="syntax-keyword">import</span> pandas <span class="syntax-keyword">as</span> pd
+<span class="syntax-keyword">import</span> numpy <span class="syntax-keyword">as</span> np
+<span class="syntax-keyword">import</span> matplotlib.pyplot <span class="syntax-keyword">as</span> plt
+<span class="syntax-keyword">import</span> seaborn <span class="syntax-keyword">as</span> sns
+<span class="syntax-keyword">from</span> sklearn.cluster <span class="syntax-keyword">import</span> KMeans
+<span class="syntax-keyword">from</span> sklearn.preprocessing <span class="syntax-keyword">import</span> StandardScaler
+<span class="syntax-keyword">from</span> sklearn.metrics <span class="syntax-keyword">import</span> silhouette_score
+<span class="syntax-keyword">from</span> datetime <span class="syntax-keyword">import</span> datetime, timedelta
+<span class="syntax-keyword">import</span> warnings
+warnings.filterwarnings(<span class="syntax-string">'ignore'</span>)
+
+<span class="syntax-comment"># Configurações de visualização</span>
+plt.style.use(<span class="syntax-string">'seaborn-v0_8-whitegrid'</span>)
+sns.set_palette(<span class="syntax-string">"husl"</span>)
+plt.rcParams[<span class="syntax-string">'figure.figsize'</span>] = (<span class="syntax-number">12</span>, <span class="syntax-number">6</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"🛍️ E-COMMERCE CUSTOMER SEGMENTATION"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 45</span>)
+
+<span class="syntax-comment"># Carregar dataset</span>
+<span class="syntax-comment"># URL do dataset no UCI repository</span>
+url = <span class="syntax-string">'https://archive.ics.uci.edu/ml/machine-learning-databases/00352/Online%20Retail.xlsx'</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"📥 Carregando dataset do UCI Repository..."</span>)
+
+<span class="syntax-keyword">try</span>:
+    df = pd.read_excel(url, engine=<span class="syntax-string">'openpyxl'</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Dataset carregado: {df.shape[0]:,} linhas, {df.shape[1]} colunas"</span>)
+<span class="syntax-keyword">except</span>:
+    <span class="syntax-function">print</span>(<span class="syntax-string">"⚠️ Erro ao carregar. Usando dataset alternativo..."</span>)
+    <span class="syntax-comment"># Aqui você pode colocar um dataset local como backup</span>
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📊 Primeiras 5 linhas:"</span>)
+<span class="syntax-function">print</span>(df.head())</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 2: Análise Exploratória Integrada -->
+        <div class="section">
+            <h2><span class="step-indicator">2</span>EDA: Revisando Conceitos da Aula 2</h2>
+            <p>Vamos aplicar toda a <strong>estatística descritiva</strong> que aprendemos na aula 2, mas agora com foco na preparação para algoritmos de ML.</p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📊 Análise Estatística Direcionada para ML</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># 1. INSPEÇÃO INICIAL - Conceitos da Aula 2</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"🔍 ANÁLISE EXPLORATÓRIA PARA ML"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 35</span>)
+
+<span class="syntax-comment"># Informações básicas</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📏 Shape: {df.shape}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"🗂️ Colunas: {list(df.columns)}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📋 Tipos de dados:"</span>)
+<span class="syntax-function">print</span>(df.dtypes)
+
+<span class="syntax-comment"># Valores faltantes - crucial para ML</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n❓ VALORES FALTANTES:"</span>)
+missing_data = df.isnull().<span class="syntax-function">sum</span>()
+missing_percent = (<span class="syntax-number">100</span> * missing_data / <span class="syntax-function">len</span>(df)).round(<span class="syntax-number">2</span>)
+missing_table = pd.DataFrame({
+    <span class="syntax-string">'Missing Count'</span>: missing_data,
+    <span class="syntax-string">'Percentage'</span>: missing_percent
+})
+<span class="syntax-function">print</span>(missing_table[missing_table[<span class="syntax-string">'Missing Count'</span>] > <span class="syntax-number">0</span>])
+
+<span class="syntax-comment"># Estatísticas descritivas das variáveis numéricas</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n📊 ESTATÍSTICAS DESCRITIVAS:"</span>)
+numeric_cols = df.select_dtypes(include=[np.number]).columns
+<span class="syntax-function">print</span>(df[numeric_cols].describe())
+
+<span class="syntax-comment"># Análise de outliers - importante para clustering</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎯 ANÁLISE DE OUTLIERS (IQR Method):"</span>)
+<span class="syntax-keyword">for</span> col <span class="syntax-keyword">in</span> [<span class="syntax-string">'Quantity'</span>, <span class="syntax-string">'UnitPrice'</span>]:
+    Q1 = df[col].quantile(<span class="syntax-number">0.25</span>)
+    Q3 = df[col].quantile(<span class="syntax-number">0.75</span>)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - <span class="syntax-number">1.5</span> * IQR
+    upper_bound = Q3 + <span class="syntax-number">1.5</span> * IQR
+    outliers = ((df[col] < lower_bound) | (df[col] > upper_bound)).<span class="syntax-function">sum</span>()
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   {col}: {outliers:,} outliers ({outliers/len(df)*100:.2f}%)"</span>)</code></pre>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>💡 Conexão com Aula 2</h3>
+                    <p><strong>Medidas de tendência central:</strong> Identificar valores típicos<br>
+                    <strong>Dispersão:</strong> Entender variabilidade para normalização<br>
+                    <strong>Distribuições:</strong> Detectar assimetrias e outliers<br>
+                    <strong>Correlações:</strong> Features importantes para clustering</p>
+                </div>
+                <div class="card">
+                    <h3>🔧 Preparação para ML</h3>
+                    <p><strong>Missing values:</strong> Estratégia de imputação<br>
+                    <strong>Outliers:</strong> Decidir se remover ou transformar<br>
+                    <strong>Scaling:</strong> Normalizar para K-Means<br>
+                    <strong>Feature engineering:</strong> Criar variáveis RFM</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parte 3: Preparação de Dados -->
+        <div class="section">
+            <h2><span class="step-indicator">3</span>Preparação: Da Estatística para ML</h2>
+            <p>Agora vamos transformar nossos dados em features adequadas para o algoritmo K-Means, aplicando conceitos de <strong>feature engineering</strong>.</p>
+
+            <div class="concept-box">
+                <h4>🧠 Conceito: Análise RFM</h4>
+                <p><strong>Recency:</strong> Há quanto tempo fez a última compra<br>
+                <strong>Frequency:</strong> Quantas vezes comprou<br>
+                <strong>Monetary:</strong> Quanto gastou no total<br><br>
+                Essas 3 dimensões são ideais para segmentar clientes com K-Means!</p>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🔧 Feature Engineering: Criando Variáveis RFM</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># PREPARAÇÃO DOS DADOS PARA K-MEANS</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"🔧 FEATURE ENGINEERING"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 25</span>)
+
+<span class="syntax-comment"># 1. Limpeza básica</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"🧹 Limpando dados..."</span>)
+df_clean = df.dropna(subset=[<span class="syntax-string">'CustomerID'</span>])  <span class="syntax-comment"># Remove linhas sem CustomerID</span>
+df_clean = df_clean[df_clean[<span class="syntax-string">'Quantity'</span>] > <span class="syntax-number">0</span>]      <span class="syntax-comment"># Remove devoluções</span>
+df_clean = df_clean[df_clean[<span class="syntax-string">'UnitPrice'</span>] > <span class="syntax-number">0</span>]    <span class="syntax-comment"># Remove preços inválidos</span>
+
+<span class="syntax-comment"># Criar variável Revenue</span>
+df_clean[<span class="syntax-string">'Revenue'</span>] = df_clean[<span class="syntax-string">'Quantity'</span>] * df_clean[<span class="syntax-string">'UnitPrice'</span>]
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Dados limpos: {df_clean.shape[0]:,} transações"</span>)
+
+<span class="syntax-comment"># 2. CONSTRUIR FEATURES RFM</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n📊 Construindo features RFM..."</span>)
+
+<span class="syntax-comment"># Data de referência (última data do dataset + 1 dia)</span>
+reference_date = df_clean[<span class="syntax-string">'InvoiceDate'</span>].<span class="syntax-function">max</span>() + timedelta(days=<span class="syntax-number">1</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📅 Data de referência: {reference_date.strftime('%d/%m/%Y')}"</span>)
+
+<span class="syntax-comment"># Agregar por cliente</span>
+rfm = df_clean.groupby(<span class="syntax-string">'CustomerID'</span>).agg({
+    <span class="syntax-string">'InvoiceDate'</span>: <span class="syntax-keyword">lambda</span> x: (reference_date - x.<span class="syntax-function">max</span>()).days,  <span class="syntax-comment"># Recency</span>
+    <span class="syntax-string">'InvoiceNo'</span>: <span class="syntax-string">'count'</span>,                                      <span class="syntax-comment"># Frequency</span>
+    <span class="syntax-string">'Revenue'</span>: <span class="syntax-string">'sum'</span>                                            <span class="syntax-comment"># Monetary</span>
+}).round(<span class="syntax-number">2</span>)
+
+<span class="syntax-comment"># Renomear colunas</span>
+rfm.columns = [<span class="syntax-string">'Recency'</span>, <span class="syntax-string">'Frequency'</span>, <span class="syntax-string">'Monetary'</span>]
+
+<span class="syntax-comment"># Filtrar clientes com valores válidos</span>
+rfm = rfm[rfm[<span class="syntax-string">'Monetary'</span>] > <span class="syntax-number">0</span>]
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ RFM calculado para {len(rfm):,} clientes"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n📋 Estatísticas RFM:"</span>)
+<span class="syntax-function">print</span>(rfm.describe())
+
+<span class="syntax-comment"># 3. ANÁLISE EXPLORATÓRIA DAS FEATURES RFM</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🔍 ANÁLISE DAS FEATURES RFM:"</span>)
+
+<span class="syntax-comment"># Correlações entre features</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📊 Matriz de correlação:"</span>)
+<span class="syntax-function">print</span>(rfm.corr().round(<span class="syntax-number">3</span>))
+
+<span class="syntax-comment"># Detectar outliers extremos</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎯 Outliers extremos (Z-score > 3):"</span>)
+<span class="syntax-keyword">from</span> scipy <span class="syntax-keyword">import</span> stats
+<span class="syntax-keyword">for</span> col <span class="syntax-keyword">in</span> rfm.columns:
+    z_scores = np.<span class="syntax-function">abs</span>(stats.zscore(rfm[col]))
+    outliers = (z_scores > <span class="syntax-number">3</span>).<span class="syntax-function">sum</span>()
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   {col}: {outliers} outliers extremos"</span>)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 4: K-Means Theory e Implementation -->
+        <div class="section">
+            <h2><span class="step-indicator">4</span>Algoritmo K-Means: Da Teoria à Prática</h2>
+            
+            <div class="concept-box">
+                <h4>🧠 Como funciona o K-Means?</h4>
+                <p><strong>1. Escolha k</strong> (número de clusters)<br>
+                <strong>2. Inicializa</strong> k centroides aleatoriamente<br>
+                <strong>3. Atribui</strong> cada ponto ao centroide mais próximo<br>
+                <strong>4. Recalcula</strong> centroides (média dos pontos)<br>
+                <strong>5. Repete</strong> passos 3-4 até convergência</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>✅ Vantagens do K-Means</h3>
+                    <p>• Simples e rápido<br>
+                    • Funciona bem com clusters esféricos<br>
+                    • Escalável para grandes datasets<br>
+                    • Boa interpretabilidade</p>
+                </div>
+                <div class="card">
+                    <h3>⚠️ Limitações</h3>
+                    <p>• Precisa definir k previamente<br>
+                    • Sensível a outliers<br>
+                    • Assume clusters esféricos<br>
+                    • Sensível à escala das variáveis</p>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🎯 Implementação K-Means: Passo a Passo</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># K-MEANS PARA SEGMENTAÇÃO DE CLIENTES</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"🎯 IMPLEMENTAÇÃO K-MEANS"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 30</span>)
+
+<span class="syntax-comment"># 1. NORMALIZAÇÃO DOS DADOS</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"📏 Normalizando dados (Z-score)..."</span>)
+
+<span class="syntax-comment"># Por que normalizar? K-Means usa distância euclidiana!</span>
+scaler = StandardScaler()
+rfm_scaled = scaler.fit_transform(rfm)
+rfm_scaled_df = pd.DataFrame(rfm_scaled, columns=rfm.columns, index=rfm.index)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"✅ Dados normalizados:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   Média: {rfm_scaled_df.mean().round(3).values}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   Desvio: {rfm_scaled_df.std().round(3).values}"</span>)
+
+<span class="syntax-comment"># 2. MÉTODO DO COTOVELO PARA ESCOLHER K</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n📊 Método do Cotovelo para escolher K..."</span>)
+
+inertias = []
+silhouette_scores = []
+k_range = <span class="syntax-function">range</span>(<span class="syntax-number">2</span>, <span class="syntax-number">11</span>)
+
+<span class="syntax-keyword">for</span> k <span class="syntax-keyword">in</span> k_range:
+    kmeans = KMeans(n_clusters=k, random_state=<span class="syntax-number">42</span>, n_init=<span class="syntax-number">10</span>)
+    kmeans.fit(rfm_scaled)
+    inertias.append(kmeans.inertia_)
+    silhouette_avg = silhouette_score(rfm_scaled, kmeans.labels_)
+    silhouette_scores.append(silhouette_avg)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   K={k}: Inertia={kmeans.inertia_:.2f}, Silhouette={silhouette_avg:.3f}"</span>)
+
+<span class="syntax-comment"># Escolher K com melhor silhouette score</span>
+optimal_k = k_range[np.argmax(silhouette_scores)]
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎯 K ótimo escolhido: {optimal_k} (melhor silhouette score)"</span>)
+
+<span class="syntax-comment"># 3. APLICAR K-MEANS COM K ÓTIMO</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🚀 Aplicando K-Means com K={optimal_k}..."</span>)
+
+final_kmeans = KMeans(n_clusters=optimal_k, random_state=<span class="syntax-number">42</span>, n_init=<span class="syntax-number">10</span>)
+cluster_labels = final_kmeans.fit_predict(rfm_scaled)
+
+<span class="syntax-comment"># Adicionar labels aos dados originais</span>
+rfm[<span class="syntax-string">'Cluster'</span>] = cluster_labels
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Clustering concluído!"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📊 Distribuição dos clusters:"</span>)
+<span class="syntax-function">print</span>(rfm[<span class="syntax-string">'Cluster'</span>].value_counts().sort_index())</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 5: Análise dos Resultados -->
+        <div class="section">
+            <h2><span class="step-indicator">5</span>Interpretação: De Clusters para Insights de Negócio</h2>
+            <p>O verdadeiro valor do ML está na <strong>interpretação</strong> dos resultados e na <strong>geração de insights</strong> acionáveis para o negócio.</p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📊 Análise de Clusters e Insights de Negócio</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># ANÁLISE DOS CLUSTERS GERADOS</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"📊 ANÁLISE DOS CLUSTERS"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 25</span>)
+
+<span class="syntax-comment"># 1. PERFIL DE CADA CLUSTER</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"👥 PERFIL DOS CLUSTERS:"</span>)
+cluster_summary = rfm.groupby(<span class="syntax-string">'Cluster'</span>).agg({
+    <span class="syntax-string">'Recency'</span>: [<span class="syntax-string">'mean'</span>, <span class="syntax-string">'median'</span>],
+    <span class="syntax-string">'Frequency'</span>: [<span class="syntax-string">'mean'</span>, <span class="syntax-string">'median'</span>],
+    <span class="syntax-string">'Monetary'</span>: [<span class="syntax-string">'mean'</span>, <span class="syntax-string">'median'</span>]
+}).round(<span class="syntax-number">2</span>)
+
+cluster_summary.columns = [<span class="syntax-string">'_'</span>.join(col).strip() <span class="syntax-keyword">for</span> col <span class="syntax-keyword">in</span> cluster_summary.columns]
+<span class="syntax-function">print</span>(cluster_summary)
+
+<span class="syntax-comment"># 2. INTERPRETAÇÃO DOS CLUSTERS</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎯 INTERPRETAÇÃO DOS CLUSTERS:"</span>)
+
+<span class="syntax-keyword">for</span> cluster <span class="syntax-keyword">in</span> <span class="syntax-function">range</span>(optimal_k):
+    cluster_data = rfm[rfm[<span class="syntax-string">'Cluster'</span>] == cluster]
+    size = <span class="syntax-function">len</span>(cluster_data)
+    avg_recency = cluster_data[<span class="syntax-string">'Recency'</span>].mean()
+    avg_frequency = cluster_data[<span class="syntax-string">'Frequency'</span>].mean()
+    avg_monetary = cluster_data[<span class="syntax-string">'Monetary'</span>].mean()
+    
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"\n🏷️ CLUSTER {cluster} ({size:,} clientes - {size/len(rfm)*100:.1f}%)"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   📅 Recency: {avg_recency:.0f} dias (última compra)"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   🔢 Frequency: {avg_frequency:.1f} compras"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   💰 Monetary: £{avg_monetary:.2f} gasto total"</span>)
+    
+    <span class="syntax-comment"># Classificar tipo de cliente</span>
+    <span class="syntax-keyword">if</span> avg_recency < <span class="syntax-number">50</span> <span class="syntax-keyword">and</span> avg_monetary > <span class="syntax-number">1000</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   ⭐ TIPO: Clientes VIP (Recentes e Alto Valor)"</span>)
+    <span class="syntax-keyword">elif</span> avg_recency > <span class="syntax-number">200</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   😴 TIPO: Clientes Dormentes (Não compram há muito tempo)"</span>)
+    <span class="syntax-keyword">elif</span> avg_frequency > <span class="syntax-number">100</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   🔥 TIPO: Clientes Frequentes (Muitas compras)"</span>)
+    <span class="syntax-keyword">elif</span> avg_monetary < <span class="syntax-number">100</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   💸 TIPO: Clientes Baixo Valor"</span>)
+    <span class="syntax-keyword">else</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   👤 TIPO: Clientes Regulares"</span>)
+
+<span class="syntax-comment"># 3. INSIGHTS DE NEGÓCIO</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n💡 INSIGHTS DE NEGÓCIO:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 25</span>)
+
+total_customers = <span class="syntax-function">len</span>(rfm)
+total_revenue = rfm[<span class="syntax-string">'Monetary'</span>].<span class="syntax-function">sum</span>()
+
+<span class="syntax-keyword">for</span> cluster <span class="syntax-keyword">in</span> <span class="syntax-function">range</span>(optimal_k):
+    cluster_data = rfm[rfm[<span class="syntax-string">'Cluster'</span>] == cluster]
+    cluster_revenue = cluster_data[<span class="syntax-string">'Monetary'</span>].<span class="syntax-function">sum</span>()
+    revenue_share = cluster_revenue / total_revenue * <span class="syntax-number">100</span>
+    
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"\n📈 Cluster {cluster}:"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   💰 Representa {revenue_share:.1f}% da receita total"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   👥 {len(cluster_data)/total_customers*100:.1f}% dos clientes"</span>)
+    
+    <span class="syntax-keyword">if</span> revenue_share > <span class="syntax-number">30</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   🎯 AÇÃO: Foco em retenção - grupo de alto valor!"</span>)
+    <span class="syntax-keyword">elif</span> cluster_data[<span class="syntax-string">'Recency'</span>].mean() > <span class="syntax-number">150</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   📧 AÇÃO: Campanha de reativação necessária"</span>)
+    <span class="syntax-keyword">else</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   📊 AÇÃO: Monitorar e nutrir relacionamento"</span>)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 6: Visualização -->
+        <div class="section">
+            <h2><span class="step-indicator">6</span>Visualização dos Resultados</h2>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📊 Criando Visualizações Impactantes</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># VISUALIZAÇÕES DOS CLUSTERS</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"📊 CRIANDO VISUALIZAÇÕES"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 28</span>)
+
+<span class="syntax-comment"># 1. Scatter plot 3D dos clusters</span>
+<span class="syntax-keyword">from</span> mpl_toolkits.mplot3d <span class="syntax-keyword">import</span> Axes3D
+
+fig = plt.figure(figsize=(<span class="syntax-number">15</span>, <span class="syntax-number">12</span>))
+
+<span class="syntax-comment"># Plot 3D</span>
+ax1 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">2</span>, <span class="syntax-number">1</span>, projection=<span class="syntax-string">'3d'</span>)
+colors = [<span class="syntax-string">'red'</span>, <span class="syntax-string">'blue'</span>, <span class="syntax-string">'green'</span>, <span class="syntax-string">'orange'</span>, <span class="syntax-string">'purple'</span>]
+<span class="syntax-keyword">for</span> i <span class="syntax-keyword">in</span> <span class="syntax-function">range</span>(optimal_k):
+    cluster_data = rfm[rfm[<span class="syntax-string">'Cluster'</span>] == i]
+    ax1.scatter(cluster_data[<span class="syntax-string">'Recency'</span>], 
+               cluster_data[<span class="syntax-string">'Frequency'</span>], 
+               cluster_data[<span class="syntax-string">'Monetary'</span>],
+               c=colors[i], label=<span class="syntax-string">f'Cluster {i}'</span>, alpha=<span class="syntax-number">0.6</span>)
+
+ax1.set_xlabel(<span class="syntax-string">'Recency (dias)'</span>)
+ax1.set_ylabel(<span class="syntax-string">'Frequency'</span>)
+ax1.set_zlabel(<span class="syntax-string">'Monetary (£)'</span>)
+ax1.set_title(<span class="syntax-string">'Clusters RFM - Visão 3D'</span>)
+ax1.legend()
+
+<span class="syntax-comment"># 2. Box plots por cluster</span>
+ax2 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">2</span>, <span class="syntax-number">2</span>)
+rfm.boxplot(column=<span class="syntax-string">'Monetary'</span>, by=<span class="syntax-string">'Cluster'</span>, ax=ax2)
+ax2.set_title(<span class="syntax-string">'Distribuição do Valor Monetário por Cluster'</span>)
+ax2.set_xlabel(<span class="syntax-string">'Cluster'</span>)
+ax2.set_ylabel(<span class="syntax-string">'Monetary (£)'</span>)
+
+<span class="syntax-comment"># 3. Heatmap dos centroides</span>
+ax3 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">2</span>, <span class="syntax-number">3</span>)
+centroids_df = pd.DataFrame(final_kmeans.cluster_centers_, 
+                           columns=[<span class="syntax-string">'Recency'</span>, <span class="syntax-string">'Frequency'</span>, <span class="syntax-string">'Monetary'</span>])
+sns.heatmap(centroids_df.T, annot=<span class="syntax-keyword">True</span>, fmt=<span class="syntax-string">'.2f'</span>, cmap=<span class="syntax-string">'viridis'</span>, ax=ax3)
+ax3.set_title(<span class="syntax-string">'Centroides dos Clusters (Normalizados)'</span>)
+ax3.set_xlabel(<span class="syntax-string">'Cluster'</span>)
+
+<span class="syntax-comment"># 4. Distribuição dos clusters</span>
+ax4 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">2</span>, <span class="syntax-number">4</span>)
+cluster_counts = rfm[<span class="syntax-string">'Cluster'</span>].value_counts().sort_index()
+ax4.pie(cluster_counts.values, labels=[<span class="syntax-string">f'Cluster {i}'</span> <span class="syntax-keyword">for</span> i <span class="syntax-keyword">in</span> cluster_counts.index], 
+        autopct=<span class="syntax-string">'%1.1f%%'</span>, colors=colors[:optimal_k])
+ax4.set_title(<span class="syntax-string">'Distribuição dos Clientes por Cluster'</span>)
+
+plt.tight_layout()
+plt.show()
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"✅ Visualizações criadas!"</span>)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 7: Próximos Passos -->
+        <div class="section">
+            <h2><span class="step-indicator">7</span>Próximos Passos e Checkpoint 2</h2>
+            
+            <div class="checkpoint-box">
+                <h3>🎯 Checkpoint 2 (02/09) - Checklist</h3>
+                <p><strong>✅ Dataset escolhido e carregado</strong><br>
+                <strong>✅ EDA completa (estatísticas, distribuições, correlações)</strong><br>
+                <strong>✅ Preparação dos dados (limpeza, normalização)</strong><br>
+                <strong>✅ Implementação K-Means</strong><br>
+                <strong>✅ Análise e interpretação dos resultados</strong><br>
+                <strong>✅ Visualizações impactantes</strong><br>
+                <strong>✅ Insights de negócio documentados</strong></p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🔄 Para seu Projeto</h3>
+                    <p><strong>1. Adapte este código</strong> para seu dataset<br>
+                    <strong>2. Experimente</strong> outros valores de K<br>
+                    <strong>3. Teste</strong> diferentes features<br>
+                    <strong>4. Documente</strong> todos os insights<br>
+                    <strong>5. Prepare</strong> apresentação de 10 min</p>
+                </div>
+                <div class="card">
+                    <h3>🚀 Próxima Aula (26/08)</h3>
+                    <p><strong>Tópico:</strong> Regressão Logística<br>
+                    <strong>Dataset:</strong> Classificação binária<br>
+                    <strong>Objetivo:</strong> Prever comportamento do cliente<br>
+                    <strong>Integração:</strong> Usar clusters como features</p>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>💾 Salvando Resultados para Próxima Aula</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># SALVANDO RESULTADOS</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"💾 Salvando resultados para próximas aulas..."</span>)
+
+<span class="syntax-comment"># Salvar dataset com clusters</span>
+rfm.to_csv(<span class="syntax-string">'customer_segments.csv'</span>)
+
+<span class="syntax-comment"># Salvar modelo para reutilização</span>
+<span class="syntax-keyword">import</span> pickle
+<span class="syntax-keyword">with</span> <span class="syntax-function">open</span>(<span class="syntax-string">'kmeans_model.pkl'</span>, <span class="syntax-string">'wb'</span>) <span class="syntax-keyword">as</span> f:
+    pickle.dump(final_kmeans, f)
+
+<span class="syntax-keyword">with</span> <span class="syntax-function">open</span>(<span class="syntax-string">'scaler.pkl'</span>, <span class="syntax-string">'wb'</span>) <span class="syntax-keyword">as</span> f:
+    pickle.dump(scaler, f)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"✅ Arquivos salvos:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"   📊 customer_segments.csv - Dataset com clusters"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"   🤖 kmeans_model.pkl - Modelo treinado"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"   📏 scaler.pkl - Normalizador"</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎉 AULA 4 CONCLUÍDA!"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"Vocês aplicaram com sucesso:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Estatística descritiva (Aula 2)"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Análise exploratória (Aula 3)"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Primeiro algoritmo de ML (Aula 4)"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"🚀 Próximo: Regressão Logística!"</span>)</code></pre>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <h3>🌟 Parabéns!</h3>
+            <p>Vocês acabaram de completar sua primeira implementação completa de Machine Learning! Integraram conceitos de estatística, análise exploratória e clustering para gerar insights valiosos de negócio. Isso é exatamente o que fazem cientistas de dados no mundo real!</p>
+        </div>
+    </div>
+
+    <script>
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('code').textContent;
+            
+            navigator.clipboard.writeText(code).then(function() {
+                button.textContent = 'Copiado!';
+                button.style.background = '#28a745';
+                
+                setTimeout(function() {
+                    button.textContent = 'Copiar';
+                    button.style.background = '#667eea';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
