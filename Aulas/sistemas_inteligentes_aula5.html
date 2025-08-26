@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistemas Inteligentes - Aula 5</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover { transform: translateY(-3px); }
+
+        .card h3 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin: 25px 0;
+        }
+
+        .highlight-box h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #e8e8e8;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .code-header {
+            background: #2d2d2d;
+            color: #fff;
+            padding: 8px 16px;
+            margin: -20px -20px 12px -20px;
+            border-radius: 12px 12px 0 0;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        .step-indicator {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .checkpoint-box {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 25px;
+            border-radius: 16px;
+            margin: 25px 0;
+        }
+
+        .checkpoint-box h3 {
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .dataset-info {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .dataset-info h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .concept-box {
+            background: rgba(118, 75, 162, 0.1);
+            border: 2px solid rgba(118, 75, 162, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .concept-box h4 {
+            color: #764ba2;
+            margin-bottom: 10px;
+        }
+
+        .syntax-keyword { color: #569cd6; }
+        .syntax-string { color: #ce9178; }
+        .syntax-comment { color: #6a9955; }
+        .syntax-number { color: #b5cea8; }
+        .syntax-function { color: #dcdcaa; }
+
+        .metrics-box {
+            background: rgba(40, 167, 69, 0.1);
+            border: 2px solid rgba(40, 167, 69, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .metrics-box h4 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        .formula-box {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .formula-box h4 {
+            color: #ffc107;
+            margin-bottom: 10px;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 20px; margin: 10px; }
+            .title { font-size: 2.2rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="badge">🎯 Aula 5 - 26/08</div>
+            <h1 class="title">Regressão Logística na Prática</h1>
+            <p class="subtitle">Do clustering à classificação: Prevendo comportamento do cliente</p>
+        </div>
+
+        <div class="highlight-box">
+            <h3>🔗 Conectando com a Aula Anterior</h3>
+            <p>Na aula 4, segmentamos clientes com <strong>K-Means</strong>. Hoje vamos usar esses clusters como features para um modelo de <strong>classificação</strong>: a Regressão Logística. Vamos prever se um cliente fará uma nova compra nos próximos 30 dias!</p>
+        </div>
+
+        <div class="checkpoint-box">
+            <h3>🎯 Checkpoint 2 - Próxima Aula (02/09)</h3>
+            <p><strong>Hoje completamos:</strong> Implementação de algoritmos básicos de ML + Análise exploratória completa<br>
+            <strong>Entrega:</strong> Projeto com K-Means + Regressão Logística + Insights de negócio<br>
+            <strong>Status:</strong> Finalizando preparação completa</p>
+        </div>
+
+        <!-- Parte 1: Teoria da Regressão Logística -->
+        <div class="section">
+            <h2><span class="step-indicator">1</span>Regressão Logística: Fundamentos</h2>
+            <p>Diferente da <strong>regressão linear</strong> (que prevê valores contínuos), a <strong>regressão logística</strong> é usada para <strong>classificação</strong> - prever categorias ou probabilidades de eventos.</p>
+            
+            <div class="concept-box">
+                <h4>🧠 Por que Regressão "Logística"?</h4>
+                <p>Usa a <strong>função logística (sigmoid)</strong> para mapear qualquer valor real para um intervalo entre 0 e 1, perfect para probabilidades!<br><br>
+                <strong>Sigmoid:</strong> Converte valores em probabilidades<br>
+                <strong>Threshold:</strong> Geralmente 0.5 para classificação binária<br>
+                <strong>Output:</strong> Probabilidade de pertencer à classe positiva</p>
+            </div>
+
+            <div class="formula-box">
+                <h4>📐 Fórmula da Função Sigmoid</h4>
+                <p><strong>σ(z) = 1 / (1 + e^(-z))</strong><br><br>
+                Onde: <strong>z = β₀ + β₁x₁ + β₂x₂ + ... + βₙxₙ</strong><br><br>
+                <strong>z > 0</strong> → σ(z) > 0.5 → Classe 1<br>
+                <strong>z < 0</strong> → σ(z) < 0.5 → Classe 0</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>✅ Vantagens</h3>
+                    <p>• Fornece probabilidades interpretáveis<br>
+                    • Não assume distribuição normal<br>
+                    • Menos sensível a outliers<br>
+                    • Computacionalmente eficiente<br>
+                    • Boa baseline para classificação</p>
+                </div>
+                <div class="card">
+                    <h3>⚠️ Limitações</h3>
+                    <p>• Assume relação linear entre features e log-odds<br>
+                    • Sensível a features correlacionadas<br>
+                    • Precisa de mais dados para estabilidade<br>
+                    • Dificuldade com relações complexas não-lineares</p>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📚 Setup: Preparando Ambiente e Dados</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># Sistemas Inteligentes - Aula 5: Regressão Logística
+# Classificação: Prever comportamento de compra do cliente</span>
+
+<span class="syntax-keyword">import</span> pandas <span class="syntax-keyword">as</span> pd
+<span class="syntax-keyword">import</span> numpy <span class="syntax-keyword">as</span> np
+<span class="syntax-keyword">import</span> matplotlib.pyplot <span class="syntax-keyword">as</span> plt
+<span class="syntax-keyword">import</span> seaborn <span class="syntax-keyword">as</span> sns
+<span class="syntax-keyword">from</span> sklearn.model_selection <span class="syntax-keyword">import</span> train_test_split, cross_val_score
+<span class="syntax-keyword">from</span> sklearn.linear_model <span class="syntax-keyword">import</span> LogisticRegression
+<span class="syntax-keyword">from</span> sklearn.preprocessing <span class="syntax-keyword">import</span> StandardScaler
+<span class="syntax-keyword">from</span> sklearn.metrics <span class="syntax-keyword">import</span> (accuracy_score, precision_score, 
+                                recall_score, f1_score, roc_auc_score,
+                                confusion_matrix, classification_report, roc_curve)
+<span class="syntax-keyword">from</span> datetime <span class="syntax-keyword">import</span> datetime, timedelta
+<span class="syntax-keyword">import</span> pickle
+<span class="syntax-keyword">import</span> warnings
+warnings.filterwarnings(<span class="syntax-string">'ignore'</span>)
+
+<span class="syntax-comment"># Configurações de visualização</span>
+plt.style.use(<span class="syntax-string">'seaborn-v0_8-whitegrid'</span>)
+sns.set_palette(<span class="syntax-string">"husl"</span>)
+plt.rcParams[<span class="syntax-string">'figure.figsize'</span>] = (<span class="syntax-number">12</span>, <span class="syntax-number">6</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"🎯 REGRESSÃO LOGÍSTICA PARA E-COMMERCE"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 45</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"📊 Objetivo: Prever se cliente comprará nos próximos 30 dias"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"🔗 Usando: Clusters da Aula 4 + Features RFM"</span>)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 2: Preparação dos Dados -->
+        <div class="section">
+            <h2><span class="step-indicator">2</span>Preparação: De Clusters para Classificação</h2>
+            <p>Vamos carregar os dados da aula 4 e criar nossa <strong>variável target</strong> - se o cliente comprará novamente.</p>
+
+            <div class="concept-box">
+                <h4>🎯 Problema de Negócio</h4>
+                <p><strong>Pergunta:</strong> "Quais clientes têm maior probabilidade de fazer uma nova compra nos próximos 30 dias?"<br><br>
+                <strong>Features:</strong> RFM + Cluster + Estatísticas de compra<br>
+                <strong>Target:</strong> will_purchase_next_month (0 = Não, 1 = Sim)<br>
+                <strong>Aplicação:</strong> Campanhas de marketing direcionadas</p>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🔧 Carregando Dados e Criando Target</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># CARREGANDO DADOS DA AULA 4</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"🔄 Carregando dados da aula anterior..."</span>)
+
+<span class="syntax-comment"># Tentar carregar dados salvos da aula 4</span>
+<span class="syntax-keyword">try</span>:
+    <span class="syntax-comment"># Se você salvou os dados da aula 4</span>
+    customer_segments = pd.read_csv(<span class="syntax-string">'customer_segments.csv'</span>, index_col=<span class="syntax-number">0</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">"✅ Dados carregados do arquivo local"</span>)
+<span class="syntax-keyword">except</span>:
+    <span class="syntax-function">print</span>(<span class="syntax-string">"⚠️ Arquivo local não encontrado. Recriando dados..."</span>)
+    
+    <span class="syntax-comment"># Recriar dados básicos para demonstração</span>
+    <span class="syntax-comment"># Simulando dados do e-commerce</span>
+    np.random.seed(<span class="syntax-number">42</span>)
+    n_customers = <span class="syntax-number">2000</span>
+    
+    customer_segments = pd.DataFrame({
+        <span class="syntax-string">'Recency'</span>: np.random.gamma(<span class="syntax-number">2</span>, <span class="syntax-number">50</span>, n_customers),
+        <span class="syntax-string">'Frequency'</span>: np.random.poisson(<span class="syntax-number">25</span>, n_customers) + <span class="syntax-number">1</span>,
+        <span class="syntax-string">'Monetary'</span>: np.random.lognormal(<span class="syntax-number">5</span>, <span class="syntax-number">1</span>, n_customers),
+        <span class="syntax-string">'Cluster'</span>: np.random.choice([<span class="syntax-number">0</span>, <span class="syntax-number">1</span>, <span class="syntax-number">2</span>, <span class="syntax-number">3</span>], n_customers)
+    })
+    
+    customer_segments.index.name = <span class="syntax-string">'CustomerID'</span>
+    <span class="syntax-function">print</span>(<span class="syntax-string">"✅ Dados simulados criados"</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📊 Dataset carregado: {customer_segments.shape[0]:,} clientes"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📋 Colunas: {list(customer_segments.columns)}"</span>)
+
+<span class="syntax-comment"># Mostrar distribuição dos clusters</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🏷️ Distribuição dos clusters:"</span>)
+<span class="syntax-function">print</span>(customer_segments[<span class="syntax-string">'Cluster'</span>].value_counts().sort_index())
+
+<span class="syntax-comment"># CRIAR VARIÁVEL TARGET</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎯 Criando variável target..."</span>)
+
+<span class="syntax-comment"># Lógica para determinar se o cliente vai comprar novamente
+# Baseada na análise RFM: Recency baixa e Monetary/Frequency altas = maior chance</span>
+
+<span class="syntax-comment"># Calcular probabilidade base usando RFM</span>
+prob_base = (
+    (<span class="syntax-number">1</span> / (<span class="syntax-number">1</span> + customer_segments[<span class="syntax-string">'Recency'</span>] / <span class="syntax-number">100</span>)) * <span class="syntax-number">0.4</span> +  <span class="syntax-comment"># Recency weight</span>
+    (customer_segments[<span class="syntax-string">'Frequency'</span>] / customer_segments[<span class="syntax-string">'Frequency'</span>].max()) * <span class="syntax-number">0.3</span> +  <span class="syntax-comment"># Frequency weight</span>
+    (customer_segments[<span class="syntax-string">'Monetary'</span>] / customer_segments[<span class="syntax-string">'Monetary'</span>].max()) * <span class="syntax-number">0.3</span>    <span class="syntax-comment"># Monetary weight</span>
+)
+
+<span class="syntax-comment"># Adicionar efeito do cluster</span>
+cluster_effect = customer_segments[<span class="syntax-string">'Cluster'</span>].map({
+    <span class="syntax-number">0</span>: <span class="syntax-number">0.2</span>,  <span class="syntax-comment"># Cluster de baixo valor</span>
+    <span class="syntax-number">1</span>: <span class="syntax-number">0.8</span>,  <span class="syntax-comment"># Cluster VIP</span>
+    <span class="syntax-number">2</span>: <span class="syntax-number">0.6</span>,  <span class="syntax-comment"># Cluster frequente</span>
+    <span class="syntax-number">3</span>: <span class="syntax-number">0.3</span>   <span class="syntax-comment"># Cluster dormente</span>
+})
+
+<span class="syntax-comment"># Combinar probabilidades</span>
+final_prob = (prob_base + cluster_effect) / <span class="syntax-number">2</span>
+final_prob = np.clip(final_prob, <span class="syntax-number">0</span>, <span class="syntax-number">1</span>)  <span class="syntax-comment"># Garantir entre 0 e 1</span>
+
+<span class="syntax-comment"># Gerar target baseado na probabilidade</span>
+np.random.seed(<span class="syntax-number">42</span>)
+customer_segments[<span class="syntax-string">'will_purchase_next_month'</span>] = np.random.binomial(<span class="syntax-number">1</span>, final_prob)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Target criado:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   📈 Comprará (1): {customer_segments['will_purchase_next_month'].sum():,} ({customer_segments['will_purchase_next_month'].mean()*100:.1f}%)"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   📉 Não comprará (0): {(customer_segments['will_purchase_next_month'] == 0).sum():,} ({(1-customer_segments['will_purchase_next_month'].mean())*100:.1f}%)"</span>)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 3: Feature Engineering -->
+        <div class="section">
+            <h2><span class="step-indicator">3</span>Feature Engineering: Criando Features Preditivas</h2>
+            <p>Vamos criar features adicionais que podem melhorar nosso modelo de classificação.</p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🔧 Engenharia de Features para Classificação</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># FEATURE ENGINEERING AVANÇADO</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"🔧 CRIANDO FEATURES ADICIONAIS"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 35</span>)
+
+<span class="syntax-comment"># 1. Features derivadas do RFM</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"📊 Criando features derivadas..."</span>)
+
+<span class="syntax-comment"># RFM Score (combinação das três dimensões)</span>
+customer_segments[<span class="syntax-string">'RFM_Score'</span>] = (
+    (<span class="syntax-number">1</span> / (<span class="syntax-number">1</span> + customer_segments[<span class="syntax-string">'Recency'</span>] / <span class="syntax-number">100</span>)) * <span class="syntax-number">0.33</span> +
+    (customer_segments[<span class="syntax-string">'Frequency'</span>] / customer_segments[<span class="syntax-string">'Frequency'</span>].max()) * <span class="syntax-number">0.33</span> +
+    (customer_segments[<span class="syntax-string">'Monetary'</span>] / customer_segments[<span class="syntax-string">'Monetary'</span>].max()) * <span class="syntax-number">0.33</span>
+)
+
+<span class="syntax-comment"># Valor médio por transação</span>
+customer_segments[<span class="syntax-string">'Avg_Order_Value'</span>] = customer_segments[<span class="syntax-string">'Monetary'</span>] / customer_segments[<span class="syntax-string">'Frequency'</span>]
+
+<span class="syntax-comment"># Cliente recente (comprou nos últimos 30 dias)</span>
+customer_segments[<span class="syntax-string">'Is_Recent_Customer'</span>] = (customer_segments[<span class="syntax-string">'Recency'</span>] <= <span class="syntax-number">30</span>).astype(<span class="syntax-keyword">int</span>)
+
+<span class="syntax-comment"># Cliente frequente (acima da mediana de frequência)</span>
+freq_median = customer_segments[<span class="syntax-string">'Frequency'</span>].median()
+customer_segments[<span class="syntax-string">'Is_Frequent_Customer'</span>] = (customer_segments[<span class="syntax-string">'Frequency'</span>] > freq_median).astype(<span class="syntax-keyword">int</span>)
+
+<span class="syntax-comment"># Cliente alto valor (acima do percentil 75 de valor monetário)</span>
+monetary_p75 = customer_segments[<span class="syntax-string">'Monetary'</span>].quantile(<span class="syntax-number">0.75</span>)
+customer_segments[<span class="syntax-string">'Is_High_Value'</span>] = (customer_segments[<span class="syntax-string">'Monetary'</span>] > monetary_p75).astype(<span class="syntax-keyword">int</span>)
+
+<span class="syntax-comment"># 2. One-hot encoding dos clusters</span>
+cluster_dummies = pd.get_dummies(customer_segments[<span class="syntax-string">'Cluster'</span>], prefix=<span class="syntax-string">'Cluster'</span>)
+customer_segments = pd.concat([customer_segments, cluster_dummies], axis=<span class="syntax-number">1</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Features criadas:"</span>)
+new_features = [<span class="syntax-string">'RFM_Score'</span>, <span class="syntax-string">'Avg_Order_Value'</span>, <span class="syntax-string">'Is_Recent_Customer'</span>, 
+                <span class="syntax-string">'Is_Frequent_Customer'</span>, <span class="syntax-string">'Is_High_Value'</span>] + list(cluster_dummies.columns)
+<span class="syntax-keyword">for</span> feature <span class="syntax-keyword">in</span> new_features:
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   • {feature}"</span>)
+
+<span class="syntax-comment"># 3. ANÁLISE EXPLORATÓRIA DA TARGET</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n📊 ANÁLISE DA VARIÁVEL TARGET"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 32</span>)
+
+<span class="syntax-comment"># Correlação das features com a target</span>
+numeric_features = [<span class="syntax-string">'Recency'</span>, <span class="syntax-string">'Frequency'</span>, <span class="syntax-string">'Monetary'</span>, <span class="syntax-string">'RFM_Score'</span>, 
+                   <span class="syntax-string">'Avg_Order_Value'</span>, <span class="syntax-string">'Is_Recent_Customer'</span>, <span class="syntax-string">'Is_Frequent_Customer'</span>, 
+                   <span class="syntax-string">'Is_High_Value'</span>] + list(cluster_dummies.columns)
+
+correlations = customer_segments[numeric_features + [<span class="syntax-string">'will_purchase_next_month'</span>]].corr()[<span class="syntax-string">'will_purchase_next_month'</span>].drop(<span class="syntax-string">'will_purchase_next_month'</span>)
+correlations_sorted = correlations.abs().sort_values(ascending=<span class="syntax-keyword">False</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"🔗 Correlações com target (ordenadas por magnitude):"</span>)
+<span class="syntax-keyword">for</span> feature, corr <span class="syntax-keyword">in</span> correlations_sorted.head(<span class="syntax-number">8</span>).items():
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   {feature:20s}: {corr:+.3f}"</span>)
+
+<span class="syntax-comment"># Análise por cluster</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🏷️ Taxa de conversão por cluster:"</span>)
+conversion_by_cluster = customer_segments.groupby(<span class="syntax-string">'Cluster'</span>)[<span class="syntax-string">'will_purchase_next_month'</span>].mean()
+<span class="syntax-keyword">for</span> cluster, rate <span class="syntax-keyword">in</span> conversion_by_cluster.items():
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   Cluster {cluster}: {rate:.1%}"</span>)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 4: Implementação da Regressão Logística -->
+        <div class="section">
+            <h2><span class="step-indicator">4</span>Modelo: Implementando Regressão Logística</h2>
+            
+            <div class="concept-box">
+                <h4>🎯 Processo de Modelagem</h4>
+                <p><strong>1. Divisão dos dados:</strong> Treino (70%) e Teste (30%)<br>
+                <strong>2. Normalização:</strong> StandardScaler para features numéricas<br>
+                <strong>3. Treinamento:</strong> Ajustar modelo aos dados de treino<br>
+                <strong>4. Avaliação:</strong> Métricas no conjunto de teste<br>
+                <strong>5. Interpretação:</strong> Coeficientes e importância das features</p>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🤖 Implementação do Modelo de Regressão Logística</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># PREPARAÇÃO PARA MODELAGEM</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"🤖 IMPLEMENTAÇÃO REGRESSÃO LOGÍSTICA"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 40</span>)
+
+<span class="syntax-comment"># 1. Definir features e target</span>
+feature_columns = [<span class="syntax-string">'Recency'</span>, <span class="syntax-string">'Frequency'</span>, <span class="syntax-string">'Monetary'</span>, <span class="syntax-string">'RFM_Score'</span>, 
+                  <span class="syntax-string">'Avg_Order_Value'</span>, <span class="syntax-string">'Is_Recent_Customer'</span>, <span class="syntax-string">'Is_Frequent_Customer'</span>, 
+                  <span class="syntax-string">'Is_High_Value'</span>] + [col <span class="syntax-keyword">for</span> col <span class="syntax-keyword">in</span> customer_segments.columns <span class="syntax-keyword">if</span> col.startswith(<span class="syntax-string">'Cluster_'</span>)]
+
+X = customer_segments[feature_columns]
+y = customer_segments[<span class="syntax-string">'will_purchase_next_month'</span>]
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📊 Features selecionadas: {len(feature_columns)}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📈 Samples: {len(X):,}"</span>)
+
+<span class="syntax-comment"># 2. Divisão treino/teste</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🔀 Dividindo dados em treino/teste..."</span>)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=<span class="syntax-number">0.3</span>, random_state=<span class="syntax-number">42</span>, stratify=y
+)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   🏋️ Treino: {len(X_train):,} samples"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   🧪 Teste: {len(X_test):,} samples"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   📊 Proporção positive class - Treino: {y_train.mean():.3f}, Teste: {y_test.mean():.3f}"</span>)
+
+<span class="syntax-comment"># 3. Normalização das features</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🔧 Normalizando features..."</span>)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Normalização concluída"</span>)
+
+<span class="syntax-comment"># 4. TREINAMENTO DO MODELO</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🚀 Treinando modelo de Regressão Logística..."</span>)
+
+<span class="syntax-comment"># Testando diferentes valores de regularização</span>
+C_values = [<span class="syntax-number">0.1</span>, <span class="syntax-number">1</span>, <span class="syntax-number">10</span>, <span class="syntax-number">100</span>]
+best_score = <span class="syntax-number">0</span>
+best_C = <span class="syntax-number">1</span>
+
+<span class="syntax-keyword">for</span> C <span class="syntax-keyword">in</span> C_values:
+    lr = LogisticRegression(C=C, random_state=<span class="syntax-number">42</span>, max_iter=<span class="syntax-number">1000</span>)
+    scores = cross_val_score(lr, X_train_scaled, y_train, cv=<span class="syntax-number">5</span>, scoring=<span class="syntax-string">'roc_auc'</span>)
+    avg_score = scores.mean()
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   C={C}: AUC = {avg_score:.4f} ± {scores.std():.4f}"</span>)
+    
+    <span class="syntax-keyword">if</span> avg_score > best_score:
+        best_score = avg_score
+        best_C = C
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎯 Melhor C: {best_C} (AUC: {best_score:.4f})"</span>)
+
+<span class="syntax-comment"># Treinar modelo final</span>
+lr_final = LogisticRegression(C=best_C, random_state=<span class="syntax-number">42</span>, max_iter=<span class="syntax-number">1000</span>)
+lr_final.fit(X_train_scaled, y_train)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Modelo treinado!"</span>)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 5: Avaliação do Modelo -->
+        <div class="section">
+            <h2><span class="step-indicator">5</span>Avaliação: Métricas e Performance</h2>
+            
+            <div class="metrics-box">
+                <h4>📊 Métricas de Classificação</h4>
+                <p><strong>Accuracy:</strong> % de previsões corretas (pode ser enganosa com classes desbalanceadas)<br>
+                <strong>Precision:</strong> De todos que prevemos como positivo, quantos realmente são?<br>
+                <strong>Recall (Sensitivity):</strong> De todos os positivos reais, quantos conseguimos identificar?<br>
+                <strong>F1-Score:</strong> Média harmônica entre precision e recall<br>
+                <strong>AUC-ROC:</strong> Área sob curva ROC - capacidade de distinção entre classes</p>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📈 Avaliação Completa do Modelo</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># AVALIAÇÃO DO MODELO</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"📊 AVALIAÇÃO DO MODELO"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 25</span>)
+
+<span class="syntax-comment"># 1. Fazer previsões</span>
+y_pred = lr_final.predict(X_test_scaled)
+y_pred_proba = lr_final.predict_proba(X_test_scaled)[:, <span class="syntax-number">1</span>]  <span class="syntax-comment"># Probabilidade da classe positiva</span>
+
+<span class="syntax-comment"># 2. MÉTRICAS PRINCIPAIS</span>
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+auc = roc_auc_score(y_test, y_pred_proba)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"🎯 MÉTRICAS DE PERFORMANCE:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   📊 Accuracy:  {accuracy:.4f} ({accuracy*100:.2f}%)"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   🎯 Precision: {precision:.4f} ({precision*100:.2f}%)"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   📡 Recall:    {recall:.4f} ({recall*100:.2f}%)"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   ⚖️ F1-Score:  {f1:.4f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   📈 AUC-ROC:   {auc:.4f}"</span>)
+
+<span class="syntax-comment"># 3. Matriz de Confusão</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🔍 MATRIZ DE CONFUSÃO:"</span>)
+cm = confusion_matrix(y_test, y_pred)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   {cm}"</span>)
+
+tn, fp, fn, tp = cm.ravel()
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n📋 Interpretação:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   ✅ True Negatives (Correto - Não comprará):  {tn:,}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   ❌ False Positives (Erro - Previu compra):    {fp:,}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   ❌ False Negatives (Erro - Perdeu compra):   {fn:,}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   ✅ True Positives (Correto - Comprará):      {tp:,}"</span>)
+
+<span class="syntax-comment"># 4. Relatório de classificação detalhado</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n📋 RELATÓRIO DETALHADO:"</span>)
+<span class="syntax-function">print</span>(classification_report(y_test, y_pred, 
+                              target_names=[<span class="syntax-string">'Não Comprará'</span>, <span class="syntax-string">'Comprará'</span>]))
+
+<span class="syntax-comment"># 5. ANÁLISE DE IMPORTÂNCIA DAS FEATURES</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"🔍 IMPORTÂNCIA DAS FEATURES (Coeficientes):"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 45</span>)
+
+feature_importance = pd.DataFrame({
+    <span class="syntax-string">'Feature'</span>: feature_columns,
+    <span class="syntax-string">'Coefficient'</span>: lr_final.coef_[<span class="syntax-number">0</span>],
+    <span class="syntax-string">'Abs_Coefficient'</span>: np.abs(lr_final.coef_[<span class="syntax-number">0</span>])
+}).sort_values(<span class="syntax-string">'Abs_Coefficient'</span>, ascending=<span class="syntax-keyword">False</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📊 Top 10 features mais importantes:"</span>)
+<span class="syntax-keyword">for</span> idx, row <span class="syntax-keyword">in</span> feature_importance.head(<span class="syntax-number">10</span>).iterrows():
+    impact = <span class="syntax-string">"↗️ Positivo"</span> <span class="syntax-keyword">if</span> row[<span class="syntax-string">'Coefficient'</span>] > <span class="syntax-number">0</span> <span class="syntax-keyword">else</span> <span class="syntax-string">"↘️ Negativo"</span>
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   {row['Feature']:20s}: {row['Coefficient']:+.4f} {impact}"</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n💡 Interpretação dos coeficientes:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Coeficiente positivo: aumenta probabilidade de compra"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Coeficiente negativo: diminui probabilidade de compra"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   • Valor absoluto: magnitude do impacto"</span>)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 6: Visualizações e Insights -->
+        <div class="section">
+            <h2><span class="step-indicator">6</span>Visualização: Insights do Modelo</h2>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📊 Criando Visualizações dos Resultados</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># VISUALIZAÇÕES DOS RESULTADOS</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"📊 CRIANDO VISUALIZAÇÕES"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 28</span>)
+
+fig = plt.figure(figsize=(<span class="syntax-number">16</span>, <span class="syntax-number">12</span>))
+
+<span class="syntax-comment"># 1. Curva ROC</span>
+ax1 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, <span class="syntax-number">1</span>)
+fpr, tpr, thresholds = roc_curve(y_test, y_pred_proba)
+ax1.plot(fpr, tpr, color=<span class="syntax-string">'blue'</span>, linewidth=<span class="syntax-number">2</span>, label=<span class="syntax-string">f'ROC Curve (AUC = {auc:.3f})'</span>)
+ax1.plot([<span class="syntax-number">0</span>, <span class="syntax-number">1</span>], [<span class="syntax-number">0</span>, <span class="syntax-number">1</span>], color=<span class="syntax-string">'red'</span>, linestyle=<span class="syntax-string">'--'</span>, label=<span class="syntax-string">'Random Classifier'</span>)
+ax1.set_xlabel(<span class="syntax-string">'False Positive Rate'</span>)
+ax1.set_ylabel(<span class="syntax-string">'True Positive Rate'</span>)
+ax1.set_title(<span class="syntax-string">'Curva ROC'</span>)
+ax1.legend()
+ax1.grid(<span class="syntax-keyword">True</span>)
+
+<span class="syntax-comment"># 2. Distribuição das probabilidades preditas</span>
+ax2 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, <span class="syntax-number">2</span>)
+ax2.hist(y_pred_proba[y_test == <span class="syntax-number">0</span>], bins=<span class="syntax-number">30</span>, alpha=<span class="syntax-number">0.7</span>, label=<span class="syntax-string">'Não Comprará'</span>, color=<span class="syntax-string">'red'</span>)
+ax2.hist(y_pred_proba[y_test == <span class="syntax-number">1</span>], bins=<span class="syntax-number">30</span>, alpha=<span class="syntax-number">0.7</span>, label=<span class="syntax-string">'Comprará'</span>, color=<span class="syntax-string">'blue'</span>)
+ax2.axvline(x=<span class="syntax-number">0.5</span>, color=<span class="syntax-string">'black'</span>, linestyle=<span class="syntax-string">'--'</span>, label=<span class="syntax-string">'Threshold'</span>)
+ax2.set_xlabel(<span class="syntax-string">'Probabilidade Predita'</span>)
+ax2.set_ylabel(<span class="syntax-string">'Frequência'</span>)
+ax2.set_title(<span class="syntax-string">'Distribuição das Probabilidades'</span>)
+ax2.legend()
+
+<span class="syntax-comment"># 3. Matriz de Confusão (Heatmap)</span>
+ax3 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, <span class="syntax-number">3</span>)
+sns.heatmap(cm, annot=<span class="syntax-keyword">True</span>, fmt=<span class="syntax-string">'d'</span>, cmap=<span class="syntax-string">'Blues'</span>, ax=ax3,
+            xticklabels=[<span class="syntax-string">'Não Comprará'</span>, <span class="syntax-string">'Comprará'</span>],
+            yticklabels=[<span class="syntax-string">'Não Comprará'</span>, <span class="syntax-string">'Comprará'</span>])
+ax3.set_title(<span class="syntax-string">'Matriz de Confusão'</span>)
+ax3.set_ylabel(<span class="syntax-string">'Valor Real'</span>)
+ax3.set_xlabel(<span class="syntax-string">'Previsão'</span>)
+
+<span class="syntax-comment"># 4. Importância das Features</span>
+ax4 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, <span class="syntax-number">4</span>)
+top_features = feature_importance.head(<span class="syntax-number">8</span>)
+colors = [<span class="syntax-string">'green'</span> <span class="syntax-keyword">if</span> x > <span class="syntax-number">0</span> <span class="syntax-keyword">else</span> <span class="syntax-string">'red'</span> <span class="syntax-keyword">for</span> x <span class="syntax-keyword">in</span> top_features[<span class="syntax-string">'Coefficient'</span>]]
+ax4.barh(<span class="syntax-function">range</span>(<span class="syntax-function">len</span>(top_features)), top_features[<span class="syntax-string">'Coefficient'</span>], color=colors)
+ax4.set_yticks(<span class="syntax-function">range</span>(<span class="syntax-function">len</span>(top_features)))
+ax4.set_yticklabels(top_features[<span class="syntax-string">'Feature'</span>])
+ax4.set_xlabel(<span class="syntax-string">'Coeficiente'</span>)
+ax4.set_title(<span class="syntax-string">'Top 8 Features Mais Importantes'</span>)
+ax4.axvline(x=<span class="syntax-number">0</span>, color=<span class="syntax-string">'black'</span>, linestyle=<span class="syntax-string">'-'</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 5. Performance por Cluster</span>
+ax5 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, <span class="syntax-number">5</span>)
+<span class="syntax-comment"># Criar DataFrame para análise por cluster</span>
+test_results = pd.DataFrame({
+    <span class="syntax-string">'Cluster'</span>: X_test[<span class="syntax-string">'Cluster_0'</span>] * <span class="syntax-number">0</span> + X_test[<span class="syntax-string">'Cluster_1'</span>] * <span class="syntax-number">1</span> + 
+              X_test[<span class="syntax-string">'Cluster_2'</span>] * <span class="syntax-number">2</span> + X_test[<span class="syntax-string">'Cluster_3'</span>] * <span class="syntax-number">3</span>,
+    <span class="syntax-string">'Real'</span>: y_test,
+    <span class="syntax-string">'Predicted'</span>: y_pred_proba
+})
+
+cluster_performance = test_results.groupby(<span class="syntax-string">'Cluster'</span>).agg({
+    <span class="syntax-string">'Real'</span>: <span class="syntax-string">'mean'</span>,
+    <span class="syntax-string">'Predicted'</span>: <span class="syntax-string">'mean'</span>
+}).reset_index()
+
+x = np.arange(<span class="syntax-function">len</span>(cluster_performance))
+width = <span class="syntax-number">0.35</span>
+ax5.bar(x - width/<span class="syntax-number">2</span>, cluster_performance[<span class="syntax-string">'Real'</span>], width, label=<span class="syntax-string">'Taxa Real'</span>, alpha=<span class="syntax-number">0.8</span>)
+ax5.bar(x + width/<span class="syntax-number">2</span>, cluster_performance[<span class="syntax-string">'Predicted'</span>], width, label=<span class="syntax-string">'Prob. Predita'</span>, alpha=<span class="syntax-number">0.8</span>)
+ax5.set_xlabel(<span class="syntax-string">'Cluster'</span>)
+ax5.set_ylabel(<span class="syntax-string">'Taxa/Probabilidade'</span>)
+ax5.set_title(<span class="syntax-string">'Performance por Cluster'</span>)
+ax5.set_xticks(x)
+ax5.set_xticklabels([<span class="syntax-string">f'Cluster {i}'</span> <span class="syntax-keyword">for</span> i <span class="syntax-keyword">in</span> cluster_performance[<span class="syntax-string">'Cluster'</span>]])
+ax5.legend()
+
+<span class="syntax-comment"># 6. Calibração do modelo</span>
+ax6 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, <span class="syntax-number">6</span>)
+<span class="syntax-comment"># Criar bins de probabilidade</span>
+n_bins = <span class="syntax-number">10</span>
+bin_boundaries = np.linspace(<span class="syntax-number">0</span>, <span class="syntax-number">1</span>, n_bins + <span class="syntax-number">1</span>)
+bin_lowers = bin_boundaries[:-<span class="syntax-number">1</span>]
+bin_uppers = bin_boundaries[<span class="syntax-number">1</span>:]
+
+true_probs = []
+pred_probs = []
+<span class="syntax-keyword">for</span> bin_lower, bin_upper <span class="syntax-keyword">in</span> <span class="syntax-function">zip</span>(bin_lowers, bin_uppers):
+    in_bin = (y_pred_proba > bin_lower) & (y_pred_proba <= bin_upper)
+    <span class="syntax-keyword">if</span> in_bin.<span class="syntax-function">sum</span>() > <span class="syntax-number">0</span>:
+        true_probs.append(y_test[in_bin].mean())
+        pred_probs.append(y_pred_proba[in_bin].mean())
+
+ax6.plot([<span class="syntax-number">0</span>, <span class="syntax-number">1</span>], [<span class="syntax-number">0</span>, <span class="syntax-number">1</span>], <span class="syntax-string">'k:'</span>, label=<span class="syntax-string">'Perfeitamente calibrado'</span>)
+ax6.plot(pred_probs, true_probs, <span class="syntax-string">'s-'</span>, label=<span class="syntax-string">'Modelo'</span>)
+ax6.set_xlabel(<span class="syntax-string">'Probabilidade Predita'</span>)
+ax6.set_ylabel(<span class="syntax-string">'Fração Positiva'</span>)
+ax6.set_title(<span class="syntax-string">'Calibração do Modelo'</span>)
+ax6.legend()
+
+plt.tight_layout()
+plt.show()
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"✅ Visualizações criadas!"</span>)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 7: Insights de Negócio -->
+        <div class="section">
+            <h2><span class="step-indicator">7</span>Insights de Negócio: Ações Práticas</h2>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <span>💼 Traduzindo Modelo em Estratégias de Negócio</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># INSIGHTS DE NEGÓCIO</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"💡 INSIGHTS DE NEGÓCIO"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 25</span>)
+
+<span class="syntax-comment"># 1. SEGMENTAÇÃO POR PROBABILIDADE</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"🎯 SEGMENTAÇÃO POR PROBABILIDADE DE COMPRA:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 45</span>)
+
+<span class="syntax-comment"># Criar segmentos baseados na probabilidade predita</span>
+test_data = pd.DataFrame({
+    <span class="syntax-string">'CustomerID'</span>: X_test.index,
+    <span class="syntax-string">'Probability'</span>: y_pred_proba,
+    <span class="syntax-string">'Prediction'</span>: y_pred,
+    <span class="syntax-string">'Real'</span>: y_test
+})
+
+<span class="syntax-comment"># Definir segmentos</span>
+<span class="syntax-keyword">def</span> <span class="syntax-function">classify_probability</span>(prob):
+    <span class="syntax-keyword">if</span> prob >= <span class="syntax-number">0.8</span>:
+        <span class="syntax-keyword">return</span> <span class="syntax-string">"🔥 Muito Provável (80%+)"</span>
+    <span class="syntax-keyword">elif</span> prob >= <span class="syntax-number">0.6</span>:
+        <span class="syntax-keyword">return</span> <span class="syntax-string">"📈 Provável (60-80%)"</span>
+    <span class="syntax-keyword">elif</span> prob >= <span class="syntax-number">0.4</span>:
+        <span class="syntax-keyword">return</span> <span class="syntax-string">"⚖️ Incerto (40-60%)"</span>
+    <span class="syntax-keyword">elif</span> prob >= <span class="syntax-number">0.2</span>:
+        <span class="syntax-keyword">return</span> <span class="syntax-string">"📉 Pouco Provável (20-40%)"</span>
+    <span class="syntax-keyword">else</span>:
+        <span class="syntax-keyword">return</span> <span class="syntax-string">"❄️ Muito Improvável (<20%)"</span>
+
+test_data[<span class="syntax-string">'Segment'</span>] = test_data[<span class="syntax-string">'Probability'</span>].apply(classify_probability)
+
+<span class="syntax-comment"># Analisar cada segmento</span>
+segment_analysis = test_data.groupby(<span class="syntax-string">'Segment'</span>).agg({
+    <span class="syntax-string">'Probability'</span>: [<span class="syntax-string">'mean'</span>, <span class="syntax-string">'count'</span>],
+    <span class="syntax-string">'Real'</span>: <span class="syntax-string">'mean'</span>
+}).round(<span class="syntax-number">3</span>)
+
+segment_analysis.columns = [<span class="syntax-string">'Prob_Média'</span>, <span class="syntax-string">'Qtd_Clientes'</span>, <span class="syntax-string">'Taxa_Real'</span>]
+
+<span class="syntax-keyword">for</span> segment, data <span class="syntax-keyword">in</span> segment_analysis.iterrows():
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"\n{segment}:"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   👥 Clientes: {data['Qtd_Clientes']:,} ({data['Qtd_Clientes']/len(test_data)*100:.1f}%)"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   🎯 Probabilidade média: {data['Prob_Média']:.1%}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   ✅ Taxa real de conversão: {data['Taxa_Real']:.1%}"</span>)
+    
+    <span class="syntax-comment"># Recomendações específicas</span>
+    <span class="syntax-keyword">if</span> <span class="syntax-string">"Muito Provável"</span> <span class="syntax-keyword">in</span> segment:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   💼 AÇÃO: Oferecer produtos premium, desconto VIP"</span>)
+    <span class="syntax-keyword">elif</span> <span class="syntax-string">"Provável"</span> <span class="syntax-keyword">in</span> segment:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   💼 AÇÃO: Email marketing personalizado"</span>)
+    <span class="syntax-keyword">elif</span> <span class="syntax-string">"Incerto"</span> <span class="syntax-keyword">in</span> segment:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   💼 AÇÃO: Teste A/B com diferentes ofertas"</span>)
+    <span class="syntax-keyword">elif</span> <span class="syntax-string">"Pouco"</span> <span class="syntax-keyword">in</span> segment:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   💼 AÇÃO: Campanha de reengajamento"</span>)
+    <span class="syntax-keyword">else</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   💼 AÇÃO: Foco em retenção básica, baixo investimento"</span>)
+
+<span class="syntax-comment"># 2. ANÁLISE FINANCEIRA</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n💰 ANÁLISE DE IMPACTO FINANCEIRO:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 35</span>)
+
+<span class="syntax-comment"># Assumir valores médios para cálculo</span>
+avg_order_value = <span class="syntax-number">150</span>  <span class="syntax-comment"># R$ valor médio do pedido</span>
+campaign_cost_per_customer = <span class="syntax-number">10</span>  <span class="syntax-comment"># R$ custo por cliente na campanha</span>
+total_test_customers = <span class="syntax-function">len</span>(test_data)
+
+<span class="syntax-comment"># Estratégia 1: Campanha para todos</span>
+strategy1_cost = total_test_customers * campaign_cost_per_customer
+strategy1_revenue = test_data[<span class="syntax-string">'Real'</span>].<span class="syntax-function">sum</span>() * avg_order_value
+strategy1_profit = strategy1_revenue - strategy1_cost
+
+<span class="syntax-comment"># Estratégia 2: Campanha apenas para probabilidade > 50%</span>
+high_prob_customers = (test_data[<span class="syntax-string">'Probability'</span>] > <span class="syntax-number">0.5</span>).<span class="syntax-function">sum</span>()
+strategy2_cost = high_prob_customers * campaign_cost_per_customer
+strategy2_revenue = test_data[test_data[<span class="syntax-string">'Probability'</span>] > <span class="syntax-number">0.5</span>][<span class="syntax-string">'Real'</span>].<span class="syntax-function">sum</span>() * avg_order_value
+strategy2_profit = strategy2_revenue - strategy2_cost
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📊 COMPARAÇÃO DE ESTRATÉGIAS:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎯 Estratégia 1 - Campanha para Todos:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   👥 Clientes alvo: {total_test_customers:,}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   💸 Custo: R$ {strategy1_cost:,.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   💰 Receita: R$ {strategy1_revenue:,.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   📈 Lucro: R$ {strategy1_profit:,.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   📊 ROI: {(strategy1_profit/strategy1_cost*100):.1f}%"</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎯 Estratégia 2 - Apenas Alta Probabilidade (>50%):"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   👥 Clientes alvo: {high_prob_customers:,}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   💸 Custo: R$ {strategy2_cost:,.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   💰 Receita: R$ {strategy2_revenue:,.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   📈 Lucro: R$ {strategy2_profit:,.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   📊 ROI: {(strategy2_profit/strategy2_cost*100):.1f}%"</span>)
+
+savings = strategy1_cost - strategy2_cost
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n💡 ECONOMIA com segmentação: R$ {savings:,.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Estratégia recomendada: {'2 - Segmentada' if strategy2_profit > strategy1_profit else '1 - Ampla'}"</span>)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 8: Checkpoint 2 -->
+        <div class="section">
+            <h2><span class="step-indicator">8</span>Finalização: Checkpoint 2 Completo</h2>
+            
+            <div class="checkpoint-box">
+                <h3>🎯 Checkpoint 2 (02/09) - CHECKLIST FINAL</h3>
+                <p><strong>✅ EDA completa com estatísticas descritivas</strong><br>
+                <strong>✅ K-Means implementado e interpretado</strong><br>
+                <strong>✅ Regressão Logística implementada</strong><br>
+                <strong>✅ Avaliação com métricas adequadas</strong><br>
+                <strong>✅ Visualizações impactantes</strong><br>
+                <strong>✅ Insights de negócio documentados</strong><br>
+                <strong>✅ Análise financeira e ROI</strong></p>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>💾 Salvando Projeto Completo</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># SALVANDO PROJETO COMPLETO</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"💾 SALVANDO PROJETO CHECKPOINT 2"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 35</span>)
+
+<span class="syntax-comment"># 1. Salvar modelo de regressão logística</span>
+<span class="syntax-keyword">with</span> <span class="syntax-function">open</span>(<span class="syntax-string">'logistic_regression_model.pkl'</span>, <span class="syntax-string">'wb'</span>) <span class="syntax-keyword">as</span> f:
+    pickle.dump(lr_final, f)
+
+<span class="syntax-comment"># 2. Salvar scaler</span>
+<span class="syntax-keyword">with</span> <span class="syntax-function">open</span>(<span class="syntax-string">'logistic_scaler.pkl'</span>, <span class="syntax-string">'wb'</span>) <span class="syntax-keyword">as</span> f:
+    pickle.dump(scaler, f)
+
+<span class="syntax-comment"># 3. Salvar dados com previsões</span>
+test_data.to_csv(<span class="syntax-string">'customer_predictions.csv'</span>)
+
+<span class="syntax-comment"># 4. Salvar features importantes</span>
+feature_importance.to_csv(<span class="syntax-string">'feature_importance.csv'</span>, index=<span class="syntax-keyword">False</span>)
+
+<span class="syntax-comment"># 5. Criar relatório resumido</span>
+report = <span class="syntax-string">f"""
+RELATÓRIO CHECKPOINT 2 - SISTEMAS INTELIGENTES
+============================================
+
+1. DATASET:
+   - {len(customer_segments):,} clientes analisados
+   - Features: RFM + Clusters + Derivadas
+   - Target: Probabilidade de compra (próximos 30 dias)
+
+2. MODELOS IMPLEMENTADOS:
+   ✅ K-Means Clustering (4 clusters)
+   ✅ Regressão Logística para classificação
+
+3. PERFORMANCE DO MODELO:
+   - Accuracy: {accuracy:.3f}
+   - Precision: {precision:.3f}
+   - Recall: {recall:.3f}
+   - F1-Score: {f1:.3f}
+   - AUC-ROC: {auc:.3f}
+
+4. PRINCIPAIS INSIGHTS:
+   - Feature mais importante: {feature_importance.iloc[0]['Feature']}
+   - ROI da campanha segmentada: {(strategy2_profit/strategy2_cost*100):.1f}%
+   - Economia potencial: R$ {savings:,.2f}
+
+5. RECOMENDAÇÕES DE NEGÓCIO:
+   - Focar campanha em clientes com prob > 50%
+   - Implementar estratégias diferenciadas por segmento
+   - Monitorar performance continuamente
+
+Data: {datetime.now().strftime('%d/%m/%Y %H:%M')}
+"""</span>
+
+<span class="syntax-keyword">with</span> <span class="syntax-function">open</span>(<span class="syntax-string">'relatorio_checkpoint2.txt'</span>, <span class="syntax-string">'w'</span>, encoding=<span class="syntax-string">'utf-8'</span>) <span class="syntax-keyword">as</span> f:
+    f.write(report)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"✅ Arquivos salvos:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"   🤖 logistic_regression_model.pkl - Modelo treinado"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"   🔧 logistic_scaler.pkl - Scaler para features"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"   📊 customer_predictions.csv - Previsões dos clientes"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"   📋 feature_importance.csv - Importância das features"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"   📄 relatorio_checkpoint2.txt - Relatório completo"</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎉 CHECKPOINT 2 COMPLETO!"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"Implementaram com sucesso:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Análise Exploratória de Dados"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Algoritmo de Clustering (K-Means)"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Algoritmo de Classificação (Regressão Logística)"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Avaliação e Métricas de Performance"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Insights Acionáveis de Negócio"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"🚀 Próximo: Aplicações de IA para Gestão Empresarial!"</span>)</code></pre>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>📋 Para a Apresentação (02/09)</h3>
+                    <p><strong>10 minutos máximo:</strong><br>
+                    • 2 min: Problema e dataset<br>
+                    • 3 min: K-Means + clusters<br>
+                    • 3 min: Regressão Logística + métricas<br>
+                    • 2 min: Insights e ROI</p>
+                </div>
+                <div class="card">
+                    <h3>🚀 Próxima Aula (02/09)</h3>
+                    <p><strong>Unidade III:</strong> Aplicações de IA para gestão empresarial<br>
+                    <strong>Ferramentas:</strong> ChatGPT, Gemini, Copilot<br>
+                    <strong>Foco:</strong> Casos práticos na Engenharia</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <h3>🌟 Parabéns pelo Checkpoint 2!</h3>
+            <p>Vocês completaram um <strong>pipeline completo de Machine Learning</strong>! Desde a análise exploratória até insights de negócio, passando por clustering e classificação. Isso é exatamente o que fazem cientistas de dados profissionais. Na próxima unidade, vamos aplicar ferramentas de IA já prontas para resolver problemas reais da engenharia!</p>
+        </div>
+    </div>
+
+    <script>
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('code').textContent;
+            
+            navigator.clipboard.writeText(code).then(function() {
+                button.textContent = 'Copiado!';
+                button.style.background = '#28a745';
+                
+                setTimeout(function() {
+                    button.textContent = 'Copiar';
+                    button.style.background = '#667eea';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
