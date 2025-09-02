@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistemas Inteligentes - Aula 6</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover { transform: translateY(-3px); }
+
+        .card h3 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin: 25px 0;
+        }
+
+        .highlight-box h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #e8e8e8;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .code-header {
+            background: #2d2d2d;
+            color: #fff;
+            padding: 8px 16px;
+            margin: -20px -20px 12px -20px;
+            border-radius: 12px 12px 0 0;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        .step-indicator {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .checkpoint-box {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 25px;
+            border-radius: 16px;
+            margin: 25px 0;
+        }
+
+        .checkpoint-box h3 {
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .dataset-info {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .dataset-info h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .concept-box {
+            background: rgba(118, 75, 162, 0.1);
+            border: 2px solid rgba(118, 75, 162, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .concept-box h4 {
+            color: #764ba2;
+            margin-bottom: 10px;
+        }
+
+        .syntax-keyword { color: #569cd6; }
+        .syntax-string { color: #ce9178; }
+        .syntax-comment { color: #6a9955; }
+        .syntax-number { color: #b5cea8; }
+        .syntax-function { color: #dcdcaa; }
+
+        .metrics-box {
+            background: rgba(40, 167, 69, 0.1);
+            border: 2px solid rgba(40, 167, 69, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .metrics-box h4 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        .formula-box {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .formula-box h4 {
+            color: #ffc107;
+            margin-bottom: 10px;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+        }
+
+        .success-box {
+            background: rgba(40, 167, 69, 0.1);
+            border: 2px solid rgba(40, 167, 69, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #28a745;
+        }
+
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #ffc107;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 20px; margin: 10px; }
+            .title { font-size: 2.2rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="badge">🎯 Aula 6 - 02/09</div>
+            <h1 class="title">Aplicações Avançadas de ML</h1>
+            <p class="subtitle">Regressão Logística Multiclasse, Regularização e Aplicações Práticas</p>
+        </div>
+
+        <div class="highlight-box">
+            <h3>🚀 Expandindo Horizontes em Machine Learning</h3>
+            <p>Hoje vamos <strong>expandir</strong> a Regressão Logística para problemas multiclasse, explorar técnicas de <strong>regularização</strong> para evitar overfitting, e implementar um <strong>sistema de recomendação</strong> completo. Preparados para levar seus modelos ao próximo nível?</p>
+        </div>
+
+        <div class="checkpoint-box">
+            <h3>📚 Conteúdo da Aula</h3>
+            <p><strong>Parte 1:</strong> Classificação Multiclasse com Softmax<br>
+            <strong>Parte 2:</strong> Regularização L1, L2 e ElasticNet<br>
+            <strong>Parte 3:</strong> Otimização com Grid Search e Cross-Validation<br>
+            <strong>Parte 4:</strong> Sistema de Recomendação Personalizada</p>
+        </div>
+
+        <!-- Parte 1: Revisão e Extensão -->
+        <div class="section">
+            <h2><span class="step-indicator">1</span>Revisão: De Binária para Multiclasse</h2>
+            <p>Na aula anterior, previmos se um cliente <strong>compraria ou não</strong> (2 classes). Hoje vamos prever <strong>qual tipo de produto</strong> ele comprará (múltiplas classes).</p>
+            
+            <div class="concept-box">
+                <h4>🧠 Regressão Logística Multiclasse</h4>
+                <p><strong>One-vs-Rest (OvR):</strong> Treina N classificadores binários, um para cada classe<br>
+                <strong>Multinomial (Softmax):</strong> Extensão natural para múltiplas classes<br>
+                <strong>Output:</strong> Probabilidade para cada classe possível<br>
+                <strong>Decisão:</strong> Classe com maior probabilidade</p>
+            </div>
+
+            <div class="formula-box">
+                <h4>📐 Softmax Function</h4>
+                <p><strong>P(y = k | x) = e^(z_k) / Σ(e^(z_j))</strong><br><br>
+                Onde: <strong>z_k = β_k0 + β_k1*x_1 + ... + β_kn*x_n</strong><br><br>
+                Garante que a soma das probabilidades = 1</p>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🔄 Setup: Preparando Ambiente Multiclasse</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># Sistemas Inteligentes - Aula 6: Aplicações Avançadas
+# Regressão Logística Multiclasse e Técnicas de Regularização</span>
+
+<span class="syntax-keyword">import</span> pandas <span class="syntax-keyword">as</span> pd
+<span class="syntax-keyword">import</span> numpy <span class="syntax-keyword">as</span> np
+<span class="syntax-keyword">import</span> matplotlib.pyplot <span class="syntax-keyword">as</span> plt
+<span class="syntax-keyword">import</span> seaborn <span class="syntax-keyword">as</span> sns
+<span class="syntax-keyword">from</span> sklearn.model_selection <span class="syntax-keyword">import</span> train_test_split, cross_val_score, GridSearchCV
+<span class="syntax-keyword">from</span> sklearn.linear_model <span class="syntax-keyword">import</span> LogisticRegression, LogisticRegressionCV
+<span class="syntax-keyword">from</span> sklearn.preprocessing <span class="syntax-keyword">import</span> StandardScaler, LabelEncoder
+<span class="syntax-keyword">from</span> sklearn.metrics <span class="syntax-keyword">import</span> (accuracy_score, precision_score, recall_score,
+                                f1_score, confusion_matrix, classification_report,
+                                roc_auc_score, roc_curve, auc)
+<span class="syntax-keyword">from</span> sklearn.multiclass <span class="syntax-keyword">import</span> OneVsRestClassifier
+<span class="syntax-keyword">from</span> sklearn.preprocessing <span class="syntax-keyword">import</span> label_binarize
+<span class="syntax-keyword">import</span> warnings
+warnings.filterwarnings(<span class="syntax-string">'ignore'</span>)
+
+<span class="syntax-comment"># Configurações de visualização</span>
+plt.style.use(<span class="syntax-string">'seaborn-v0_8-whitegrid'</span>)
+sns.set_palette(<span class="syntax-string">"husl"</span>)
+plt.rcParams[<span class="syntax-string">'figure.figsize'</span>] = (<span class="syntax-number">12</span>, <span class="syntax-number">6</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"🎯 REGRESSÃO LOGÍSTICA MULTICLASSE"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 40</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"📊 Objetivo: Prever categoria de produto preferida"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"🔧 Técnicas: Multiclasse + Regularização + Validação"</span>)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 2: Criando Dataset Multiclasse -->
+        <div class="section">
+            <h2><span class="step-indicator">2</span>Dataset: Preferências de Categoria de Produto</h2>
+            <p>Vamos expandir nosso dataset de e-commerce para prever qual <strong>categoria de produto</strong> o cliente tem maior probabilidade de comprar.</p>
+
+            <div class="dataset-info">
+                <h4>📦 Categorias de Produtos</h4>
+                <p><strong>0 - Eletrônicos:</strong> Clientes tech-savvy, alto ticket médio<br>
+                <strong>1 - Moda:</strong> Compras frequentes, sensíveis a tendências<br>
+                <strong>2 - Casa & Decoração:</strong> Compras sazonais, alto valor<br>
+                <strong>3 - Livros & Mídia:</strong> Clientes recorrentes, baixo ticket</p>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📊 Criando Dataset Multiclasse</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># CRIAR DATASET MULTICLASSE</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"📊 CRIANDO DATASET MULTICLASSE"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 32</span>)
+
+<span class="syntax-comment"># Carregar ou criar dados base</span>
+<span class="syntax-keyword">try</span>:
+    <span class="syntax-comment"># Tentar carregar dados da aula anterior</span>
+    customer_data = pd.read_csv(<span class="syntax-string">'customer_segments.csv'</span>, index_col=<span class="syntax-number">0</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">"✅ Dados carregados da aula anterior"</span>)
+<span class="syntax-keyword">except</span>:
+    <span class="syntax-function">print</span>(<span class="syntax-string">"⚠️ Criando novo dataset..."</span>)
+    
+    <span class="syntax-comment"># Simular dados de clientes</span>
+    np.random.seed(<span class="syntax-number">42</span>)
+    n_customers = <span class="syntax-number">3000</span>
+    
+    customer_data = pd.DataFrame({
+        <span class="syntax-string">'CustomerID'</span>: <span class="syntax-function">range</span>(<span class="syntax-number">1</span>, n_customers + <span class="syntax-number">1</span>),
+        <span class="syntax-string">'Age'</span>: np.random.normal(<span class="syntax-number">35</span>, <span class="syntax-number">12</span>, n_customers).clip(<span class="syntax-number">18</span>, <span class="syntax-number">70</span>),
+        <span class="syntax-string">'Income'</span>: np.random.lognormal(<span class="syntax-number">10.5</span>, <span class="syntax-number">0.6</span>, n_customers),
+        <span class="syntax-string">'Recency'</span>: np.random.gamma(<span class="syntax-number">2</span>, <span class="syntax-number">30</span>, n_customers),
+        <span class="syntax-string">'Frequency'</span>: np.random.poisson(<span class="syntax-number">20</span>, n_customers) + <span class="syntax-number">1</span>,
+        <span class="syntax-string">'Monetary'</span>: np.random.lognormal(<span class="syntax-number">5</span>, <span class="syntax-number">1.2</span>, n_customers),
+        <span class="syntax-string">'WebVisits'</span>: np.random.poisson(<span class="syntax-number">15</span>, n_customers),
+        <span class="syntax-string">'EmailsOpened'</span>: np.random.poisson(<span class="syntax-number">8</span>, n_customers),
+        <span class="syntax-string">'DiscountUsage'</span>: np.random.beta(<span class="syntax-number">2</span>, <span class="syntax-number">5</span>, n_customers),
+        <span class="syntax-string">'MobileApp'</span>: np.random.choice([<span class="syntax-number">0</span>, <span class="syntax-number">1</span>], n_customers, p=[<span class="syntax-number">0.4</span>, <span class="syntax-number">0.6</span>])
+    })
+    
+    customer_data.set_index(<span class="syntax-string">'CustomerID'</span>, inplace=<span class="syntax-keyword">True</span>)
+
+<span class="syntax-comment"># CRIAR VARIÁVEL TARGET MULTICLASSE</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n🎯 Criando categorias de produto preferidas..."</span>)
+
+<span class="syntax-comment"># Lógica para determinar categoria preferida baseada no perfil</span>
+<span class="syntax-keyword">def</span> <span class="syntax-function">determine_category</span>(row):
+    <span class="syntax-comment"># Score para cada categoria</span>
+    scores = {
+        <span class="syntax-string">'Eletrônicos'</span>: <span class="syntax-number">0</span>,
+        <span class="syntax-string">'Moda'</span>: <span class="syntax-number">0</span>,
+        <span class="syntax-string">'Casa_Decoracao'</span>: <span class="syntax-number">0</span>,
+        <span class="syntax-string">'Livros_Midia'</span>: <span class="syntax-number">0</span>
+    }
+    
+    <span class="syntax-comment"># Eletrônicos: jovens, alta renda, usa app</span>
+    scores[<span class="syntax-string">'Eletrônicos'</span>] = (
+        (<span class="syntax-number">50</span> - row[<span class="syntax-string">'Age'</span>]) / <span class="syntax-number">50</span> * <span class="syntax-number">0.3</span> +
+        row[<span class="syntax-string">'Income'</span>] / <span class="syntax-number">100000</span> * <span class="syntax-number">0.4</span> +
+        row[<span class="syntax-string">'MobileApp'</span>] * <span class="syntax-number">0.3</span>
+    )
+    
+    <span class="syntax-comment"># Moda: frequência alta, abre emails</span>
+    scores[<span class="syntax-string">'Moda'</span>] = (
+        row[<span class="syntax-string">'Frequency'</span>] / <span class="syntax-number">50</span> * <span class="syntax-number">0.4</span> +
+        row[<span class="syntax-string">'EmailsOpened'</span>] / <span class="syntax-number">20</span> * <span class="syntax-number">0.3</span> +
+        row[<span class="syntax-string">'DiscountUsage'</span>] * <span class="syntax-number">0.3</span>
+    )
+    
+    <span class="syntax-comment"># Casa & Decoração: idade média, alto valor monetário</span>
+    scores[<span class="syntax-string">'Casa_Decoracao'</span>] = (
+        (<span class="syntax-number">1</span> - abs(row[<span class="syntax-string">'Age'</span>] - <span class="syntax-number">40</span>) / <span class="syntax-number">40</span>) * <span class="syntax-number">0.3</span> +
+        row[<span class="syntax-string">'Monetary'</span>] / <span class="syntax-number">500</span> * <span class="syntax-number">0.5</span> +
+        (<span class="syntax-number">1</span> - row[<span class="syntax-string">'Frequency'</span>] / <span class="syntax-number">50</span>) * <span class="syntax-number">0.2</span>
+    )
+    
+    <span class="syntax-comment"># Livros: visitas web frequentes, recency baixo</span>
+    scores[<span class="syntax-string">'Livros_Midia'</span>] = (
+        row[<span class="syntax-string">'WebVisits'</span>] / <span class="syntax-number">30</span> * <span class="syntax-number">0.4</span> +
+        (<span class="syntax-number">1</span> / (<span class="syntax-number">1</span> + row[<span class="syntax-string">'Recency'</span>] / <span class="syntax-number">30</span>)) * <span class="syntax-number">0.3</span> +
+        (<span class="syntax-number">1</span> - row[<span class="syntax-string">'DiscountUsage'</span>]) * <span class="syntax-number">0.3</span>
+    )
+    
+    <span class="syntax-comment"># Adicionar ruído aleatório</span>
+    <span class="syntax-keyword">for</span> key <span class="syntax-keyword">in</span> scores:
+        scores[key] += np.random.normal(<span class="syntax-number">0</span>, <span class="syntax-number">0.1</span>)
+    
+    <span class="syntax-comment"># Retornar categoria com maior score</span>
+    <span class="syntax-keyword">return</span> <span class="syntax-function">max</span>(scores, key=scores.get)
+
+<span class="syntax-comment"># Aplicar função para criar target</span>
+np.random.seed(<span class="syntax-number">42</span>)
+customer_data[<span class="syntax-string">'PreferredCategory'</span>] = customer_data.apply(determine_category, axis=<span class="syntax-number">1</span>)
+
+<span class="syntax-comment"># Mapear para números</span>
+category_mapping = {
+    <span class="syntax-string">'Eletrônicos'</span>: <span class="syntax-number">0</span>,
+    <span class="syntax-string">'Moda'</span>: <span class="syntax-number">1</span>,
+    <span class="syntax-string">'Casa_Decoracao'</span>: <span class="syntax-number">2</span>,
+    <span class="syntax-string">'Livros_Midia'</span>: <span class="syntax-number">3</span>
+}
+customer_data[<span class="syntax-string">'Category_Code'</span>] = customer_data[<span class="syntax-string">'PreferredCategory'</span>].map(category_mapping)
+
+<span class="syntax-comment"># Mostrar distribuição</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n📦 Distribuição das categorias:"</span>)
+category_dist = customer_data[<span class="syntax-string">'PreferredCategory'</span>].value_counts()
+<span class="syntax-keyword">for</span> cat, count <span class="syntax-keyword">in</span> category_dist.items():
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   {cat}: {count:,} clientes ({count/len(customer_data)*100:.1f}%)"</span>)
+
+<span class="syntax-comment"># Estatísticas por categoria</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n📊 Perfil médio por categoria:"</span>)
+profile_cols = [<span class="syntax-string">'Age'</span>, <span class="syntax-string">'Income'</span>, <span class="syntax-string">'Frequency'</span>, <span class="syntax-string">'Monetary'</span>]
+category_profiles = customer_data.groupby(<span class="syntax-string">'PreferredCategory'</span>)[profile_cols].mean().round(<span class="syntax-number">2</span>)
+<span class="syntax-function">print</span>(category_profiles)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 3: Implementação Multiclasse -->
+        <div class="section">
+            <h2><span class="step-indicator">3</span>Implementação: Regressão Logística Multiclasse</h2>
+            
+            <div class="concept-box">
+                <h4>🎯 Estratégias Multiclasse</h4>
+                <p><strong>One-vs-Rest (OvR):</strong> N modelos binários, cada um distingue uma classe de todas as outras<br>
+                <strong>One-vs-One (OvO):</strong> N*(N-1)/2 modelos, cada um distingue entre dois pares de classes<br>
+                <strong>Multinomial:</strong> Um único modelo que otimiza todas as classes simultaneamente</p>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🤖 Implementando Classificação Multiclasse</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># PREPARAÇÃO PARA MODELAGEM MULTICLASSE</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n🤖 MODELAGEM MULTICLASSE"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 28</span>)
+
+<span class="syntax-comment"># 1. Feature Engineering</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"🔧 Criando features..."</span>)
+
+<span class="syntax-comment"># Features adicionais</span>
+customer_data[<span class="syntax-string">'AvgOrderValue'</span>] = customer_data[<span class="syntax-string">'Monetary'</span>] / customer_data[<span class="syntax-string">'Frequency'</span>]
+customer_data[<span class="syntax-string">'EngagementScore'</span>] = (
+    customer_data[<span class="syntax-string">'WebVisits'</span>] * <span class="syntax-number">0.3</span> + 
+    customer_data[<span class="syntax-string">'EmailsOpened'</span>] * <span class="syntax-number">0.4</span> + 
+    customer_data[<span class="syntax-string">'MobileApp'</span>] * <span class="syntax-number">10</span> * <span class="syntax-number">0.3</span>
+)
+customer_data[<span class="syntax-string">'ValueSegment'</span>] = pd.qcut(customer_data[<span class="syntax-string">'Monetary'</span>], q=<span class="syntax-number">3</span>, 
+                                         labels=[<span class="syntax-string">'Low'</span>, <span class="syntax-string">'Medium'</span>, <span class="syntax-string">'High'</span>])
+
+<span class="syntax-comment"># 2. Preparar X e y</span>
+feature_cols = [<span class="syntax-string">'Age'</span>, <span class="syntax-string">'Income'</span>, <span class="syntax-string">'Recency'</span>, <span class="syntax-string">'Frequency'</span>, <span class="syntax-string">'Monetary'</span>,
+                <span class="syntax-string">'WebVisits'</span>, <span class="syntax-string">'EmailsOpened'</span>, <span class="syntax-string">'DiscountUsage'</span>, 
+                <span class="syntax-string">'MobileApp'</span>, <span class="syntax-string">'AvgOrderValue'</span>, <span class="syntax-string">'EngagementScore'</span>]
+
+X = customer_data[feature_cols]
+y = customer_data[<span class="syntax-string">'Category_Code'</span>]
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Features: {len(feature_cols)}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📊 Samples: {len(X):,}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"🎯 Classes: {len(y.unique())}"</span>)
+
+<span class="syntax-comment"># 3. Split treino/teste</span>
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=<span class="syntax-number">0.3</span>, random_state=<span class="syntax-number">42</span>, stratify=y
+)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n📊 Divisão dos dados:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   🏋️ Treino: {len(X_train):,} samples"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   🧪 Teste: {len(X_test):,} samples"</span>)
+
+<span class="syntax-comment"># 4. Normalização</span>
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+<span class="syntax-comment"># 5. COMPARAR DIFERENTES ABORDAGENS</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n🔬 COMPARANDO ESTRATÉGIAS MULTICLASSE"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 40</span>)
+
+<span class="syntax-comment"># A. One-vs-Rest (OvR)</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n1️⃣ One-vs-Rest (OvR):"</span>)
+lr_ovr = LogisticRegression(multi_class=<span class="syntax-string">'ovr'</span>, max_iter=<span class="syntax-number">1000</span>, random_state=<span class="syntax-number">42</span>)
+lr_ovr.fit(X_train_scaled, y_train)
+y_pred_ovr = lr_ovr.predict(X_test_scaled)
+accuracy_ovr = accuracy_score(y_test, y_pred_ovr)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   Accuracy: {accuracy_ovr:.4f}"</span>)
+
+<span class="syntax-comment"># B. Multinomial (Softmax)</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n2️⃣ Multinomial (Softmax):"</span>)
+lr_multi = LogisticRegression(multi_class=<span class="syntax-string">'multinomial'</span>, max_iter=<span class="syntax-number">1000</span>, random_state=<span class="syntax-number">42</span>)
+lr_multi.fit(X_train_scaled, y_train)
+y_pred_multi = lr_multi.predict(X_test_scaled)
+accuracy_multi = accuracy_score(y_test, y_pred_multi)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   Accuracy: {accuracy_multi:.4f}"</span>)
+
+<span class="syntax-comment"># Escolher melhor modelo</span>
+best_model = lr_multi <span class="syntax-keyword">if</span> accuracy_multi > accuracy_ovr <span class="syntax-keyword">else</span> lr_ovr
+best_pred = y_pred_multi <span class="syntax-keyword">if</span> accuracy_multi > accuracy_ovr <span class="syntax-keyword">else</span> y_pred_ovr
+best_name = <span class="syntax-string">"Multinomial"</span> <span class="syntax-keyword">if</span> accuracy_multi > accuracy_ovr <span class="syntax-keyword">else</span> <span class="syntax-string">"One-vs-Rest"</span>
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n✅ Melhor estratégia: {best_name}"</span>)
+
+<span class="syntax-comment"># 6. MÉTRICAS DETALHADAS</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n📊 MÉTRICAS DETALHADAS"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 25</span>)
+
+<span class="syntax-comment"># Classification report</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n📋 Relatório de Classificação:"</span>)
+category_names = [<span class="syntax-string">'Eletrônicos'</span>, <span class="syntax-string">'Moda'</span>, <span class="syntax-string">'Casa&Deco'</span>, <span class="syntax-string">'Livros'</span>]
+<span class="syntax-function">print</span>(classification_report(y_test, best_pred, target_names=category_names))
+
+<span class="syntax-comment"># Matriz de confusão</span>
+cm = confusion_matrix(y_test, best_pred)
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n🔍 Matriz de Confusão:"</span>)
+<span class="syntax-function">print</span>(cm)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 4: Regularização -->
+        <div class="section">
+            <h2><span class="step-indicator">4</span>Regularização: Evitando Overfitting</h2>
+            
+            <div class="concept-box">
+                <h4>⚖️ Técnicas de Regularização</h4>
+                <p><strong>L1 (Lasso):</strong> Força alguns coeficientes a zero, fazendo seleção de features<br>
+                <strong>L2 (Ridge):</strong> Reduz magnitude dos coeficientes, mantendo todas as features<br>
+                <strong>ElasticNet:</strong> Combina L1 e L2, balanceando entre elas<br>
+                <strong>Parâmetro C:</strong> Inverso da força de regularização (menor C = maior regularização)</p>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>⚖️ Aplicando Regularização</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># REGULARIZAÇÃO E OTIMIZAÇÃO</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n⚖️ REGULARIZAÇÃO E OTIMIZAÇÃO"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 32</span>)
+
+<span class="syntax-comment"># 1. Grid Search para encontrar melhor C e penalty</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"🔍 Grid Search para otimização..."</span>)
+
+param_grid = {
+    <span class="syntax-string">'C'</span>: [<span class="syntax-number">0.001</span>, <span class="syntax-number">0.01</span>, <span class="syntax-number">0.1</span>, <span class="syntax-number">1</span>, <span class="syntax-number">10</span>, <span class="syntax-number">100</span>],
+    <span class="syntax-string">'penalty'</span>: [<span class="syntax-string">'l1'</span>, <span class="syntax-string">'l2'</span>],
+    <span class="syntax-string">'solver'</span>: [<span class="syntax-string">'liblinear'</span>]  <span class="syntax-comment"># Suporta L1 e L2</span>
+}
+
+grid_search = GridSearchCV(
+    LogisticRegression(max_iter=<span class="syntax-number">1000</span>, random_state=<span class="syntax-number">42</span>),
+    param_grid,
+    cv=<span class="syntax-number">5</span>,
+    scoring=<span class="syntax-string">'accuracy'</span>,
+    n_jobs=-<span class="syntax-number">1</span>,
+    verbose=<span class="syntax-number">0</span>
+)
+
+grid_search.fit(X_train_scaled, y_train)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n✅ Melhores parâmetros encontrados:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   C: {grid_search.best_params_['C']}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   Penalty: {grid_search.best_params_['penalty']}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   Score CV: {grid_search.best_score_:.4f}"</span>)
+
+<span class="syntax-comment"># 2. Comparar modelos com diferentes regularizações</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n📊 COMPARAÇÃO DE REGULARIZAÇÕES"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 35</span>)
+
+regularizations = [
+    (<span class="syntax-string">'Sem Regularização'</span>, <span class="syntax-number">1000</span>, <span class="syntax-string">'l2'</span>),
+    (<span class="syntax-string">'L2 Fraca (C=10)'</span>, <span class="syntax-number">10</span>, <span class="syntax-string">'l2'</span>),
+    (<span class="syntax-string">'L2 Média (C=1)'</span>, <span class="syntax-number">1</span>, <span class="syntax-string">'l2'</span>),
+    (<span class="syntax-string">'L2 Forte (C=0.01)'</span>, <span class="syntax-number">0.01</span>, <span class="syntax-string">'l2'</span>),
+    (<span class="syntax-string">'L1 Média (C=1)'</span>, <span class="syntax-number">1</span>, <span class="syntax-string">'l1'</span>),
+]
+
+results = []
+<span class="syntax-keyword">for</span> name, C, penalty <span class="syntax-keyword">in</span> regularizations:
+    lr = LogisticRegression(C=C, penalty=penalty, solver=<span class="syntax-string">'liblinear'</span>, 
+                           max_iter=<span class="syntax-number">1000</span>, random_state=<span class="syntax-number">42</span>)
+    lr.fit(X_train_scaled, y_train)
+    
+    <span class="syntax-comment"># Scores</span>
+    train_score = lr.score(X_train_scaled, y_train)
+    test_score = lr.score(X_test_scaled, y_test)
+    
+    <span class="syntax-comment"># Número de coeficientes zerados (para L1)</span>
+    n_zero_coefs = np.<span class="syntax-function">sum</span>(np.abs(lr.coef_) < <span class="syntax-number">1e-4</span>)
+    
+    results.append({
+        <span class="syntax-string">'Modelo'</span>: name,
+        <span class="syntax-string">'Train Acc'</span>: train_score,
+        <span class="syntax-string">'Test Acc'</span>: test_score,
+        <span class="syntax-string">'Overfitting'</span>: train_score - test_score,
+        <span class="syntax-string">'Coefs Zero'</span>: n_zero_coefs
+    })
+    
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"\n{name}:"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   Train: {train_score:.4f}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   Test:  {test_score:.4f}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   Overfit: {train_score - test_score:+.4f}"</span>)
+    <span class="syntax-keyword">if</span> penalty == <span class="syntax-string">'l1'</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   Features zeradas: {n_zero_coefs}"</span>)
+
+<span class="syntax-comment"># 3. Cross-validation com regularização</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n🔄 CROSS-VALIDATION COM REGULARIZAÇÃO"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 40</span>)
+
+<span class="syntax-comment"># LogisticRegressionCV automaticamente escolhe o melhor C</span>
+lr_cv = LogisticRegressionCV(
+    cv=<span class="syntax-number">5</span>,
+    Cs=<span class="syntax-number">10</span>,  <span class="syntax-comment"># Testa 10 valores de C</span>
+    penalty=<span class="syntax-string">'l2'</span>,
+    scoring=<span class="syntax-string">'accuracy'</span>,
+    max_iter=<span class="syntax-number">1000</span>,
+    random_state=<span class="syntax-number">42</span>,
+    n_jobs=-<span class="syntax-number">1</span>
+)
+
+lr_cv.fit(X_train_scaled, y_train)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"✅ Melhor C por Cross-Validation: {lr_cv.C_[0]:.4f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"📊 Score médio CV: {lr_cv.scores_[1].mean():.4f}"</span>)
+
+<span class="syntax-comment"># Avaliar no teste</span>
+y_pred_cv = lr_cv.predict(X_test_scaled)
+accuracy_cv = accuracy_score(y_test, y_pred_cv)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"🎯 Accuracy no teste: {accuracy_cv:.4f}"</span>)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 5: Visualizações Avançadas -->
+        <div class="section">
+            <h2><span class="step-indicator">5</span>Visualizações: Análise Multiclasse</h2>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📊 Visualizações Avançadas</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># VISUALIZAÇÕES AVANÇADAS</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n📊 CRIANDO VISUALIZAÇÕES"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 28</span>)
+
+fig = plt.figure(figsize=(<span class="syntax-number">18</span>, <span class="syntax-number">12</span>))
+
+<span class="syntax-comment"># 1. Matriz de Confusão Multiclasse</span>
+ax1 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, <span class="syntax-number">1</span>)
+cm = confusion_matrix(y_test, best_pred)
+sns.heatmap(cm, annot=<span class="syntax-keyword">True</span>, fmt=<span class="syntax-string">'d'</span>, cmap=<span class="syntax-string">'Blues'</span>, 
+            xticklabels=category_names, yticklabels=category_names, ax=ax1)
+ax1.set_title(<span class="syntax-string">'Matriz de Confusão Multiclasse'</span>)
+ax1.set_xlabel(<span class="syntax-string">'Predito'</span>)
+ax1.set_ylabel(<span class="syntax-string">'Real'</span>)
+
+<span class="syntax-comment"># 2. Curvas ROC para cada classe (One-vs-Rest)</span>
+ax2 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, <span class="syntax-number">2</span>)
+
+<span class="syntax-comment"># Binarizar labels para ROC multiclasse</span>
+y_test_bin = label_binarize(y_test, classes=[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>, <span class="syntax-number">2</span>, <span class="syntax-number">3</span>])
+y_score = best_model.predict_proba(X_test_scaled)
+
+<span class="syntax-comment"># Calcular ROC para cada classe</span>
+colors = [<span class="syntax-string">'blue'</span>, <span class="syntax-string">'red'</span>, <span class="syntax-string">'green'</span>, <span class="syntax-string">'orange'</span>]
+<span class="syntax-keyword">for</span> i, (color, name) <span class="syntax-keyword">in</span> <span class="syntax-function">enumerate</span>(<span class="syntax-function">zip</span>(colors, category_names)):
+    fpr, tpr, _ = roc_curve(y_test_bin[:, i], y_score[:, i])
+    roc_auc = auc(fpr, tpr)
+    ax2.plot(fpr, tpr, color=color, lw=<span class="syntax-number">2</span>, 
+             label=<span class="syntax-string">f'{name} (AUC = {roc_auc:.2f})'</span>)
+
+ax2.plot([<span class="syntax-number">0</span>, <span class="syntax-number">1</span>], [<span class="syntax-number">0</span>, <span class="syntax-number">1</span>], <span class="syntax-string">'k--'</span>, lw=<span class="syntax-number">2</span>)
+ax2.set_xlim([<span class="syntax-number">0.0</span>, <span class="syntax-number">1.0</span>])
+ax2.set_ylim([<span class="syntax-number">0.0</span>, <span class="syntax-number">1.05</span>])
+ax2.set_xlabel(<span class="syntax-string">'Taxa de Falsos Positivos'</span>)
+ax2.set_ylabel(<span class="syntax-string">'Taxa de Verdadeiros Positivos'</span>)
+ax2.set_title(<span class="syntax-string">'Curvas ROC - Multiclasse'</span>)
+ax2.legend(loc=<span class="syntax-string">'lower right'</span>)
+ax2.grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 3. Importância das Features</span>
+ax3 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, <span class="syntax-number">3</span>)
+
+<span class="syntax-comment"># Média absoluta dos coeficientes por feature</span>
+feature_importance = pd.DataFrame({
+    <span class="syntax-string">'Feature'</span>: feature_cols,
+    <span class="syntax-string">'Importance'</span>: np.abs(best_model.coef_).mean(axis=<span class="syntax-number">0</span>)
+}).sort_values(<span class="syntax-string">'Importance'</span>, ascending=<span class="syntax-keyword">False</span>)
+
+ax3.barh(<span class="syntax-function">range</span>(<span class="syntax-function">len</span>(feature_importance)), feature_importance[<span class="syntax-string">'Importance'</span>])
+ax3.set_yticks(<span class="syntax-function">range</span>(<span class="syntax-function">len</span>(feature_importance)))
+ax3.set_yticklabels(feature_importance[<span class="syntax-string">'Feature'</span>])
+ax3.set_xlabel(<span class="syntax-string">'Importância Média'</span>)
+ax3.set_title(<span class="syntax-string">'Importância das Features'</span>)
+
+<span class="syntax-comment"># 4. Probabilidades por Classe</span>
+ax4 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, <span class="syntax-number">4</span>)
+
+<span class="syntax-comment"># Boxplot das probabilidades preditas por classe real</span>
+prob_data = []
+<span class="syntax-keyword">for</span> i <span class="syntax-keyword">in</span> <span class="syntax-function">range</span>(<span class="syntax-number">4</span>):
+    mask = y_test == i
+    probs = y_score[mask, i]  <span class="syntax-comment"># Probabilidade da classe correta</span>
+    prob_data.append(probs)
+
+ax4.boxplot(prob_data, labels=category_names)
+ax4.set_ylabel(<span class="syntax-string">'Probabilidade da Classe Correta'</span>)
+ax4.set_title(<span class="syntax-string">'Confiança do Modelo por Categoria'</span>)
+ax4.axhline(y=<span class="syntax-number">0.5</span>, color=<span class="syntax-string">'r'</span>, linestyle=<span class="syntax-string">'--'</span>, alpha=<span class="syntax-number">0.5</span>)
+
+<span class="syntax-comment"># 5. Comparação de Regularizações</span>
+ax5 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, <span class="syntax-number">5</span>)
+
+results_df = pd.DataFrame(results)
+x = np.arange(<span class="syntax-function">len</span>(results_df))
+width = <span class="syntax-number">0.35</span>
+
+ax5.bar(x - width/<span class="syntax-number">2</span>, results_df[<span class="syntax-string">'Train Acc'</span>], width, label=<span class="syntax-string">'Treino'</span>, alpha=<span class="syntax-number">0.8</span>)
+ax5.bar(x + width/<span class="syntax-number">2</span>, results_df[<span class="syntax-string">'Test Acc'</span>], width, label=<span class="syntax-string">'Teste'</span>, alpha=<span class="syntax-number">0.8</span>)
+
+ax5.set_ylabel(<span class="syntax-string">'Accuracy'</span>)
+ax5.set_title(<span class="syntax-string">'Efeito da Regularização'</span>)
+ax5.set_xticks(x)
+ax5.set_xticklabels(results_df[<span class="syntax-string">'Modelo'</span>], rotation=<span class="syntax-number">45</span>, ha=<span class="syntax-string">'right'</span>)
+ax5.legend()
+ax5.grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 6. Análise de Erros por Categoria</span>
+ax6 = fig.add_subplot(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, <span class="syntax-number">6</span>)
+
+<span class="syntax-comment"># Calcular métricas por classe</span>
+precision = precision_score(y_test, best_pred, average=<span class="syntax-keyword">None</span>)
+recall = recall_score(y_test, best_pred, average=<span class="syntax-keyword">None</span>)
+f1 = f1_score(y_test, best_pred, average=<span class="syntax-keyword">None</span>)
+
+x = np.arange(<span class="syntax-function">len</span>(category_names))
+width = <span class="syntax-number">0.25</span>
+
+ax6.bar(x - width, precision, width, label=<span class="syntax-string">'Precision'</span>, alpha=<span class="syntax-number">0.8</span>)
+ax6.bar(x, recall, width, label=<span class="syntax-string">'Recall'</span>, alpha=<span class="syntax-number">0.8</span>)
+ax6.bar(x + width, f1, width, label=<span class="syntax-string">'F1-Score'</span>, alpha=<span class="syntax-number">0.8</span>)
+
+ax6.set_ylabel(<span class="syntax-string">'Score'</span>)
+ax6.set_title(<span class="syntax-string">'Métricas por Categoria'</span>)
+ax6.set_xticks(x)
+ax6.set_xticklabels(category_names, rotation=<span class="syntax-number">45</span>, ha=<span class="syntax-string">'right'</span>)
+ax6.legend()
+ax6.grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+plt.tight_layout()
+plt.show()
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"✅ Visualizações criadas!"</span>)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 6: Aplicação Prática -->
+        <div class="section">
+            <h2><span class="step-indicator">6</span>Aplicação: Sistema de Recomendação</h2>
+            
+            <div class="success-box">
+                <h4>💡 Caso de Uso: Personalização de Marketing</h4>
+                <p>Com o modelo multiclasse, podemos criar campanhas personalizadas para cada categoria de produto, aumentando conversão e satisfação do cliente.</p>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>🎯 Sistema de Recomendação Personalizada</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># SISTEMA DE RECOMENDAÇÃO BASEADO EM PROBABILIDADES</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n🎯 SISTEMA DE RECOMENDAÇÃO"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 30</span>)
+
+<span class="syntax-comment"># 1. Criar função de recomendação</span>
+<span class="syntax-keyword">def</span> <span class="syntax-function">generate_recommendations</span>(model, scaler, customer_features, category_names):
+    <span class="syntax-string">"""
+    Gera recomendações personalizadas baseadas nas probabilidades preditas
+    """</span>
+    <span class="syntax-comment"># Normalizar features</span>
+    features_scaled = scaler.transform(customer_features.values.reshape(<span class="syntax-number">1</span>, -<span class="syntax-number">1</span>))
+    
+    <span class="syntax-comment"># Prever probabilidades</span>
+    probabilities = model.predict_proba(features_scaled)[<span class="syntax-number">0</span>]
+    
+    <span class="syntax-comment"># Criar ranking</span>
+    recommendations = []
+    <span class="syntax-keyword">for</span> i, prob <span class="syntax-keyword">in</span> <span class="syntax-function">enumerate</span>(probabilities):
+        recommendations.append({
+            <span class="syntax-string">'Categoria'</span>: category_names[i],
+            <span class="syntax-string">'Probabilidade'</span>: prob,
+            <span class="syntax-string">'Score'</span>: int(prob * <span class="syntax-number">100</span>)
+        })
+    
+    <span class="syntax-comment"># Ordenar por probabilidade</span>
+    recommendations = <span class="syntax-function">sorted</span>(recommendations, key=<span class="syntax-keyword">lambda</span> x: x[<span class="syntax-string">'Probabilidade'</span>], reverse=<span class="syntax-keyword">True</span>)
+    
+    <span class="syntax-keyword">return</span> recommendations
+
+<span class="syntax-comment"># 2. Testar com clientes exemplo</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n📋 ANÁLISE DE CLIENTES EXEMPLO:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 35</span>)
+
+<span class="syntax-comment"># Selecionar clientes aleatórios do teste</span>
+sample_indices = np.random.choice(X_test.index, <span class="syntax-number">3</span>, replace=<span class="syntax-keyword">False</span>)
+
+<span class="syntax-keyword">for</span> idx <span class="syntax-keyword">in</span> sample_indices:
+    customer = X_test.loc[idx]
+    real_category = customer_data.loc[idx, <span class="syntax-string">'PreferredCategory'</span>]
+    
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"\n👤 Cliente #{idx}:"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   Idade: {customer['Age']:.0f} anos"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   Renda: R$ {customer['Income']:,.2f}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   Frequência: {customer['Frequency']:.0f} compras"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   App Mobile: {'Sim' if customer['MobileApp'] else 'Não'}"</span>)
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   \n🎯 Categoria Real: {real_category}"</span>)
+    
+    <span class="syntax-comment"># Gerar recomendações</span>
+    recs = generate_recommendations(best_model, scaler, customer, category_names)
+    
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   \n📊 Recomendações:"</span>)
+    <span class="syntax-keyword">for</span> i, rec <span class="syntax-keyword">in</span> <span class="syntax-function">enumerate</span>(recs):
+        emoji = <span class="syntax-string">"🏆"</span> <span class="syntax-keyword">if</span> i == <span class="syntax-number">0</span> <span class="syntax-keyword">else</span> (<span class="syntax-string">"🥈"</span> <span class="syntax-keyword">if</span> i == <span class="syntax-number">1</span> <span class="syntax-keyword">else</span> <span class="syntax-string">"  "</span>)
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   {emoji} {rec['Categoria']:15s}: {rec['Score']}% confiança"</span>)
+    
+    <span class="syntax-comment"># Estratégia de marketing</span>
+    top_category = recs[<span class="syntax-number">0</span>][<span class="syntax-string">'Categoria'</span>]
+    confidence = recs[<span class="syntax-number">0</span>][<span class="syntax-string">'Score'</span>]
+    
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   \n💡 Estratégia Recomendada:"</span>)
+    <span class="syntax-keyword">if</span> confidence > <span class="syntax-number">70</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   Alta confiança em {top_category}"</span>)
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   → Enviar ofertas específicas de {top_category}"</span>)
+    <span class="syntax-keyword">elif</span> confidence > <span class="syntax-number">50</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   Confiança moderada em {top_category}"</span>)
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   → Mix de ofertas: {recs[0]['Categoria']} + {recs[1]['Categoria']}"</span>)
+    <span class="syntax-keyword">else</span>:
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   Perfil diversificado"</span>)
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   → Campanhas gerais com múltiplas categorias"</span>)
+
+<span class="syntax-comment"># 3. ANÁLISE DE SEGMENTAÇÃO</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n📊 ANÁLISE DE SEGMENTAÇÃO"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 28</span>)
+
+<span class="syntax-comment"># Probabilidades médias por segmento de valor</span>
+segment_probs = []
+<span class="syntax-keyword">for</span> segment <span class="syntax-keyword">in</span> [<span class="syntax-string">'Low'</span>, <span class="syntax-string">'Medium'</span>, <span class="syntax-string">'High'</span>]:
+    mask = customer_data[<span class="syntax-string">'ValueSegment'</span>] == segment
+    segment_features = customer_data[mask][feature_cols]
+    
+    <span class="syntax-keyword">if</span> <span class="syntax-function">len</span>(segment_features) > <span class="syntax-number">0</span>:
+        segment_scaled = scaler.transform(segment_features)
+        probs = best_model.predict_proba(segment_scaled).mean(axis=<span class="syntax-number">0</span>)
+        segment_probs.append((segment, probs))
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"Preferências por Segmento de Valor:\n"</span>)
+<span class="syntax-keyword">for</span> segment, probs <span class="syntax-keyword">in</span> segment_probs:
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"{segment} Value Customers:"</span>)
+    <span class="syntax-keyword">for</span> i, prob <span class="syntax-keyword">in</span> <span class="syntax-function">enumerate</span>(probs):
+        <span class="syntax-function">print</span>(<span class="syntax-string">f"   {category_names[i]:15s}: {prob:.1%}"</span>)
+    <span class="syntax-function">print</span>()</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 7: Deployment e Produção -->
+        <div class="section">
+            <h2><span class="step-indicator">7</span>Deploy: Colocando em Produção</h2>
+            
+            <div class="success-box">
+                <h4>🚀 Preparando para Produção</h4>
+                <p>Vamos preparar nosso modelo para ser usado em um ambiente real, criando uma API simples e salvando todos os componentes necessários para deployment.</p>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📝 Preparando Modelo para Produção</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+<pre><code><span class="syntax-comment"># PREPARAÇÃO PARA PRODUÇÃO</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n🚀 PREPARAÇÃO PARA PRODUÇÃO"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 32</span>)
+
+<span class="syntax-keyword">from</span> datetime <span class="syntax-keyword">import</span> datetime
+<span class="syntax-keyword">import</span> json
+
+<span class="syntax-comment"># 1. Criar classe para predição</span>
+<span class="syntax-keyword">class</span> <span class="syntax-function">ProductRecommender</span>:
+    <span class="syntax-string">"""
+    Sistema de recomendação de produtos baseado em ML
+    """</span>
+    
+    <span class="syntax-keyword">def</span> <span class="syntax-function">__init__</span>(self, model, scaler, feature_names, category_names):
+        self.model = model
+        self.scaler = scaler
+        self.feature_names = feature_names
+        self.category_names = category_names
+        self.threshold = <span class="syntax-number">0.5</span>
+    
+    <span class="syntax-keyword">def</span> <span class="syntax-function">predict</span>(self, customer_data):
+        <span class="syntax-string">"""
+        Faz predição para um cliente
+        """</span>
+        <span class="syntax-comment"># Validar entrada</span>
+        <span class="syntax-keyword">if</span> <span class="syntax-keyword">not</span> <span class="syntax-function">all</span>(feature <span class="syntax-keyword">in</span> customer_data <span class="syntax-keyword">for</span> feature <span class="syntax-keyword">in</span> self.feature_names):
+            missing = [f <span class="syntax-keyword">for</span> f <span class="syntax-keyword">in</span> self.feature_names <span class="syntax-keyword">if</span> f <span class="syntax-keyword">not</span> <span class="syntax-keyword">in</span> customer_data]
+            <span class="syntax-keyword">raise</span> ValueError(<span class="syntax-string">f"Missing features: {missing}"</span>)
+        
+        <span class="syntax-comment"># Preparar features</span>
+        X = pd.DataFrame([customer_data])[self.feature_names]
+        X_scaled = self.scaler.transform(X)
+        
+        <span class="syntax-comment"># Predição</span>
+        probabilities = self.model.predict_proba(X_scaled)[<span class="syntax-number">0</span>]
+        predicted_class = self.model.predict(X_scaled)[<span class="syntax-number">0</span>]
+        
+        <span class="syntax-comment"># Preparar resposta</span>
+        response = {
+            <span class="syntax-string">'predicted_category'</span>: self.category_names[predicted_class],
+            <span class="syntax-string">'confidence'</span>: float(probabilities[predicted_class]),
+            <span class="syntax-string">'all_probabilities'</span>: {
+                self.category_names[i]: float(prob) 
+                <span class="syntax-keyword">for</span> i, prob <span class="syntax-keyword">in</span> <span class="syntax-function">enumerate</span>(probabilities)
+            },
+            <span class="syntax-string">'recommendation'</span>: self._generate_recommendation(probabilities)
+        }
+        
+        <span class="syntax-keyword">return</span> response
+    
+    <span class="syntax-keyword">def</span> <span class="syntax-function">_generate_recommendation</span>(self, probabilities):
+        <span class="syntax-string">"""
+        Gera recomendação baseada nas probabilidades
+        """</span>
+        max_prob = probabilities.max()
+        
+        <span class="syntax-keyword">if</span> max_prob > <span class="syntax-number">0.7</span>:
+            <span class="syntax-keyword">return</span> <span class="syntax-string">"Alta confiança - Campanha focada"</span>
+        <span class="syntax-keyword">elif</span> max_prob > <span class="syntax-number">0.5</span>:
+            <span class="syntax-keyword">return</span> <span class="syntax-string">"Confiança média - Mix de produtos"</span>
+        <span class="syntax-keyword">else</span>:
+            <span class="syntax-keyword">return</span> <span class="syntax-string">"Baixa confiança - Explorar preferências"</span>
+
+<span class="syntax-comment"># 2. Instanciar o sistema</span>
+recommender = ProductRecommender(
+    model=best_model,
+    scaler=scaler,
+    feature_names=feature_cols,
+    category_names=category_names
+)
+
+<span class="syntax-comment"># 3. Testar com exemplo</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n📊 TESTE DO SISTEMA:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 25</span>)
+
+test_customer = {
+    <span class="syntax-string">'Age'</span>: <span class="syntax-number">28</span>,
+    <span class="syntax-string">'Income'</span>: <span class="syntax-number">75000</span>,
+    <span class="syntax-string">'Recency'</span>: <span class="syntax-number">15</span>,
+    <span class="syntax-string">'Frequency'</span>: <span class="syntax-number">25</span>,
+    <span class="syntax-string">'Monetary'</span>: <span class="syntax-number">450</span>,
+    <span class="syntax-string">'WebVisits'</span>: <span class="syntax-number">20</span>,
+    <span class="syntax-string">'EmailsOpened'</span>: <span class="syntax-number">12</span>,
+    <span class="syntax-string">'DiscountUsage'</span>: <span class="syntax-number">0.3</span>,
+    <span class="syntax-string">'MobileApp'</span>: <span class="syntax-number">1</span>,
+    <span class="syntax-string">'AvgOrderValue'</span>: <span class="syntax-number">18</span>,
+    <span class="syntax-string">'EngagementScore'</span>: <span class="syntax-number">12</span>
+}
+
+result = recommender.predict(test_customer)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n👤 Cliente Teste:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   Idade: {test_customer['Age']} anos"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   Renda: R$ {test_customer['Income']:,.2f}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   App Mobile: {'Sim' if test_customer['MobileApp'] else 'Não'}"</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n🎯 Resultado da Predição:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   Categoria: {result['predicted_category']}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   Confiança: {result['confidence']:.1%}"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">f"   Estratégia: {result['recommendation']}"</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">f"\n📊 Probabilidades:"</span>)
+<span class="syntax-keyword">for</span> cat, prob <span class="syntax-keyword">in</span> result[<span class="syntax-string">'all_probabilities'</span>].items():
+    <span class="syntax-function">print</span>(<span class="syntax-string">f"   {cat:15s}: {prob:.1%}"</span>)
+
+<span class="syntax-comment"># 4. Salvar componentes</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n💾 SALVANDO COMPONENTES:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 28</span>)
+
+<span class="syntax-keyword">import</span> pickle
+
+<span class="syntax-comment"># Salvar modelo</span>
+<span class="syntax-keyword">with</span> <span class="syntax-function">open</span>(<span class="syntax-string">'modelo_producao.pkl'</span>, <span class="syntax-string">'wb'</span>) <span class="syntax-keyword">as</span> f:
+    pickle.dump(recommender, f)
+
+<span class="syntax-comment"># Salvar configuração</span>
+config = {
+    <span class="syntax-string">'model_type'</span>: <span class="syntax-string">'LogisticRegression'</span>,
+    <span class="syntax-string">'n_classes'</span>: <span class="syntax-function">len</span>(category_names),
+    <span class="syntax-string">'features'</span>: feature_cols,
+    <span class="syntax-string">'categories'</span>: category_names,
+    <span class="syntax-string">'accuracy'</span>: float(accuracy_cv),
+    <span class="syntax-string">'created_at'</span>: datetime.now().isoformat()
+}
+
+<span class="syntax-keyword">with</span> <span class="syntax-function">open</span>(<span class="syntax-string">'model_config.json'</span>, <span class="syntax-string">'w'</span>) <span class="syntax-keyword">as</span> f:
+    json.dump(config, f, indent=<span class="syntax-number">2</span>)
+
+<span class="syntax-function">print</span>(<span class="syntax-string">"✅ Arquivos salvos:"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"   • modelo_producao.pkl"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"   • model_config.json"</span>)
+
+<span class="syntax-comment"># 5. Exemplo de API simples</span>
+<span class="syntax-function">print</span>(<span class="syntax-string">"\n🌐 EXEMPLO DE API (Flask):"</span>)
+<span class="syntax-function">print</span>(<span class="syntax-string">"=" * 30</span>)
+
+api_code = <span class="syntax-string">"""
+# app.py - API Flask para o modelo
+from flask import Flask, request, jsonify
+import pickle
+import pandas as pd
+
+app = Flask(__name__)
+
+# Carregar modelo
+with open('modelo_producao.pkl', 'rb') as f:
+    recommender = pickle.load(f)
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    try:
+        # Receber dados
+        data = request.json
+        
+        # Fazer predição
+        result = recommender.predict(data)
+        
+        return jsonify(result)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({'status': 'healthy'})
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
+"""</span>
+
+<span class="syntax-function">print</span>(api_code)</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 8: Conclusão -->
+        <div class="section">
+            <h2><span class="step-indicator">8</span>Conclusão: Próxima Unidade</h2>
+            
+            <div class="success-box">
+                <h4>🎉 Parabéns! Unidade II Completa!</h4>
+                <p>Vocês dominaram os algoritmos clássicos de Machine Learning! K-Means para clustering, Regressão Logística para classificação binária e multiclasse, além de técnicas de regularização e validação.</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>✅ O que aprendemos</h3>
+                    <p>• Clustering com K-Means<br>
+                    • Classificação binária<br>
+                    • Classificação multiclasse<br>
+                    • Regularização L1/L2<br>
+                    • Cross-validation<br>
+                    • Métricas de avaliação<br>
+                    • Aplicações práticas</p>
+                </div>
+                <div class="card">
+                    <h3>🚀 Próxima Aula (09/09)</h3>
+                    <p><strong>Unidade III: IA Comercial</strong><br>
+                    • ChatGPT para engenharia<br>
+                    • Google Gemini<br>
+                    • GitHub Copilot<br>
+                    • Casos práticos reais<br>
+                    • Integração com workflows<br>
+                    • Prompt engineering</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>📋 Checklist para Hoje</h4>
+                <p>□ Apresentação do Checkpoint 2 (10 min)<br>
+                □ Código funcionando (EDA + K-Means + Regressão Logística)<br>
+                □ Visualizações claras e informativas<br>
+                □ Insights de negócio documentados<br>
+                □ Arquivos salvos e organizados</p>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <h3>🌟 Mensagem Final</h3>
+            <p>Vocês completaram com sucesso a <strong>Unidade II</strong>! Agora têm uma base sólida em Machine Learning clássico. Na próxima unidade, vamos explorar como ferramentas comerciais de IA podem revolucionar o trabalho na engenharia. Preparem-se para aplicações práticas que vão transformar sua produtividade!</p>
+        </div>
+    </div>
+
+    <script>
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('code').textContent;
+            
+            navigator.clipboard.writeText(code).then(function() {
+                button.textContent = 'Copiado!';
+                button.style.background = '#28a745';
+                
+                setTimeout(function() {
+                    button.textContent = 'Copiar';
+                    button.style.background = '#667eea';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
