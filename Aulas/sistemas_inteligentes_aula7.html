@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistemas Inteligentes - Aula 30/09</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover { transform: translateY(-3px); }
+
+        .card h3 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin: 25px 0;
+        }
+
+        .highlight-box h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #e8e8e8;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .code-header {
+            background: #2d2d2d;
+            color: #fff;
+            padding: 8px 16px;
+            margin: -20px -20px 12px -20px;
+            border-radius: 12px 12px 0 0;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        .step-indicator {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .checkpoint-box {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 25px;
+            border-radius: 16px;
+            margin: 25px 0;
+        }
+
+        .checkpoint-box h3 {
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .prompt-box {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .prompt-box h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .concept-box {
+            background: rgba(118, 75, 162, 0.1);
+            border: 2px solid rgba(118, 75, 162, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .concept-box h4 {
+            color: #764ba2;
+            margin-bottom: 10px;
+        }
+
+        .success-box {
+            background: rgba(40, 167, 69, 0.1);
+            border: 2px solid rgba(40, 167, 69, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #28a745;
+        }
+
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #ffc107;
+        }
+
+        .example-box {
+            background: rgba(23, 162, 184, 0.1);
+            border: 2px solid rgba(23, 162, 184, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .example-box h4 {
+            color: #17a2b8;
+            margin-bottom: 10px;
+        }
+
+        .prompt-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        .response-display {
+            background: #e8f5e8;
+            border: 1px solid #c3e6c3;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 20px; margin: 10px; }
+            .title { font-size: 2.2rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="badge">🎯 Aula 30/09 - Unidade III</div>
+            <h1 class="title">ChatGPT para Gestão Empresarial</h1>
+            <p class="subtitle">Aplicações Práticas de IA Comercial na Engenharia de Produção</p>
+        </div>
+
+        <div class="highlight-box">
+            <h3>🚀 Revolucionando a Gestão com IA</h3>
+            <p>Hoje vamos <strong>explorar</strong> como o ChatGPT pode transformar processos de gestão empresarial, automatizar tarefas rotineiras e <strong>otimizar</strong> a tomada de decisões na engenharia de produção. Preparem-se para descobrir o potencial real da IA comercial!</p>
+        </div>
+
+        <div class="checkpoint-box">
+            <h3>📚 Conteúdo da Aula</h3>
+            <p><strong>Parte 1:</strong> Introdução ao ChatGPT e Prompt Engineering<br>
+            <strong>Parte 2:</strong> Aplicações em Análise de Dados e Relatórios<br>
+            <strong>Parte 3:</strong> Otimização de Processos Produtivos<br>
+            <strong>Parte 4:</strong> Automação de Comunicações Empresariais<br>
+            <strong>Parte 5:</strong> Desenvolvimento do Checkpoint 3</p>
+        </div>
+
+        <!-- Parte 1: Introdução ao ChatGPT -->
+        <div class="section">
+            <h2><span class="step-indicator">1</span>ChatGPT: Fundamentos e Estratégias</h2>
+            <p>O ChatGPT representa uma revolução na forma como interagimos com sistemas inteligentes. Vamos entender como utilizá-lo estrategicamente para gestão empresarial.</p>
+            
+            <div class="concept-box">
+                <h4>🧠 O que é o ChatGPT?</h4>
+                <p><strong>Large Language Model (LLM):</strong> Modelo treinado em textos massivos<br>
+                <strong>Processamento de Linguagem Natural:</strong> Compreende e gera texto humano<br>
+                <strong>Versatilidade:</strong> Adaptável a múltiplas tarefas empresariais<br>
+                <strong>Contexto:</strong> Mantém conversas coerentes e longas</p>
+            </div>
+
+            <div class="prompt-box">
+                <h4>🎯 Prompt Engineering - Princípios Fundamentais</h4>
+                <p><strong>Clareza:</strong> Seja específico sobre o que deseja<br>
+                <strong>Contexto:</strong> Forneça informações relevantes<br>
+                <strong>Formato:</strong> Especifique o tipo de resposta esperada<br>
+                <strong>Exemplos:</strong> Use few-shot learning quando necessário<br>
+                <strong>Iteração:</strong> Refine prompts baseado nos resultados</p>
+            </div>
+
+            <div class="example-box">
+                <h4>📝 Exemplo 1: Prompt Básico vs. Otimizado</h4>
+                
+                <div style="margin: 15px 0;">
+                    <strong>❌ Prompt Fraco:</strong>
+                    <div class="prompt-display">Analise estes dados de vendas</div>
+                </div>
+
+                <div style="margin: 15px 0;">
+                    <strong>✅ Prompt Otimizado:</strong>
+                    <div class="prompt-display">Como especialista em análise de vendas, examine os dados abaixo e forneça:
+1. Tendências principais (crescimento/declínio)
+2. Produtos com melhor performance
+3. Recomendações específicas para aumento de vendas
+4. Formato: Relatório executivo com bullets
+
+Dados: [inserir dados aqui]</div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🎯 Prompts Eficazes</h3>
+                    <p>• Use verbos de ação específicos<br>
+                    • Defina o papel do ChatGPT<br>
+                    • Estabeleça critérios claros<br>
+                    • Solicite formato específico<br>
+                    • Inclua exemplos quando possível</p>
+                </div>
+                <div class="card">
+                    <h3>⚠️ Armadilhas Comuns</h3>
+                    <p>• Prompts muito vagos<br>
+                    • Não fornecer contexto suficiente<br>
+                    • Não especificar formato de saída<br>
+                    • Confiar cegamente nas respostas<br>
+                    • Não validar informações críticas</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parte 2: Análise de Dados e Relatórios -->
+        <div class="section">
+            <h2><span class="step-indicator">2</span>Análise de Dados e Geração de Relatórios</h2>
+            
+            <div class="success-box">
+                <h4>💡 Caso de Uso: Dashboard Executivo Automatizado</h4>
+                <p>Transforme dados brutos em insights executivos rapidamente, criando relatórios que antes levariam horas para produzir.</p>
+            </div>
+
+            <div class="example-box">
+                <h4>📊 Exemplo 2: Análise Dataset SECOM (UCI)</h4>
+                <p><strong>Dataset Real:</strong> Manufatura de Semicondutores da UCI Repository</p>
+                
+                <div style="margin: 15px 0;">
+                    <strong>Prompt para ChatGPT:</strong>
+                    <div class="prompt-display">Como especialista em qualidade de manufatura, analise o dataset SECOM da UCI:
+
+DADOS DO PROCESSO:
+- 1567 produtos manufaturados
+- 591 variáveis de sensores e processo
+- 104 falhas identificadas (6.6% taxa de defeito)
+- Valores missing em diversas variáveis
+- Processo de fabricação de semicondutores
+
+CONTEXTO: Linha de produção com monitoramento contínuo de sensores
+
+SOLICITO:
+1. Diagnóstico da qualidade do processo atual
+2. Identificação dos principais problemas
+3. Estratégias para reduzir taxa de defeitos de 6.6% para <3%
+4. Plano de implementação de melhorias
+5. Indicadores KPI para monitoramento
+
+Formato: Relatório executivo com ações prioritárias</div>
+                </div>
+
+                <div style="margin: 15px 0;">
+                    <strong>Resposta Esperada:</strong>
+                    <div class="response-display"><strong>RELATÓRIO: OTIMIZAÇÃO PROCESSO SECOM</strong>
+
+<strong>1. DIAGNÓSTICO ATUAL:</strong>
+• Taxa de defeitos: 6.6% (104/1567) - CRÍTICO
+• Variabilidade excessiva: 591 variáveis monitoradas
+• Missing data indica problemas de sensores
+• Processo instável com alta rejeição
+
+<strong>2. PROBLEMAS IDENTIFICADOS:</strong>
+• Falta de controle estatístico do processo
+• Sensores com falhas frequentes (missing values)
+• Ausência de detecção precoce de defeitos
+
+<strong>3. ESTRATÉGIAS DE MELHORIA:</strong>
+• Implementar SPC (Statistical Process Control)
+• Feature selection: identificar 20-30 variáveis críticas
+• Sistema de alarme precoce baseado em ML
+• Manutenção preventiva de sensores
+
+<strong>4. PLANO DE IMPLEMENTAÇÃO (6 meses):</strong>
+Fase 1: Análise de dados históricos (1 mês)
+Fase 2: Modelo preditivo de defeitos (2 meses)  
+Fase 3: Sistema de monitoramento real-time (3 meses)
+
+<strong>5. KPIs PROPOSTOS:</strong>
+• Taxa de defeitos: <3% (meta)
+• First Pass Yield: >97%
+• Tempo médio entre falhas: >200 produtos
+• Disponibilidade de sensores: >98%</div>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4>🍷 Exemplo 3: Controle de Qualidade - Dataset Wine Quality (UCI)</h4>
+                <p><strong>Dataset Real:</strong> Vinhos Portugueses com 11 variáveis físico-químicas</p>
+                
+                <div style="margin: 15px 0;">
+                    <strong>Prompt para Controle de Qualidade:</strong>
+                    <div class="prompt-display">Como especialista em controle de qualidade, analise o dataset Wine Quality da UCI:
+
+DADOS DO PRODUTO:
+- 6497 amostras de vinho (4898 brancos + 1599 tintos)
+- 11 variáveis físico-químicas mensuradas
+- Qualidade avaliada por especialistas (escala 0-10)
+- Distribuição: maioria nota 5-7, poucos vinhos excelentes/ruins
+
+VARIÁVEIS MEDIDAS:
+• Acidez fixa/volátil, ácido cítrico
+• Açúcar residual, cloretos
+• SO2 livre/total, densidade, pH
+• Sulfatos, teor alcoólico
+
+DESAFIO: Melhorar processo para aumentar % de vinhos premium (nota ≥8)
+
+SOLICITO:
+1. Análise das variáveis mais críticas para qualidade
+2. Faixas ideais para cada parâmetro
+3. Processo de controle em linha de produção
+4. Estratégia para reduzir variabilidade
+5. Plano de implementação de melhorias
+
+Formato: Guia técnico para enólogos</div>
+                </div>
+
+                <div style="margin: 15px 0;">
+                    <strong>Resposta Esperada:</strong>
+                    <div class="response-display"><strong>GUIA DE CONTROLE DE QUALIDADE - VINHOS</strong>
+
+<strong>1. VARIÁVEIS CRÍTICAS IDENTIFICADAS:</strong>
+• Teor alcoólico: correlação positiva forte com qualidade
+• Acidez volátil: correlação negativa (reduzir para melhorar)
+• Sulfatos: otimizar faixa 0.4-0.8 g/L
+• SO2 livre: balance entre conservação e sabor
+
+<strong>2. FAIXAS IDEAIS PARA VINHOS PREMIUM:</strong>
+• Álcool: 11-13% vol (vinhos brancos), 11-14% (tintos)
+• Acidez volátil: <0.4 g/L ácido acético
+• pH: 3.0-3.5 (brancos), 3.3-3.8 (tintos)
+• Açúcar residual: <4 g/L (secos)
+
+<strong>3. CONTROLE EM LINHA:</strong>
+• Monitoramento pH e acidez a cada 4h na fermentação
+• Análise SO2 diária durante armazenamento
+• Teste sensorial semanal por painel treinado
+
+<strong>4. REDUÇÃO DE VARIABILIDADE:</strong>
+• Padronização da temperatura de fermentação (±1°C)
+• Controle automático de sulfitagem
+• Seleção rigorosa de matéria-prima
+
+<strong>5. IMPLEMENTAÇÃO (4 meses):</strong>
+Mês 1: Calibração de equipamentos e treinamento
+Mês 2: Implementação controles automáticos
+Mês 3: Testes e ajustes finos
+Mês 4: Validação e documentação</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parte 3: Otimização de Processos -->
+        <div class="section">
+            <h2><span class="step-indicator">3</span>Otimização de Processos Produtivos</h2>
+            
+            <div class="concept-box">
+                <h4>⚙️ IA para Melhoria Contínua</h4>
+                <p><strong>Identificação de Gargalos:</strong> Análise de fluxo de processos<br>
+                <strong>Simulação de Cenários:</strong> Teste de melhorias antes da implementação<br>
+                <strong>Benchmarking:</strong> Comparação com melhores práticas<br>
+                <strong>Indicadores KPI:</strong> Definição de métricas relevantes</p>
+            </div>
+
+            <div class="example-box">
+                <h4>🔧 Exemplo 4: Detecção de Defeitos - Dataset Steel Plates (UCI)</h4>
+                <p><strong>Dataset Real:</strong> Detecção de 7 tipos de defeitos em chapas de aço</p>
+                
+                <div style="margin: 15px 0;">
+                    <strong>Prompt para Sistema de Inspeção:</strong>
+                    <div class="prompt-display">Como engenheiro de qualidade especialista em inspeção, desenvolva sistema baseado no dataset Steel Plates da UCI:
+
+DADOS DO PROCESSO:
+- Chapas de aço com medições dimensionais
+- 7 tipos de defeitos possíveis: Pastry, Z_Scratch, K_Scratch, Stains, Dirtiness, Bumps, Other_Faults
+- Características: luminosidade, uniformidade, comprimento, largura, etc.
+- Classificação multi-label (uma chapa pode ter múltiplos defeitos)
+
+OBJETIVO: Sistema automático de inspeção de qualidade
+
+CONTEXTO: Linha de produção de aço com 500 chapas/dia, inspeção manual atual
+
+SOLICITO:
+1. Estratégia de automação da inspeção
+2. Priorização dos defeitos por criticidade
+3. Sistema de classificação em tempo real
+4. Plano de redução de refugo/retrabalho
+5. ROI esperado da automação
+6. Cronograma de implementação
+
+Formato: Proposta técnica para diretoria</div>
+                </div>
+
+                <div style="margin: 15px 0;">
+                    <strong>Resposta Esperada:</strong>
+                    <div class="response-display"><strong>PROPOSTA: SISTEMA AUTOMÁTICO DE INSPEÇÃO</strong>
+
+<strong>1. ESTRATÉGIA DE AUTOMAÇÃO:</strong>
+• Visão computacional + Machine Learning para classificação
+• Câmeras industriais para captura de características
+• Algoritmo multi-label para detectar defeitos simultâneos
+• Interface real-time com sistema de produção
+
+<strong>2. PRIORIZAÇÃO POR CRITICIDADE:</strong>
+Alto Impacto: Pastry, Z_Scratch (afetam resistência estrutural)
+Médio Impacto: K_Scratch, Bumps (afetam acabamento)
+Baixo Impacto: Stains, Dirtiness (defeitos cosméticos)
+
+<strong>3. SISTEMA EM TEMPO REAL:</strong>
+• Inspeção automática: 15 segundos/chapa
+• Classificação simultânea dos 7 defeitos
+• Alarme instantâneo para defeitos críticos
+• Dashboard de qualidade em tempo real
+
+<strong>4. REDUÇÃO DE PERDAS:</strong>
+• Detecção precoce: -60% refugo
+• Classificação precisa: -40% retrabalho
+• Rastreabilidade completa de defeitos
+
+<strong>5. ROI ESTIMADO:</strong>
+Investimento: R$ 850.000 (câmeras + software + implementação)
+Economia anual: R$ 1.200.000 (refugo + retrabalho + mão-de-obra)
+Payback: 8.5 meses
+
+<strong>6. CRONOGRAMA (6 meses):</strong>
+Mês 1-2: Desenvolvimento e treinamento do modelo
+Mês 3-4: Instalação e integração hardware
+Mês 5: Testes e calibração
+Mês 6: Operação e treinamento equipe</div>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4>📋 Exemplo 5: Planejamento de Manutenção</h4>
+                
+                <div style="margin: 15px 0;">
+                    <strong>Prompt Estratégico:</strong>
+                    <div class="prompt-display">Como especialista em manutenção industrial, desenvolva um plano para:
+
+EQUIPAMENTOS:
+- 5 prensas (críticas, 15 anos de uso)
+- 3 fornos (importantes, 8 anos)
+- 2 compressores (apoio, 12 anos)
+- 10 motores (vários, 5-20 anos)
+
+HISTÓRICO:
+- Paradas não programadas: 45h/mês
+- Custo manutenção corretiva: R$ 80.000/mês
+- Disponibilidade atual: 78%
+
+META: Aumentar disponibilidade para 92%
+
+Entregue plano com:
+1. Estratégia por tipo de equipamento
+2. Cronograma anual de manutenções
+3. Recursos necessários (pessoas, peças)
+4. Budget detalhado
+5. Indicadores de acompanhamento</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parte 4: Comunicações Empresariais -->
+        <div class="section">
+            <h2><span class="step-indicator">4</span>Automação de Comunicações</h2>
+            
+            <div class="example-box">
+                <h4>📧 Exemplo 6: E-mails Executivos</h4>
+                
+                <div style="margin: 15px 0;">
+                    <strong>Prompt para Comunicação:</strong>
+                    <div class="prompt-display">Redija e-mail executivo para a diretoria sobre:
+
+SITUAÇÃO: Atraso de 2 semanas na entrega do Projeto Alpha
+CAUSA: Fornecedor principal falhou na entrega de componentes
+IMPACTO: Cliente estratégico, contrato R$ 2M
+AÇÕES: Fornecedor backup ativado, equipe extra mobilizada
+NOVA PREVISÃO: Atraso reduzido para 5 dias
+
+TOM: Profissional, responsável, confiante
+OBJETIVO: Informar situação e tranquilizar sobre controle
+COMPRIMENTO: Máximo 150 palavras</div>
+                </div>
+
+                <div style="margin: 15px 0;">
+                    <strong>Resposta Gerada:</strong>
+                    <div class="response-display"><strong>Assunto:</strong> Atualização Projeto Alpha - Ações de Mitigação Implementadas
+
+Prezada Diretoria,
+
+Informo sobre a situação do Projeto Alpha. Devido a falha de entrega do fornecedor principal, o projeto apresentará atraso de 5 dias (reduzido dos 14 dias iniciais).
+
+<strong>Ações Implementadas:</strong>
+• Fornecedor backup ativado com entrega confirmada
+• Equipe adicional alocada para recuperação de cronograma
+• Cliente informado e alinhamento realizado
+
+<strong>Garantias:</strong>
+• Qualidade mantida conforme especificações
+• Penalidades negociadas e minimizadas
+• Processo de contingência documentado para futuros projetos
+
+Nova entrega: 15/10 (vs. 10/10 original). Cliente confirma aceitação do prazo ajustado.
+
+Atenciosamente,
+[Nome]</div>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4>📋 Exemplo 7: Procedimentos Operacionais</h4>
+                
+                <div style="margin: 15px 0;">
+                    <strong>Prompt para Padronização:</strong>
+                    <div class="prompt-display">Crie procedimento padrão para "Troca de Turno na Produção":
+
+CONTEXTO: Fábrica 24/7, 3 turnos, 15 operadores por turno
+PROBLEMAS ATUAIS: Informações perdidas, retrabalho, acidentes
+SETORES: Produção, Qualidade, Manutenção, Segurança
+
+REQUISITOS:
+- Linguagem clara e objetiva
+- Checklist verificável
+- Tempo máximo: 30 minutos
+- Incluir aspectos de segurança
+- Formato: Procedimento formal ISO
+
+Estrutura necessária:
+1. Objetivo e escopo
+2. Responsabilidades
+3. Procedimento passo-a-passo
+4. Registros e documentos
+5. Não conformidades</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parte 5: Aplicações Específicas -->
+        <div class="section">
+            <h2><span class="step-indicator">5</span>Casos de Uso Específicos da Engenharia</h2>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>🔍 Análise de Falhas</h3>
+                    <p><strong>Prompt:</strong> "Como especialista em análise de falhas, investigue..."<br>
+                    <strong>Uso:</strong> RCA (Root Cause Analysis)<br>
+                    <strong>Output:</strong> Relatório estruturado com causas e ações</p>
+                </div>
+                <div class="card">
+                    <h3>📊 Indicadores KPI</h3>
+                    <p><strong>Prompt:</strong> "Defina KPIs para monitorar..."<br>
+                    <strong>Uso:</strong> Dashboard gerencial<br>
+                    <strong>Output:</strong> Métricas SMART com metas</p>
+                </div>
+                <div class="card">
+                    <h3>💰 Análise de Investimento</h3>
+                    <p><strong>Prompt:</strong> "Avalie viabilidade do investimento..."<br>
+                    <strong>Uso:</strong> Business case<br>
+                    <strong>Output:</strong> VPL, TIR, payback</p>
+                </div>
+                <div class="card">
+                    <h3>📈 Previsão de Demanda</h3>
+                    <p><strong>Prompt:</strong> "Analise padrões de demanda..."<br>
+                    <strong>Uso:</strong> Planejamento produção<br>
+                    <strong>Output:</strong> Forecast com sazonalidade</p>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4>🎯 Exemplo 8: Projeto de Melhoria</h4>
+                
+                <div style="margin: 15px 0;">
+                    <strong>Prompt Completo de Projeto:</strong>
+                    <div class="prompt-display">Como gerente de projetos de melhoria contínua, desenvolva projeto para:
+
+PROBLEMA: Refugo de 8% na linha de montagem (meta: <3%)
+DADOS: 10.000 unidades/mês, custo refugo R$ 50/unidade
+RECURSOS: R$ 200.000 budget, 6 meses prazo, 3 pessoas dedicadas
+RESTRIÇÕES: Produção não pode parar, mudanças graduais
+
+Entregue projeto estruturado:
+1. Escopo e objetivos SMART
+2. Análise de causa raiz (Ishikawa)
+3. Soluções propostas com priorização
+4. Cronograma detalhado (WBS)
+5. Orçamento discriminado
+6. Análise de riscos e mitigação
+7. Plano de comunicação
+8. Métricas de acompanhamento
+9. Plano de sustentação dos resultados
+
+Formato: Documento de projeto profissional</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parte 6: Checkpoint 3 -->
+        <div class="section">
+            <h2><span class="step-indicator">6</span>Checkpoint 3: Desenvolvimento Prático</h2>
+            
+            <div class="checkpoint-box">
+                <h3>🚀 Checkpoint 3 do Projeto</h3>
+                <p><strong>Objetivo:</strong> Aplicar ChatGPT para resolver um desafio real de gestão empresarial<br>
+                <strong>Entrega:</strong> Solução prática implementada<br>
+                <strong>Prazo:</strong> Apresentação hoje (30/09)</p>
+            </div>
+
+            <div class="warning-box">
+                <h4>📋 Requisitos do Checkpoint 3</h4>
+                <p><strong>1. Definição do Problema:</strong> Situação real de gestão/produção<br>
+                <strong>2. Aplicação do ChatGPT:</strong> Mínimo 3 prompts otimizados<br>
+                <strong>3. Resultados Práticos:</strong> Soluções implementáveis<br>
+                <strong>4. Validação:</strong> Análise crítica das respostas da IA<br>
+                <strong>5. Apresentação:</strong> 10 minutos com demonstração</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🎯 Temas Sugeridos</h3>
+                    <p>• Otimização de estoque<br>
+                    • Melhoria de qualidade<br>
+                    • Redução de custos<br>
+                    • Planejamento de capacidade<br>
+                    • Gestão de fornecedores<br>
+                    • Análise de produtividade</p>
+                </div>
+                <div class="card">
+                    <h3>📊 Estrutura da Apresentação</h3>
+                    <p>1. Problema identificado (2 min)<br>
+                    2. Estratégia de prompts (3 min)<br>
+                    3. Resultados obtidos (3 min)<br>
+                    4. Validação e ajustes (2 min)<br>
+                    5. Implementação proposta (3 min)<br>
+                    6. Q&A (2 min)</p>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h4>💡 Dicas para o Sucesso</h4>
+                <p><strong>Seja Específico:</strong> Problemas reais geram soluções melhores<br>
+                <strong>Iteração:</strong> Refine prompts baseado nas respostas<br>
+                <strong>Validação:</strong> Sempre questione e valide as sugestões da IA<br>
+                <strong>Praticidade:</strong> Foque em soluções implementáveis<br>
+                <strong>Documentação:</strong> Registre todo o processo de desenvolvimento</p>
+            </div>
+        </div>
+
+        <!-- Parte 7: Limitações e Boas Práticas -->
+        <div class="section">
+            <h2><span class="step-indicator">7</span>Limitações e Boas Práticas</h2>
+            
+            <div class="warning-box">
+                <h4>⚠️ Limitações Importantes</h4>
+                <p><strong>Dados Desatualizados:</strong> Conhecimento limitado por data de treinamento<br>
+                <strong>Alucinações:</strong> Pode gerar informações incorretas com confiança<br>
+                <strong>Viés:</strong> Pode reproduzir preconceitos dos dados de treinamento<br>
+                <strong>Contexto:</strong> Limitado a conversas individuais<br>
+                <strong>Confidencialidade:</strong> Não compartilhe informações sensíveis</p>
+            </div>
+
+            <div class="success-box">
+                <h4>✅ Boas Práticas Empresariais</h4>
+                <p><strong>Sempre Valide:</strong> Confirme informações críticas com fontes confiáveis<br>
+                <strong>Use Exemplos:</strong> Forneça contexto específico da sua empresa<br>
+                <strong>Seja Incremental:</strong> Construa soluções passo a passo<br>
+                <strong>Documente Prompts:</strong> Mantenha biblioteca de prompts eficazes<br>
+                <strong>Proteja Dados:</strong> Não exponha informações confidenciais</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🔒 Segurança da Informação</h3>
+                    <p>• Não compartilhe dados financeiros detalhados<br>
+                    • Anonimize informações de clientes<br>
+                    • Use dados fictícios para testes<br>
+                    • Estabeleça políticas de uso<br>
+                    • Treine equipes sobre limitações</p>
+                </div>
+                <div class="card">
+                    <h3>📈 Melhoria Contínua</h3>
+                    <p>• Mantenha biblioteca de prompts<br>
+                    • Documente casos de sucesso<br>
+                    • Compartilhe boas práticas<br>
+                    • Avalie ROI das aplicações<br>
+                    • Evolua estratégias constantemente</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conclusão -->
+        <div class="section">
+            <h2><span class="step-indicator">8</span>Próximos Passos: Rumo à Unidade IV</h2>
+            
+            <div class="success-box">
+                <h4>🎉 Unidade III: Missão Cumprida!</h4>
+                <p>Vocês agora dominam aplicações práticas de IA comercial! Aprenderam a usar ChatGPT estrategicamente, criar prompts eficazes e implementar soluções reais de gestão empresarial.</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>✅ O que Conquistamos</h3>
+                    <p>• Prompt engineering eficaz<br>
+                    • Análise automatizada de dados<br>
+                    • Otimização de processos<br>
+                    • Comunicações profissionais<br>
+                    • Aplicações práticas reais<br>
+                    • Checkpoint 3 desenvolvido</p>
+                </div>
+                <div class="card">
+                    <h3>🚀 Próxima Aula (07/10)</h3>
+                    <p><strong>Unidade IV: IA Personalizada</strong><br>
+                    • Criação de sistemas de IA<br>
+                    • Desenvolvimento para tarefas específicas<br>
+                    • Da concepção ao treinamento<br>
+                    • Implementação e análise<br>
+                    • Projetos customizados</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🌟 Mensagem Final</h3>
+                <p>Vocês concluíram com sucesso a <strong>Unidade III</strong>! Agora têm poder real de transformar processos empresariais com IA. Na próxima unidade, vamos além das ferramentas prontas e aprenderemos a <strong>criar nossos próprios sistemas inteligentes</strong>. Preparem-se para se tornarem desenvolvedores de IA!</p>
+            </div>
+
+            <div class="warning-box">
+                <h4>📝 Para Casa: Preparação Unidade IV</h4>
+                <p>• Reflitam sobre processos que gostariam de automatizar<br>
+                • Pensem em dados que vocês têm disponíveis<br>
+                • Identifiquem tarefas repetitivas na sua área<br>
+                • Tragam ideias para projetos de IA personalizada<br>
+                • Instalem Python e bibliotecas básicas (orientações no próximo encontro)</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('code').textContent;
+            
+            navigator.clipboard.writeText(code).then(function() {
+                button.textContent = 'Copiado!';
+                button.style.background = '#28a745';
+                
+                setTimeout(function() {
+                    button.textContent = 'Copiar';
+                    button.style.background = '#667eea';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
