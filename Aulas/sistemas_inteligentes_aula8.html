@@ -3,876 +3,1256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistemas Inteligentes - Aula 30/09</title>
+    <script>
+        function copyCode(button) {
+            try {
+                // Encontrar o bloco de código
+                const codeBlock = button.closest('.code-block');
+                const preElement = codeBlock.querySelector('pre');
+                
+                if (!preElement) {
+                    alert('Código não encontrado');
+                    return;
+                }
+                
+                // Obter o texto
+                const text = preElement.textContent || preElement.innerText;
+                
+                // Criar elemento temporário
+                const temp = document.createElement('textarea');
+                temp.value = text;
+                temp.style.position = 'fixed';
+                temp.style.left = '-9999px';
+                document.body.appendChild(temp);
+                
+                // Selecionar e copiar
+                temp.select();
+                temp.setSelectionRange(0, 99999);
+                
+                const success = document.execCommand('copy');
+                document.body.removeChild(temp);
+                
+                // Feedback
+                const original = button.textContent;
+                if (success) {
+                    button.textContent = 'Copiado!';
+                    button.style.backgroundColor = '#27ae60';
+                } else {
+                    button.textContent = 'Erro!';
+                    button.style.backgroundColor = '#e74c3c';
+                }
+                
+                setTimeout(() => {
+                    button.textContent = original;
+                    button.style.backgroundColor = '#667eea';
+                }, 2000);
+                
+            } catch (err) {
+                alert('Erro ao copiar: ' + err.message);
+            }
+        }
+    </script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #1a1a1a;
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{
+            font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',system-ui,sans-serif;
+            background:linear-gradient(135deg,#f5f7fa 0%,#c3cfe2 100%);
+            min-height:100vh;padding:20px
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        .container{
+            max-width:1200px;margin:0 auto;background:rgba(255,255,255,0.95);
+            backdrop-filter:blur(20px);border-radius:24px;padding:40px;
+            box-shadow:0 20px 40px rgba(25,20,20,.2);border:1px solid rgba(255,255,255,.3);
+            animation:fadeInUp .8s cubic-bezier(.4,0,.2,1)
         }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .badge {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-
-        .title {
-            font-size: 2.8rem;
-            font-weight: 700;
-            color: #667eea;
-            margin-bottom: 16px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 30px;
-        }
-
-        .section {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 30px;
-            border-left: 5px solid #667eea;
-        }
-
-        .section h2 {
-            color: #667eea;
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 12px;
-            padding: 24px;
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover { transform: translateY(-3px); }
-
-        .card h3 {
-            color: #667eea;
-            font-size: 1.3rem;
-            margin-bottom: 12px;
-        }
-
-        .highlight-box {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 30px;
-            border-radius: 16px;
-            margin: 25px 0;
-        }
-
-        .highlight-box h3 {
-            color: white;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-        }
-
-        .code-block {
-            background: #1e1e1e;
-            color: #e8e8e8;
-            padding: 20px;
-            border-radius: 12px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            overflow-x: auto;
-            margin: 15px 0;
-            border-left: 4px solid #667eea;
-        }
-
-        .code-header {
-            background: #2d2d2d;
-            color: #fff;
-            padding: 8px 16px;
-            margin: -20px -20px 12px -20px;
-            border-radius: 12px 12px 0 0;
-            font-size: 12px;
-            font-weight: 600;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .copy-btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-            cursor: pointer;
-        }
-
-        .step-indicator {
-            background: #667eea;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 18px;
-        }
-
-        .checkpoint-box {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-            color: white;
-            padding: 25px;
-            border-radius: 16px;
-            margin: 25px 0;
-        }
-
-        .checkpoint-box h3 {
-            color: white;
-            margin-bottom: 12px;
-        }
-
-        .prompt-box {
-            background: rgba(102, 126, 234, 0.1);
-            border: 2px solid rgba(102, 126, 234, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .prompt-box h4 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
-        .concept-box {
-            background: rgba(118, 75, 162, 0.1);
-            border: 2px solid rgba(118, 75, 162, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .concept-box h4 {
-            color: #764ba2;
-            margin-bottom: 10px;
-        }
-
-        .success-box {
-            background: rgba(40, 167, 69, 0.1);
-            border: 2px solid rgba(40, 167, 69, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 5px solid #28a745;
-        }
-
-        .warning-box {
-            background: rgba(255, 193, 7, 0.1);
-            border: 2px solid rgba(255, 193, 7, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 5px solid #ffc107;
-        }
-
-        .example-box {
-            background: rgba(23, 162, 184, 0.1);
-            border: 2px solid rgba(23, 162, 184, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .example-box h4 {
-            color: #17a2b8;
-            margin-bottom: 10px;
-        }
-
-        .prompt-display {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 10px 0;
-            font-family: 'Courier New', monospace;
-            white-space: pre-wrap;
-        }
-
-        .response-display {
-            background: #e8f5e8;
-            border: 1px solid #c3e6c3;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 10px 0;
-        }
-
-        @media (max-width: 768px) {
-            .container { padding: 20px; margin: 10px; }
-            .title { font-size: 2.2rem; }
-            .grid { grid-template-columns: 1fr; }
-        }
+        .header{text-align:center;margin-bottom:40px}
+        .badge{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:10px 20px;border-radius:25px;font-size:14px;font-weight:600;display:inline-block;margin-bottom:20px;box-shadow:0 4px 15px rgba(102,126,234,.3)}
+        .stats-badge{background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;padding:6px 14px;border-radius:15px;font-size:12px;font-weight:600;display:inline-block;margin-bottom:15px;box-shadow:0 2px 8px rgba(240,147,251,.3)}
+        .title{font-size:2.5rem;font-weight:700;color:#1a1a1a;margin-bottom:12px;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .subtitle{font-size:1.2rem;color:#666;font-weight:400;margin-bottom:30px}
+        .step-container{background:rgba(255,255,255,.7);backdrop-filter:blur(10px);border-radius:16px;border-left:6px solid #667eea;padding:30px;margin-bottom:30px;box-shadow:0 8px 25px rgba(102,126,234,.1);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+        .step-container:hover{transform:translateY(-5px)}
+        .step-header{display:flex;align-items:center;gap:15px;margin-bottom:20px}
+        .step-number{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;width:45px;height:45px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;flex-shrink:0;box-shadow:0 4px 15px rgba(102,126,234,.3)}
+        .step-title{color:#667eea;font-size:1.5rem;font-weight:600;margin:0}
+        .step-description{color:#444;line-height:1.7;font-size:1.1rem;margin-bottom:20px}
+        .theory-box{background:rgba(102,126,234,.1);border:2px solid rgba(102,126,234,.3);border-radius:16px;padding:20px;margin:20px 0}
+        .theory-box h4{color:#667eea;font-size:1.2rem;margin-bottom:12px;font-weight:600;display:flex;align-items:center;gap:10px}
+        .code-block{background:#1e1e1e;color:#d4d4d4;padding:25px;border-radius:12px;font-family:'Monaco','Menlo','Ubuntu Mono',monospace;font-size:14px;line-height:1.6;overflow-x:auto;margin:20px 0;border-left:4px solid #667eea;position:relative}
+        .code-header{background:#2d2d2d;color:#fff;padding:10px 20px;margin:-25px -25px 15px -25px;border-radius:12px 12px 0 0;font-size:12px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+        .copy-btn{background:#667eea;color:#fff;border:none;padding:5px 12px;border-radius:6px;font-size:11px;cursor:pointer;transition:background .3s,transform .2s}
+        .copy-btn:hover{background:#764ba2;transform:scale(1.05)}
+        .output-example{background:rgba(76,175,80,.1);border:2px solid rgba(76,175,80,.3);border-radius:12px;padding:20px;margin:15px 0;font-family:monospace;font-size:13px}
+        .output-header{color:#388e3c;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+        .highlight-box{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:25px;border-radius:16px;margin:25px 0;backdrop-filter:blur(10px);box-shadow:0 8px 25px rgba(102,126,234,.3)}
+        .highlight-box h4{font-size:1.3rem;margin-bottom:12px;font-weight:600;display:flex;align-items:center;gap:10px}
+        .warning-box{background:rgba(255,193,7,.1);border:2px solid rgba(255,193,7,.3);border-radius:16px;padding:20px;margin:20px 0}
+        .warning-box h4{color:#f57c00;font-size:1.2rem;margin-bottom:12px;font-weight:600;display:flex;align-items:center;gap:10px}
+        .info-panel{background:rgba(102,126,234,.1);border:2px solid rgba(102,126,234,.2);border-radius:16px;padding:20px;margin:20px 0}
+        .info-panel h4{color:#667eea;font-size:1.2rem;margin-bottom:12px;font-weight:600;display:flex;align-items:center;gap:10px}
+        .explanation-box{background:rgba(255,255,255,.5);border-radius:12px;padding:20px;margin:15px 0;border-left:4px solid #667eea}
+        .explanation-box h5{color:#667eea;font-size:1.1rem;margin-bottom:10px;font-weight:600}
+        .explanation-box p{color:#555;line-height:1.6;font-size:.95rem}
+        .comparison-box{background:rgba(240,147,251,.1);border:2px solid rgba(240,147,251,.3);border-radius:16px;padding:20px;margin:20px 0}
+        .comparison-box h4{color:#f093fb;font-size:1.2rem;margin-bottom:12px;font-weight:600;display:flex;align-items:center;gap:10px}
+        .syntax-keyword{color:#569cd6}.syntax-string{color:#ce9178}.syntax-comment{color:#6a9955}.syntax-number{color:#b5cea8}.syntax-function{color:#dcdcaa}
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+        @media (max-width:768px){.container{padding:25px;margin:10px}.title{font-size:2rem}.step-container{padding:20px}.code-block{padding:15px;font-size:12px}.step-header{flex-direction:column;align-items:flex-start;gap:10px}.step-number{width:35px;height:35px;font-size:16px}.step-title{font-size:1.3rem}}
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="badge">🎯 Aula 30/09 - Unidade III</div>
-            <h1 class="title">ChatGPT para Gestão Empresarial</h1>
-            <p class="subtitle">Aplicações Práticas de IA Comercial na Engenharia de Produção</p>
+<div class="container">
+    <div class="header">
+        <div class="badge">Roteiro Prático - Aula 9</div>
+        <h1 class="title">Regressão Linear e Logística</h1>
+        <p class="subtitle">Métodos de aprendizado de máquina supervisionado para predição e classificação</p>
+    </div>
+
+    <div class="highlight-box">
+        <h4>🎯 O que vamos aprender hoje</h4>
+        <p>Exploraremos <strong>Regressão Linear</strong> para predição de valores contínuos e <strong>Regressão Logística</strong> para classificação, incluindo técnicas de regularização, avaliação de modelos e interpretação de coeficientes para insights de negócio.</p>
+    </div>
+
+    <div class="info-panel">
+        <h4>📋 Preparação</h4>
+        <p>Abra o Google Colab e crie o notebook <strong>Aula9_Regressao_Linear_Logistica</strong>. Utilizaremos os dados musicais das aulas anteriores para implementar modelos de regressão e classificação.</p>
+    </div>
+
+    <!-- Passo 1 -->
+    <div class="step-container">
+        <div class="step-header">
+            <div class="step-number">1</div>
+            <h2 class="step-title">Configuração e Preparação dos Dados</h2>
+        </div>
+        <div class="stats-badge">Setup & Data Prep</div>
+        <p class="step-description">Configurar ambiente e preparar dados para modelos de regressão linear e logística.</p>
+
+        <div class="code-block">
+            <div class="code-header"><span>Instalação e Configuração Completa</span>                <button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre><code><span class="syntax-comment"># Importar bibliotecas essenciais</span>
+<span class="syntax-keyword">import</span> pandas <span class="syntax-keyword">as</span> pd
+<span class="syntax-keyword">import</span> numpy <span class="syntax-keyword">as</span> np
+<span class="syntax-keyword">import</span> matplotlib.pyplot <span class="syntax-keyword">as</span> plt
+<span class="syntax-keyword">import</span> seaborn <span class="syntax-keyword">as</span> sns
+<span class="syntax-keyword">import</span> warnings
+warnings.filterwarnings(<span class="syntax-string">'ignore'</span>)
+
+<span class="syntax-comment"># Machine Learning</span>
+<span class="syntax-keyword">from</span> sklearn.model_selection <span class="syntax-keyword">import</span> train_test_split, cross_val_score, GridSearchCV
+<span class="syntax-keyword">from</span> sklearn.linear_model <span class="syntax-keyword">import</span> LinearRegression, LogisticRegression
+<span class="syntax-keyword">from</span> sklearn.linear_model <span class="syntax-keyword">import</span> Ridge, Lasso, ElasticNet
+<span class="syntax-keyword">from</span> sklearn.preprocessing <span class="syntax-keyword">import</span> StandardScaler, PolynomialFeatures
+<span class="syntax-keyword">from</span> sklearn.pipeline <span class="syntax-keyword">import</span> Pipeline
+
+<span class="syntax-comment"># Métricas</span>
+<span class="syntax-keyword">from</span> sklearn.metrics <span class="syntax-keyword">import</span> mean_squared_error, r2_score, mean_absolute_error
+<span class="syntax-keyword">from</span> sklearn.metrics <span class="syntax-keyword">import</span> accuracy_score, classification_report, confusion_matrix
+<span class="syntax-keyword">from</span> sklearn.metrics <span class="syntax-keyword">import</span> roc_curve, auc, precision_recall_curve, roc_auc_score
+
+<span class="syntax-comment"># Estatísticas</span>
+<span class="syntax-keyword">from</span> scipy <span class="syntax-keyword">import</span> stats
+<span class="syntax-keyword">from</span> statsmodels.stats.diagnostic <span class="syntax-keyword">import</span> het_breuschpagan
+<span class="syntax-keyword">import</span> statsmodels.api <span class="syntax-keyword">as</span> sm
+
+<span class="syntax-comment"># Configurações de visualização</span>
+plt.style.use(<span class="syntax-string">'seaborn-v0_8-whitegrid'</span>)
+sns.set_palette(<span class="syntax-string">"Set2"</span>)
+
+<span class="syntax-comment"># Cores para gráficos</span>
+cores_regressao = {
+    <span class="syntax-string">'linear'</span>: <span class="syntax-string">'#3498db'</span>,      <span class="syntax-comment"># Azul</span>
+    <span class="syntax-string">'logistica'</span>: <span class="syntax-string">'#e74c3c'</span>,   <span class="syntax-comment"># Vermelho</span>
+    <span class="syntax-string">'ridge'</span>: <span class="syntax-string">'#f39c12'</span>,       <span class="syntax-comment"># Laranja</span>
+    <span class="syntax-string">'lasso'</span>: <span class="syntax-string">'#27ae60'</span>,       <span class="syntax-comment"># Verde</span>
+    <span class="syntax-string">'elastic'</span>: <span class="syntax-string">'#9b59b6'</span>,     <span class="syntax-comment"># Roxo</span>
+    <span class="syntax-string">'residuos'</span>: <span class="syntax-string">'#34495e'</span>     <span class="syntax-comment"># Cinza escuro</span>
+}
+
+np.random.seed(<span class="syntax-number">42</span>)
+
+print(<span class="syntax-string">"📊 Ambiente configurado para Regressão Linear e Logística!"</span>)
+print(<span class="syntax-string">"🎯 Pronto para modelagem supervisionada"</span>)</code></pre>
         </div>
 
-        <div class="highlight-box">
-            <h3>🚀 Revolucionando a Gestão com IA</h3>
-            <p>Hoje vamos <strong>explorar</strong> como o ChatGPT pode transformar processos de gestão empresarial, automatizar tarefas rotineiras e <strong>otimizar</strong> a tomada de decisões na engenharia de produção. Preparem-se para descobrir o potencial real da IA comercial!</p>
+        <div class="theory-box">
+            <h4>🧠 Aprendizado Supervisionado: Conceitos Fundamentais</h4>
+            <p><strong>Aprendizado Supervisionado</strong> utiliza dados rotulados para aprender padrões:</p>
+            <ul>
+                <li><strong>Regressão:</strong> prediz valores contínuos (preço, vendas, temperatura)</li>
+                <li><strong>Classificação:</strong> prediz categorias discretas (hit/não hit, spam/ham)</li>
+                <li><strong>Features (X):</strong> variáveis independentes usadas para predição</li>
+                <li><strong>Target (y):</strong> variável dependente que queremos predizer</li>
+                <li><strong>Overfitting:</strong> modelo muito complexo, memoriza treino mas falha em teste</li>
+                <li><strong>Underfitting:</strong> modelo muito simples, não captura padrões relevantes</li>
+            </ul>
         </div>
 
-        <div class="checkpoint-box">
-            <h3>📚 Conteúdo da Aula</h3>
-            <p><strong>Parte 1:</strong> Introdução ao ChatGPT e Prompt Engineering<br>
-            <strong>Parte 2:</strong> Aplicações em Análise de Dados e Relatórios<br>
-            <strong>Parte 3:</strong> Otimização de Processos Produtivos<br>
-            <strong>Parte 4:</strong> Automação de Comunicações Empresariais<br>
-            <strong>Parte 5:</strong> Desenvolvimento do Checkpoint 3</p>
-        </div>
-
-        <!-- Parte 1: Introdução ao ChatGPT -->
-        <div class="section">
-            <h2><span class="step-indicator">1</span>ChatGPT: Fundamentos e Estratégias</h2>
-            <p>O ChatGPT representa uma revolução na forma como interagimos com sistemas inteligentes. Vamos entender como utilizá-lo estrategicamente para gestão empresarial.</p>
-            
-            <div class="concept-box">
-                <h4>🧠 O que é o ChatGPT?</h4>
-                <p><strong>Large Language Model (LLM):</strong> Modelo treinado em textos massivos<br>
-                <strong>Processamento de Linguagem Natural:</strong> Compreende e gera texto humano<br>
-                <strong>Versatilidade:</strong> Adaptável a múltiplas tarefas empresariais<br>
-                <strong>Contexto:</strong> Mantém conversas coerentes e longas</p>
+        <div class="code-block">
+            <div class="code-header">
+                <span>Criação do Dataset Musical Expandido</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
             </div>
-
-            <div class="prompt-box">
-                <h4>🎯 Prompt Engineering - Princípios Fundamentais</h4>
-                <p><strong>Clareza:</strong> Seja específico sobre o que deseja<br>
-                <strong>Contexto:</strong> Forneça informações relevantes<br>
-                <strong>Formato:</strong> Especifique o tipo de resposta esperada<br>
-                <strong>Exemplos:</strong> Use few-shot learning quando necessário<br>
-                <strong>Iteração:</strong> Refine prompts baseado nos resultados</p>
-            </div>
-
-            <div class="example-box">
-                <h4>📝 Exemplo 1: Prompt Básico vs. Otimizado</h4>
-                
-                <div style="margin: 15px 0;">
-                    <strong>❌ Prompt Fraco:</strong>
-                    <div class="prompt-display">Analise estes dados de vendas</div>
-                </div>
-
-                <div style="margin: 15px 0;">
-                    <strong>✅ Prompt Otimizado:</strong>
-                    <div class="prompt-display">Como especialista em análise de vendas, examine os dados abaixo e forneça:
-1. Tendências principais (crescimento/declínio)
-2. Produtos com melhor performance
-3. Recomendações específicas para aumento de vendas
-4. Formato: Relatório executivo com bullets
-
-Dados: [inserir dados aqui]</div>
-                </div>
-            </div>
-
-            <div class="grid">
-                <div class="card">
-                    <h3>🎯 Prompts Eficazes</h3>
-                    <p>• Use verbos de ação específicos<br>
-                    • Defina o papel do ChatGPT<br>
-                    • Estabeleça critérios claros<br>
-                    • Solicite formato específico<br>
-                    • Inclua exemplos quando possível</p>
-                </div>
-                <div class="card">
-                    <h3>⚠️ Armadilhas Comuns</h3>
-                    <p>• Prompts muito vagos<br>
-                    • Não fornecer contexto suficiente<br>
-                    • Não especificar formato de saída<br>
-                    • Confiar cegamente nas respostas<br>
-                    • Não validar informações críticas</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Parte 2: Análise de Dados e Relatórios -->
-        <div class="section">
-            <h2><span class="step-indicator">2</span>Análise de Dados e Geração de Relatórios</h2>
-            
-            <div class="success-box">
-                <h4>💡 Caso de Uso: Dashboard Executivo Automatizado</h4>
-                <p>Transforme dados brutos em insights executivos rapidamente, criando relatórios que antes levariam horas para produzir.</p>
-            </div>
-
-            <div class="example-box">
-                <h4>📊 Exemplo 2: Análise Dataset SECOM (UCI)</h4>
-                <p><strong>Dataset Real:</strong> Manufatura de Semicondutores da UCI Repository</p>
-                
-                <div style="margin: 15px 0;">
-                    <strong>Prompt para ChatGPT:</strong>
-                    <div class="prompt-display">Como especialista em qualidade de manufatura, analise o dataset SECOM da UCI:
-
-DADOS DO PROCESSO:
-- 1567 produtos manufaturados
-- 591 variáveis de sensores e processo
-- 104 falhas identificadas (6.6% taxa de defeito)
-- Valores missing em diversas variáveis
-- Processo de fabricação de semicondutores
-
-CONTEXTO: Linha de produção com monitoramento contínuo de sensores
-
-SOLICITO:
-1. Diagnóstico da qualidade do processo atual
-2. Identificação dos principais problemas
-3. Estratégias para reduzir taxa de defeitos de 6.6% para <3%
-4. Plano de implementação de melhorias
-5. Indicadores KPI para monitoramento
-
-Formato: Relatório executivo com ações prioritárias</div>
-                </div>
-
-                <div style="margin: 15px 0;">
-                    <strong>Resposta Esperada:</strong>
-                    <div class="response-display"><strong>RELATÓRIO: OTIMIZAÇÃO PROCESSO SECOM</strong>
-
-<strong>1. DIAGNÓSTICO ATUAL:</strong>
-• Taxa de defeitos: 6.6% (104/1567) - CRÍTICO
-• Variabilidade excessiva: 591 variáveis monitoradas
-• Missing data indica problemas de sensores
-• Processo instável com alta rejeição
-
-<strong>2. PROBLEMAS IDENTIFICADOS:</strong>
-• Falta de controle estatístico do processo
-• Sensores com falhas frequentes (missing values)
-• Ausência de detecção precoce de defeitos
-
-<strong>3. ESTRATÉGIAS DE MELHORIA:</strong>
-• Implementar SPC (Statistical Process Control)
-• Feature selection: identificar 20-30 variáveis críticas
-• Sistema de alarme precoce baseado em ML
-• Manutenção preventiva de sensores
-
-<strong>4. PLANO DE IMPLEMENTAÇÃO (6 meses):</strong>
-Fase 1: Análise de dados históricos (1 mês)
-Fase 2: Modelo preditivo de defeitos (2 meses)  
-Fase 3: Sistema de monitoramento real-time (3 meses)
-
-<strong>5. KPIs PROPOSTOS:</strong>
-• Taxa de defeitos: <3% (meta)
-• First Pass Yield: >97%
-• Tempo médio entre falhas: >200 produtos
-• Disponibilidade de sensores: >98%</div>
-                </div>
-            </div>
-
-            <div class="example-box">
-                <h4>🍷 Exemplo 3: Controle de Qualidade - Dataset Wine Quality (UCI)</h4>
-                <p><strong>Dataset Real:</strong> Vinhos Portugueses com 11 variáveis físico-químicas</p>
-                
-                <div style="margin: 15px 0;">
-                    <strong>Prompt para Controle de Qualidade:</strong>
-                    <div class="prompt-display">Como especialista em controle de qualidade, analise o dataset Wine Quality da UCI:
-
-DADOS DO PRODUTO:
-- 6497 amostras de vinho (4898 brancos + 1599 tintos)
-- 11 variáveis físico-químicas mensuradas
-- Qualidade avaliada por especialistas (escala 0-10)
-- Distribuição: maioria nota 5-7, poucos vinhos excelentes/ruins
-
-VARIÁVEIS MEDIDAS:
-• Acidez fixa/volátil, ácido cítrico
-• Açúcar residual, cloretos
-• SO2 livre/total, densidade, pH
-• Sulfatos, teor alcoólico
-
-DESAFIO: Melhorar processo para aumentar % de vinhos premium (nota ≥8)
-
-SOLICITO:
-1. Análise das variáveis mais críticas para qualidade
-2. Faixas ideais para cada parâmetro
-3. Processo de controle em linha de produção
-4. Estratégia para reduzir variabilidade
-5. Plano de implementação de melhorias
-
-Formato: Guia técnico para enólogos</div>
-                </div>
-
-                <div style="margin: 15px 0;">
-                    <strong>Resposta Esperada:</strong>
-                    <div class="response-display"><strong>GUIA DE CONTROLE DE QUALIDADE - VINHOS</strong>
-
-<strong>1. VARIÁVEIS CRÍTICAS IDENTIFICADAS:</strong>
-• Teor alcoólico: correlação positiva forte com qualidade
-• Acidez volátil: correlação negativa (reduzir para melhorar)
-• Sulfatos: otimizar faixa 0.4-0.8 g/L
-• SO2 livre: balance entre conservação e sabor
-
-<strong>2. FAIXAS IDEAIS PARA VINHOS PREMIUM:</strong>
-• Álcool: 11-13% vol (vinhos brancos), 11-14% (tintos)
-• Acidez volátil: <0.4 g/L ácido acético
-• pH: 3.0-3.5 (brancos), 3.3-3.8 (tintos)
-• Açúcar residual: <4 g/L (secos)
-
-<strong>3. CONTROLE EM LINHA:</strong>
-• Monitoramento pH e acidez a cada 4h na fermentação
-• Análise SO2 diária durante armazenamento
-• Teste sensorial semanal por painel treinado
-
-<strong>4. REDUÇÃO DE VARIABILIDADE:</strong>
-• Padronização da temperatura de fermentação (±1°C)
-• Controle automático de sulfitagem
-• Seleção rigorosa de matéria-prima
-
-<strong>5. IMPLEMENTAÇÃO (4 meses):</strong>
-Mês 1: Calibração de equipamentos e treinamento
-Mês 2: Implementação controles automáticos
-Mês 3: Testes e ajustes finos
-Mês 4: Validação e documentação</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Parte 3: Otimização de Processos -->
-        <div class="section">
-            <h2><span class="step-indicator">3</span>Otimização de Processos Produtivos</h2>
-            
-            <div class="concept-box">
-                <h4>⚙️ IA para Melhoria Contínua</h4>
-                <p><strong>Identificação de Gargalos:</strong> Análise de fluxo de processos<br>
-                <strong>Simulação de Cenários:</strong> Teste de melhorias antes da implementação<br>
-                <strong>Benchmarking:</strong> Comparação com melhores práticas<br>
-                <strong>Indicadores KPI:</strong> Definição de métricas relevantes</p>
-            </div>
-
-            <div class="example-box">
-                <h4>🔧 Exemplo 4: Detecção de Defeitos - Dataset Steel Plates (UCI)</h4>
-                <p><strong>Dataset Real:</strong> Detecção de 7 tipos de defeitos em chapas de aço</p>
-                
-                <div style="margin: 15px 0;">
-                    <strong>Prompt para Sistema de Inspeção:</strong>
-                    <div class="prompt-display">Como engenheiro de qualidade especialista em inspeção, desenvolva sistema baseado no dataset Steel Plates da UCI:
-
-DADOS DO PROCESSO:
-- Chapas de aço com medições dimensionais
-- 7 tipos de defeitos possíveis: Pastry, Z_Scratch, K_Scratch, Stains, Dirtiness, Bumps, Other_Faults
-- Características: luminosidade, uniformidade, comprimento, largura, etc.
-- Classificação multi-label (uma chapa pode ter múltiplos defeitos)
-
-OBJETIVO: Sistema automático de inspeção de qualidade
-
-CONTEXTO: Linha de produção de aço com 500 chapas/dia, inspeção manual atual
-
-SOLICITO:
-1. Estratégia de automação da inspeção
-2. Priorização dos defeitos por criticidade
-3. Sistema de classificação em tempo real
-4. Plano de redução de refugo/retrabalho
-5. ROI esperado da automação
-6. Cronograma de implementação
-
-Formato: Proposta técnica para diretoria</div>
-                </div>
-
-                <div style="margin: 15px 0;">
-                    <strong>Resposta Esperada:</strong>
-                    <div class="response-display"><strong>PROPOSTA: SISTEMA AUTOMÁTICO DE INSPEÇÃO</strong>
-
-<strong>1. ESTRATÉGIA DE AUTOMAÇÃO:</strong>
-• Visão computacional + Machine Learning para classificação
-• Câmeras industriais para captura de características
-• Algoritmo multi-label para detectar defeitos simultâneos
-• Interface real-time com sistema de produção
-
-<strong>2. PRIORIZAÇÃO POR CRITICIDADE:</strong>
-Alto Impacto: Pastry, Z_Scratch (afetam resistência estrutural)
-Médio Impacto: K_Scratch, Bumps (afetam acabamento)
-Baixo Impacto: Stains, Dirtiness (defeitos cosméticos)
-
-<strong>3. SISTEMA EM TEMPO REAL:</strong>
-• Inspeção automática: 15 segundos/chapa
-• Classificação simultânea dos 7 defeitos
-• Alarme instantâneo para defeitos críticos
-• Dashboard de qualidade em tempo real
-
-<strong>4. REDUÇÃO DE PERDAS:</strong>
-• Detecção precoce: -60% refugo
-• Classificação precisa: -40% retrabalho
-• Rastreabilidade completa de defeitos
-
-<strong>5. ROI ESTIMADO:</strong>
-Investimento: R$ 850.000 (câmeras + software + implementação)
-Economia anual: R$ 1.200.000 (refugo + retrabalho + mão-de-obra)
-Payback: 8.5 meses
-
-<strong>6. CRONOGRAMA (6 meses):</strong>
-Mês 1-2: Desenvolvimento e treinamento do modelo
-Mês 3-4: Instalação e integração hardware
-Mês 5: Testes e calibração
-Mês 6: Operação e treinamento equipe</div>
-                </div>
-            </div>
-
-            <div class="example-box">
-                <h4>📋 Exemplo 5: Planejamento de Manutenção</h4>
-                
-                <div style="margin: 15px 0;">
-                    <strong>Prompt Estratégico:</strong>
-                    <div class="prompt-display">Como especialista em manutenção industrial, desenvolva um plano para:
-
-EQUIPAMENTOS:
-- 5 prensas (críticas, 15 anos de uso)
-- 3 fornos (importantes, 8 anos)
-- 2 compressores (apoio, 12 anos)
-- 10 motores (vários, 5-20 anos)
-
-HISTÓRICO:
-- Paradas não programadas: 45h/mês
-- Custo manutenção corretiva: R$ 80.000/mês
-- Disponibilidade atual: 78%
-
-META: Aumentar disponibilidade para 92%
-
-Entregue plano com:
-1. Estratégia por tipo de equipamento
-2. Cronograma anual de manutenções
-3. Recursos necessários (pessoas, peças)
-4. Budget detalhado
-5. Indicadores de acompanhamento</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Parte 4: Comunicações Empresariais -->
-        <div class="section">
-            <h2><span class="step-indicator">4</span>Automação de Comunicações</h2>
-            
-            <div class="example-box">
-                <h4>📧 Exemplo 6: E-mails Executivos</h4>
-                
-                <div style="margin: 15px 0;">
-                    <strong>Prompt para Comunicação:</strong>
-                    <div class="prompt-display">Redija e-mail executivo para a diretoria sobre:
-
-SITUAÇÃO: Atraso de 2 semanas na entrega do Projeto Alpha
-CAUSA: Fornecedor principal falhou na entrega de componentes
-IMPACTO: Cliente estratégico, contrato R$ 2M
-AÇÕES: Fornecedor backup ativado, equipe extra mobilizada
-NOVA PREVISÃO: Atraso reduzido para 5 dias
-
-TOM: Profissional, responsável, confiante
-OBJETIVO: Informar situação e tranquilizar sobre controle
-COMPRIMENTO: Máximo 150 palavras</div>
-                </div>
-
-                <div style="margin: 15px 0;">
-                    <strong>Resposta Gerada:</strong>
-                    <div class="response-display"><strong>Assunto:</strong> Atualização Projeto Alpha - Ações de Mitigação Implementadas
-
-Prezada Diretoria,
-
-Informo sobre a situação do Projeto Alpha. Devido a falha de entrega do fornecedor principal, o projeto apresentará atraso de 5 dias (reduzido dos 14 dias iniciais).
-
-<strong>Ações Implementadas:</strong>
-• Fornecedor backup ativado com entrega confirmada
-• Equipe adicional alocada para recuperação de cronograma
-• Cliente informado e alinhamento realizado
-
-<strong>Garantias:</strong>
-• Qualidade mantida conforme especificações
-• Penalidades negociadas e minimizadas
-• Processo de contingência documentado para futuros projetos
-
-Nova entrega: 15/10 (vs. 10/10 original). Cliente confirma aceitação do prazo ajustado.
-
-Atenciosamente,
-[Nome]</div>
-                </div>
-            </div>
-
-            <div class="example-box">
-                <h4>📋 Exemplo 7: Procedimentos Operacionais</h4>
-                
-                <div style="margin: 15px 0;">
-                    <strong>Prompt para Padronização:</strong>
-                    <div class="prompt-display">Crie procedimento padrão para "Troca de Turno na Produção":
-
-CONTEXTO: Fábrica 24/7, 3 turnos, 15 operadores por turno
-PROBLEMAS ATUAIS: Informações perdidas, retrabalho, acidentes
-SETORES: Produção, Qualidade, Manutenção, Segurança
-
-REQUISITOS:
-- Linguagem clara e objetiva
-- Checklist verificável
-- Tempo máximo: 30 minutos
-- Incluir aspectos de segurança
-- Formato: Procedimento formal ISO
-
-Estrutura necessária:
-1. Objetivo e escopo
-2. Responsabilidades
-3. Procedimento passo-a-passo
-4. Registros e documentos
-5. Não conformidades</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Parte 5: Aplicações Específicas -->
-        <div class="section">
-            <h2><span class="step-indicator">5</span>Casos de Uso Específicos da Engenharia</h2>
-            
-            <div class="grid">
-                <div class="card">
-                    <h3>🔍 Análise de Falhas</h3>
-                    <p><strong>Prompt:</strong> "Como especialista em análise de falhas, investigue..."<br>
-                    <strong>Uso:</strong> RCA (Root Cause Analysis)<br>
-                    <strong>Output:</strong> Relatório estruturado com causas e ações</p>
-                </div>
-                <div class="card">
-                    <h3>📊 Indicadores KPI</h3>
-                    <p><strong>Prompt:</strong> "Defina KPIs para monitorar..."<br>
-                    <strong>Uso:</strong> Dashboard gerencial<br>
-                    <strong>Output:</strong> Métricas SMART com metas</p>
-                </div>
-                <div class="card">
-                    <h3>💰 Análise de Investimento</h3>
-                    <p><strong>Prompt:</strong> "Avalie viabilidade do investimento..."<br>
-                    <strong>Uso:</strong> Business case<br>
-                    <strong>Output:</strong> VPL, TIR, payback</p>
-                </div>
-                <div class="card">
-                    <h3>📈 Previsão de Demanda</h3>
-                    <p><strong>Prompt:</strong> "Analise padrões de demanda..."<br>
-                    <strong>Uso:</strong> Planejamento produção<br>
-                    <strong>Output:</strong> Forecast com sazonalidade</p>
-                </div>
-            </div>
-
-            <div class="example-box">
-                <h4>🎯 Exemplo 8: Projeto de Melhoria</h4>
-                
-                <div style="margin: 15px 0;">
-                    <strong>Prompt Completo de Projeto:</strong>
-                    <div class="prompt-display">Como gerente de projetos de melhoria contínua, desenvolva projeto para:
-
-PROBLEMA: Refugo de 8% na linha de montagem (meta: <3%)
-DADOS: 10.000 unidades/mês, custo refugo R$ 50/unidade
-RECURSOS: R$ 200.000 budget, 6 meses prazo, 3 pessoas dedicadas
-RESTRIÇÕES: Produção não pode parar, mudanças graduais
-
-Entregue projeto estruturado:
-1. Escopo e objetivos SMART
-2. Análise de causa raiz (Ishikawa)
-3. Soluções propostas com priorização
-4. Cronograma detalhado (WBS)
-5. Orçamento discriminado
-6. Análise de riscos e mitigação
-7. Plano de comunicação
-8. Métricas de acompanhamento
-9. Plano de sustentação dos resultados
-
-Formato: Documento de projeto profissional</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Parte 6: Checkpoint 3 -->
-        <div class="section">
-            <h2><span class="step-indicator">6</span>Checkpoint 3: Desenvolvimento Prático</h2>
-            
-            <div class="checkpoint-box">
-                <h3>🚀 Checkpoint 3 do Projeto</h3>
-                <p><strong>Objetivo:</strong> Aplicar ChatGPT para resolver um desafio real de gestão empresarial<br>
-                <strong>Entrega:</strong> Solução prática implementada<br>
-                <strong>Prazo:</strong> Apresentação hoje (30/09)</p>
-            </div>
-
-            <div class="warning-box">
-                <h4>📋 Requisitos do Checkpoint 3</h4>
-                <p><strong>1. Definição do Problema:</strong> Situação real de gestão/produção<br>
-                <strong>2. Aplicação do ChatGPT:</strong> Mínimo 3 prompts otimizados<br>
-                <strong>3. Resultados Práticos:</strong> Soluções implementáveis<br>
-                <strong>4. Validação:</strong> Análise crítica das respostas da IA<br>
-                <strong>5. Apresentação:</strong> 10 minutos com demonstração</p>
-            </div>
-
-            <div class="grid">
-                <div class="card">
-                    <h3>🎯 Temas Sugeridos</h3>
-                    <p>• Otimização de estoque<br>
-                    • Melhoria de qualidade<br>
-                    • Redução de custos<br>
-                    • Planejamento de capacidade<br>
-                    • Gestão de fornecedores<br>
-                    • Análise de produtividade</p>
-                </div>
-                <div class="card">
-                    <h3>📊 Estrutura da Apresentação</h3>
-                    <p>1. Problema identificado (2 min)<br>
-                    2. Estratégia de prompts (3 min)<br>
-                    3. Resultados obtidos (3 min)<br>
-                    4. Validação e ajustes (2 min)<br>
-                    5. Implementação proposta (3 min)<br>
-                    6. Q&A (2 min)</p>
-                </div>
-            </div>
-
-            <div class="success-box">
-                <h4>💡 Dicas para o Sucesso</h4>
-                <p><strong>Seja Específico:</strong> Problemas reais geram soluções melhores<br>
-                <strong>Iteração:</strong> Refine prompts baseado nas respostas<br>
-                <strong>Validação:</strong> Sempre questione e valide as sugestões da IA<br>
-                <strong>Praticidade:</strong> Foque em soluções implementáveis<br>
-                <strong>Documentação:</strong> Registre todo o processo de desenvolvimento</p>
-            </div>
-        </div>
-
-        <!-- Parte 7: Limitações e Boas Práticas -->
-        <div class="section">
-            <h2><span class="step-indicator">7</span>Limitações e Boas Práticas</h2>
-            
-            <div class="warning-box">
-                <h4>⚠️ Limitações Importantes</h4>
-                <p><strong>Dados Desatualizados:</strong> Conhecimento limitado por data de treinamento<br>
-                <strong>Alucinações:</strong> Pode gerar informações incorretas com confiança<br>
-                <strong>Viés:</strong> Pode reproduzir preconceitos dos dados de treinamento<br>
-                <strong>Contexto:</strong> Limitado a conversas individuais<br>
-                <strong>Confidencialidade:</strong> Não compartilhe informações sensíveis</p>
-            </div>
-
-            <div class="success-box">
-                <h4>✅ Boas Práticas Empresariais</h4>
-                <p><strong>Sempre Valide:</strong> Confirme informações críticas com fontes confiáveis<br>
-                <strong>Use Exemplos:</strong> Forneça contexto específico da sua empresa<br>
-                <strong>Seja Incremental:</strong> Construa soluções passo a passo<br>
-                <strong>Documente Prompts:</strong> Mantenha biblioteca de prompts eficazes<br>
-                <strong>Proteja Dados:</strong> Não exponha informações confidenciais</p>
-            </div>
-
-            <div class="grid">
-                <div class="card">
-                    <h3>🔒 Segurança da Informação</h3>
-                    <p>• Não compartilhe dados financeiros detalhados<br>
-                    • Anonimize informações de clientes<br>
-                    • Use dados fictícios para testes<br>
-                    • Estabeleça políticas de uso<br>
-                    • Treine equipes sobre limitações</p>
-                </div>
-                <div class="card">
-                    <h3>📈 Melhoria Contínua</h3>
-                    <p>• Mantenha biblioteca de prompts<br>
-                    • Documente casos de sucesso<br>
-                    • Compartilhe boas práticas<br>
-                    • Avalie ROI das aplicações<br>
-                    • Evolua estratégias constantemente</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Conclusão -->
-        <div class="section">
-            <h2><span class="step-indicator">8</span>Próximos Passos: Rumo à Unidade IV</h2>
-            
-            <div class="success-box">
-                <h4>🎉 Unidade III: Missão Cumprida!</h4>
-                <p>Vocês agora dominam aplicações práticas de IA comercial! Aprenderam a usar ChatGPT estrategicamente, criar prompts eficazes e implementar soluções reais de gestão empresarial.</p>
-            </div>
-
-            <div class="grid">
-                <div class="card">
-                    <h3>✅ O que Conquistamos</h3>
-                    <p>• Prompt engineering eficaz<br>
-                    • Análise automatizada de dados<br>
-                    • Otimização de processos<br>
-                    • Comunicações profissionais<br>
-                    • Aplicações práticas reais<br>
-                    • Checkpoint 3 desenvolvido</p>
-                </div>
-                <div class="card">
-                    <h3>🚀 Próxima Aula (07/10)</h3>
-                    <p><strong>Unidade IV: IA Personalizada</strong><br>
-                    • Criação de sistemas de IA<br>
-                    • Desenvolvimento para tarefas específicas<br>
-                    • Da concepção ao treinamento<br>
-                    • Implementação e análise<br>
-                    • Projetos customizados</p>
-                </div>
-            </div>
-
-            <div class="highlight-box">
-                <h3>🌟 Mensagem Final</h3>
-                <p>Vocês concluíram com sucesso a <strong>Unidade III</strong>! Agora têm poder real de transformar processos empresariais com IA. Na próxima unidade, vamos além das ferramentas prontas e aprenderemos a <strong>criar nossos próprios sistemas inteligentes</strong>. Preparem-se para se tornarem desenvolvedores de IA!</p>
-            </div>
-
-            <div class="warning-box">
-                <h4>📝 Para Casa: Preparação Unidade IV</h4>
-                <p>• Reflitam sobre processos que gostariam de automatizar<br>
-                • Pensem em dados que vocês têm disponíveis<br>
-                • Identifiquem tarefas repetitivas na sua área<br>
-                • Tragam ideias para projetos de IA personalizada<br>
-                • Instalem Python e bibliotecas básicas (orientações no próximo encontro)</p>
-            </div>
+<pre><code><span class="syntax-comment"># Criar dataset musical robusto para regressão e classificação</span>
+n_tracks = <span class="syntax-number">3000</span>
+generos = [<span class="syntax-string">'Pop'</span>, <span class="syntax-string">'Rock'</span>, <span class="syntax-string">'Hip Hop'</span>, <span class="syntax-string">'Eletrônica'</span>, <span class="syntax-string">'Indie'</span>, <span class="syntax-string">'R&B'</span>, <span class="syntax-string">'Jazz'</span>, <span class="syntax-string">'Country'</span>]
+plataformas = [<span class="syntax-string">'Spotify'</span>, <span class="syntax-string">'Apple Music'</span>, <span class="syntax-string">'YouTube'</span>, <span class="syntax-string">'Deezer'</span>]
+
+<span class="syntax-comment"># Features musicais com correlações realistas</span>
+np.random.seed(<span class="syntax-number">42</span>)
+
+<span class="syntax-comment"># Features base</span>
+energia = np.random.beta(<span class="syntax-number">2</span>, <span class="syntax-number">2</span>, n_tracks)
+valencia = np.random.beta(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, n_tracks)
+dancabilidade = np.random.beta(<span class="syntax-number">3</span>, <span class="syntax-number">2</span>, n_tracks)
+
+<span class="syntax-comment"># Criar correlações realistas</span>
+<span class="syntax-comment"># Dançabilidade influencia energia</span>
+energia = <span class="syntax-number">0.7</span> * energia + <span class="syntax-number">0.3</span> * dancabilidade + np.random.normal(<span class="syntax-number">0</span>, <span class="syntax-number">0.1</span>, n_tracks)
+energia = np.clip(energia, <span class="syntax-number">0</span>, <span class="syntax-number">1</span>)
+
+<span class="syntax-comment"># Valencia correlaciona com energia</span>
+valencia = <span class="syntax-number">0.6</span> * valencia + <span class="syntax-number">0.4</span> * energia + np.random.normal(<span class="syntax-number">0</span>, <span class="syntax-number">0.1</span>, n_tracks)
+valencia = np.clip(valencia, <span class="syntax-number">0</span>, <span class="syntax-number">1</span>)
+
+dados = {
+    <span class="syntax-string">'energia'</span>: energia,
+    <span class="syntax-string">'valencia'</span>: valencia,
+    <span class="syntax-string">'dancabilidade'</span>: dancabilidade,
+    <span class="syntax-string">'acousticness'</span>: np.random.beta(<span class="syntax-number">1</span>, <span class="syntax-number">4</span>, n_tracks),
+    <span class="syntax-string">'liveness'</span>: np.random.beta(<span class="syntax-number">1</span>, <span class="syntax-number">9</span>, n_tracks),
+    <span class="syntax-string">'instrumentalness'</span>: np.random.beta(<span class="syntax-number">1</span>, <span class="syntax-number">5</span>, n_tracks),
+    <span class="syntax-string">'speechiness'</span>: np.random.beta(<span class="syntax-number">1</span>, <span class="syntax-number">8</span>, n_tracks),
+    <span class="syntax-string">'tempo'</span>: np.random.normal(<span class="syntax-number">120</span>, <span class="syntax-number">25</span>, n_tracks),
+    <span class="syntax-string">'duracao_minutos'</span>: np.random.lognormal(mean=<span class="syntax-number">1.1</span>, sigma=<span class="syntax-number">0.4</span>, size=n_tracks),
+    <span class="syntax-string">'ano_lancamento'</span>: np.random.choice(<span class="syntax-function">range</span>(<span class="syntax-number">1990</span>, <span class="syntax-number">2025</span>), n_tracks),
+    <span class="syntax-string">'genero'</span>: np.random.choice(generos, size=n_tracks),
+    <span class="syntax-string">'plataforma_principal'</span>: np.random.choice(plataformas, size=n_tracks)
+}
+
+df = pd.DataFrame(dados)
+
+<span class="syntax-comment"># Clipping e ajustes</span>
+df[<span class="syntax-string">'tempo'</span>] = np.clip(df[<span class="syntax-string">'tempo'</span>], <span class="syntax-number">60</span>, <span class="syntax-number">200</span>)
+df[<span class="syntax-string">'duracao_minutos'</span>] = np.clip(df[<span class="syntax-string">'duracao_minutos'</span>], <span class="syntax-number">1</span>, <span class="syntax-number">8</span>)
+
+<span class="syntax-comment"># Variáveis derivadas</span>
+df[<span class="syntax-string">'idade_musica'</span>] = <span class="syntax-number">2024</span> - df[<span class="syntax-string">'ano_lancamento'</span>]
+df[<span class="syntax-string">'e_musica_nova'</span>] = (df[<span class="syntax-string">'idade_musica'</span>] <= <span class="syntax-number">2</span>).astype(int)
+df[<span class="syntax-string">'e_dancante'</span>] = (df[<span class="syntax-string">'dancabilidade'</span>] > <span class="syntax-number">0.7</span>).astype(int)
+
+<span class="syntax-comment"># TARGET VARIABLES</span>
+
+<span class="syntax-comment"># 1. REGRESSÃO: Popularidade (0-100) baseada em features</span>
+<span class="syntax-comment"># Modelo linear com ruído</span>
+popularidade = (
+    <span class="syntax-number">20</span> +                                    <span class="syntax-comment"># baseline</span>
+    <span class="syntax-number">25</span> * df[<span class="syntax-string">'energia'</span>] +                      <span class="syntax-comment"># energia aumenta popularidade</span>
+    <span class="syntax-number">20</span> * df[<span class="syntax-string">'valencia'</span>] +                     <span class="syntax-comment"># valência positiva</span>
+    <span class="syntax-number">15</span> * df[<span class="syntax-string">'dancabilidade'</span>] +                <span class="syntax-comment"># dançabilidade</span>
+    -<span class="syntax-number">10</span> * df[<span class="syntax-string">'acousticness'</span>] +                <span class="syntax-comment"># menos acústico = mais pop</span>
+    <span class="syntax-number">5</span> * df[<span class="syntax-string">'e_musica_nova'</span>] +                 <span class="syntax-comment"># música nova tem boost</span>
+    (df[<span class="syntax-string">'genero'</span>] == <span class="syntax-string">'Pop'</span>).astype(int) * <span class="syntax-number">8</span> +  <span class="syntax-comment"># Pop tem vantagem</span>
+    np.random.normal(<span class="syntax-number">0</span>, <span class="syntax-number">8</span>, n_tracks)            <span class="syntax-comment"># ruído aleatório</span>
+)
+df[<span class="syntax-string">'popularidade'</span>] = np.clip(popularidade, <span class="syntax-number">0</span>, <span class="syntax-number">100</span>)
+
+<span class="syntax-comment"># 2. REGRESSÃO: Streams (milhões)</span>
+log_streams = (
+    <span class="syntax-number">1.5</span> +                                    <span class="syntax-comment"># baseline em log</span>
+    <span class="syntax-number">1.2</span> * df[<span class="syntax-string">'popularidade'</span>] / <span class="syntax-number">100</span> +           <span class="syntax-comment"># popularidade → streams</span>
+    <span class="syntax-number">0.8</span> * df[<span class="syntax-string">'dancabilidade'</span>] +                <span class="syntax-comment"># dançável = mais streams</span>
+    <span class="syntax-number">0.5</span> * df[<span class="syntax-string">'energia'</span>] +                      <span class="syntax-comment"># energia</span>
+    -<span class="syntax-number">0.3</span> * df[<span class="syntax-string">'idade_musica'</span>] / <span class="syntax-number">10</span> +          <span class="syntax-comment"># músicas antigas têm menos streams</span>
+    np.random.normal(<span class="syntax-number">0</span>, <span class="syntax-number">0.4</span>, n_tracks)          <span class="syntax-comment"># ruído</span>
+)
+df[<span class="syntax-string">'streams_milhoes'</span>] = np.exp(log_streams)
+
+<span class="syntax-comment"># 3. CLASSIFICAÇÃO: Hit (1) ou Não Hit (0)</span>
+<span class="syntax-comment"># Baseado em popularidade com threshold probabilístico</span>
+prob_hit = <span class="syntax-number">1</span> / (<span class="syntax-number">1</span> + np.exp(-(<span class="syntax-number">0.15</span> * (df[<span class="syntax-string">'popularidade'</span>] - <span class="syntax-number">50</span>))))  <span class="syntax-comment"># logística</span>
+df[<span class="syntax-string">'hit'</span>] = np.random.binomial(<span class="syntax-number">1</span>, prob_hit, n_tracks)
+
+<span class="syntax-comment"># 4. CLASSIFICAÇÃO MULTICLASSE: Categoria de sucesso</span>
+<span class="syntax-keyword">def</span> <span class="syntax-function">categorizar_sucesso</span>(pop):
+    if pop >= <span class="syntax-number">75</span>: return <span class="syntax-string">'Mega Hit'</span>
+    elif pop >= <span class="syntax-number">60</span>: return <span class="syntax-string">'Hit'</span>
+    elif pop >= <span class="syntax-number">40</span>: return <span class="syntax-string">'Moderado'</span>
+    else: return <span class="syntax-string">'Baixo'</span>
+
+df[<span class="syntax-string">'categoria_sucesso'</span>] = df[<span class="syntax-string">'popularidade'</span>].apply(categorizar_sucesso)
+
+<span class="syntax-comment"># Encoding de variáveis categóricas</span>
+df_encoded = pd.get_dummies(df, columns=[<span class="syntax-string">'genero'</span>, <span class="syntax-string">'plataforma_principal'</span>], prefix=[<span class="syntax-string">'genero'</span>, <span class="syntax-string">'plat'</span>])
+
+<span class="syntax-comment"># Preparar features para modelagem</span>
+numeric_features = [<span class="syntax-string">'energia'</span>, <span class="syntax-string">'valencia'</span>, <span class="syntax-string">'dancabilidade'</span>, <span class="syntax-string">'acousticness'</span>,
+                   <span class="syntax-string">'liveness'</span>, <span class="syntax-string">'instrumentalness'</span>, <span class="syntax-string">'speechiness'</span>, <span class="syntax-string">'tempo'</span>,
+                   <span class="syntax-string">'duracao_minutos'</span>, <span class="syntax-string">'idade_musica'</span>, <span class="syntax-string">'e_musica_nova'</span>, <span class="syntax-string">'e_dancante'</span>]
+
+categorical_features = [col for col in df_encoded.columns if col.startswith((<span class="syntax-string">'genero_'</span>, <span class="syntax-string">'plat_'</span>))]
+all_features = numeric_features + categorical_features
+
+print(<span class="syntax-string">f"📊 Dataset criado: {df.shape[0]:,} músicas"</span>)
+print(<span class="syntax-string">f"🎵 Features numéricas: {len(numeric_features)}"</span>)
+print(<span class="syntax-string">f"🏷️ Features categóricas: {len(categorical_features)}"</span>)
+print(<span class="syntax-string">f"🎯 Hits no dataset: {df['hit'].sum():,} ({df['hit'].mean()*100:.1f}%)"</span>)
+print(<span class="syntax-string">f"📈 Popularidade média: {df['popularidade'].mean():.1f}"</span>)
+print(<span class="syntax-string">f"🎧 Streams médios: {df['streams_milhoes'].mean():.1f}M"</span>)
+
+<span class="syntax-comment"># Visualização inicial dos dados</span>
+fig, axes = plt.subplots(<span class="syntax-number">2</span>, <span class="syntax-number">2</span>, figsize=(<span class="syntax-number">15</span>, <span class="syntax-number">10</span>))
+fig.suptitle(<span class="syntax-string">'Análise Exploratória - Targets para Regressão e Classificação'</span>, fontsize=<span class="syntax-number">16</span>)
+
+<span class="syntax-comment"># Distribuição da popularidade</span>
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].hist(df[<span class="syntax-string">'popularidade'</span>], bins=<span class="syntax-number">30</span>, color=cores_regressao[<span class="syntax-string">'linear'</span>], alpha=<span class="syntax-number">0.7</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">'Distribuição da Popularidade'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_xlabel(<span class="syntax-string">'Popularidade'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_ylabel(<span class="syntax-string">'Frequência'</span>)
+
+<span class="syntax-comment"># Distribuição dos streams (log scale)</span>
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].hist(np.log(df[<span class="syntax-string">'streams_milhoes'</span>]), bins=<span class="syntax-number">30</span>, color=cores_regressao[<span class="syntax-string">'ridge'</span>], alpha=<span class="syntax-number">0.7</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">'Distribuição dos Streams (log)'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_xlabel(<span class="syntax-string">'Log(Streams)'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_ylabel(<span class="syntax-string">'Frequência'</span>)
+
+<span class="syntax-comment"># Hits vs Não Hits</span>
+hit_counts = df[<span class="syntax-string">'hit'</span>].value_counts()
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].bar([<span class="syntax-string">'Não Hit'</span>, <span class="syntax-string">'Hit'</span>], hit_counts, 
+                   color=[cores_regressao[<span class="syntax-string">'residuos'</span>], cores_regressao[<span class="syntax-string">'logistica'</span>]])
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">'Distribuição de Hits'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_ylabel(<span class="syntax-string">'Quantidade'</span>)
+
+<span class="syntax-comment"># Categorias de sucesso</span>
+cat_counts = df[<span class="syntax-string">'categoria_sucesso'</span>].value_counts()
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].bar(cat_counts.index, cat_counts.values, 
+                   color=[cores_regressao[<span class="syntax-string">'lasso'</span>], cores_regressao[<span class="syntax-string">'elastic'</span>], 
+                          cores_regressao[<span class="syntax-string">'linear'</span>], cores_regressao[<span class="syntax-string">'ridge'</span>]])
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">'Categorias de Sucesso'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_ylabel(<span class="syntax-string">'Quantidade'</span>)
+plt.setp(axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].get_xticklabels(), rotation=<span class="syntax-number">45</span>)
+
+plt.tight_layout()
+plt.show()</code></pre>
         </div>
     </div>
 
-    <script>
-        function copyCode(button) {
-            const codeBlock = button.closest('.code-block');
-            const code = codeBlock.querySelector('code').textContent;
+    <!-- Passo 2 -->
+    <div class="step-container">
+        <div class="step-header">
+            <div class="step-number">2</div>
+            <h2 class="step-title">Regressão Linear - Teoria e Implementação</h2>
+        </div>
+        <div class="stats-badge">Linear Regression</div>
+        <p class="step-description">Implementar e analisar modelos de regressão linear simples e múltipla.</p>
+
+        <div class="theory-box">
+            <h4>📊 Regressão Linear: Fundamentos Matemáticos</h4>
+            <p><strong>Regressão Linear</strong> modela a relação entre variável dependente e independentes:</p>
+            <ul>
+                <li><strong>Simples:</strong> y = β₀ + β₁x + ε (uma feature)</li>
+                <li><strong>Múltipla:</strong> y = β₀ + β₁x₁ + β₂x₂ + ... + βₚxₚ + ε</li>
+                <li><strong>Premissas:</strong> linearidade, independência, homocedasticidade, normalidade dos resíduos</li>
+                <li><strong>Método dos Mínimos Quadrados:</strong> minimiza soma dos quadrados dos resíduos</li>
+                <li><strong>R²:</strong> proporção da variância explicada pelo modelo (0-1)</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span>Regressão Linear Simples e Múltipla</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+<pre><code><span class="syntax-comment"># REGRESSÃO LINEAR SIMPLES: Energia vs Popularidade</span>
+print(<span class="syntax-string">"🎯 REGRESSÃO LINEAR SIMPLES"</span>)
+print(<span class="syntax-string">"="*50</span>)
+
+X_simple = df[[<span class="syntax-string">'energia'</span>]]
+y_pop = df[<span class="syntax-string">'popularidade'</span>]
+
+<span class="syntax-comment"># Split dos dados</span>
+X_train_simple, X_test_simple, y_train_pop, y_test_pop = train_test_split(
+    X_simple, y_pop, test_size=<span class="syntax-number">0.2</span>, random_state=<span class="syntax-number">42</span>
+)
+
+<span class="syntax-comment"># Treinar modelo</span>
+modelo_simples = LinearRegression()
+modelo_simples.fit(X_train_simple, y_train_pop)
+
+<span class="syntax-comment"># Predições</span>
+y_pred_simple = modelo_simples.predict(X_test_simple)
+
+<span class="syntax-comment"># Métricas</span>
+r2_simple = r2_score(y_test_pop, y_pred_simple)
+rmse_simple = np.sqrt(mean_squared_error(y_test_pop, y_pred_simple))
+mae_simple = mean_absolute_error(y_test_pop, y_pred_simple)
+
+print(<span class="syntax-string">f"📊 Coeficiente (β₁): {modelo_simples.coef_[0]:.3f}"</span>)
+print(<span class="syntax-string">f"📊 Intercepto (β₀): {modelo_simples.intercept_:.3f}"</span>)
+print(<span class="syntax-string">f"📊 Equação: Popularidade = {modelo_simples.intercept_:.2f} + {modelo_simples.coef_[0]:.2f} × Energia"</span>)
+print(<span class="syntax-string">f"📈 R²: {r2_simple:.3f}"</span>)
+print(<span class="syntax-string">f"📈 RMSE: {rmse_simple:.3f}"</span>)
+print(<span class="syntax-string">f"📈 MAE: {mae_simple:.3f}"</span>)
+
+<span class="syntax-comment"># REGRESSÃO LINEAR MÚLTIPLA</span>
+print(<span class="syntax-string">f"\n🎯 REGRESSÃO LINEAR MÚLTIPLA"</span>)
+print(<span class="syntax-string">"="*50</span>)
+
+<span class="syntax-comment"># Selecionar features mais relevantes</span>
+X_multiple = df_encoded[numeric_features]
+X_train_mult, X_test_mult, y_train_mult, y_test_mult = train_test_split(
+    X_multiple, y_pop, test_size=<span class="syntax-number">0.2</span>, random_state=<span class="syntax-number">42</span>
+)
+
+<span class="syntax-comment"># Padronizar features (importante para interpretação)</span>
+scaler = StandardScaler()
+X_train_mult_scaled = scaler.fit_transform(X_train_mult)
+X_test_mult_scaled = scaler.transform(X_test_mult)
+
+<span class="syntax-comment"># Treinar modelo múltiplo</span>
+modelo_multiplo = LinearRegression()
+modelo_multiplo.fit(X_train_mult_scaled, y_train_mult)
+
+<span class="syntax-comment"># Predições</span>
+y_pred_mult = modelo_multiplo.predict(X_test_mult_scaled)
+
+<span class="syntax-comment"># Métricas</span>
+r2_mult = r2_score(y_test_mult, y_pred_mult)
+rmse_mult = np.sqrt(mean_squared_error(y_test_mult, y_pred_mult))
+mae_mult = mean_absolute_error(y_test_mult, y_pred_mult)
+
+print(<span class="syntax-string">f"📈 R²: {r2_mult:.3f}"</span>)
+print(<span class="syntax-string">f"📈 RMSE: {rmse_mult:.3f}"</span>)
+print(<span class="syntax-string">f"📈 MAE: {mae_mult:.3f}"</span>)
+print(<span class="syntax-string">f"📈 Melhoria no R²: {((r2_mult - r2_simple) / r2_simple * 100):.1f}%"</span>)
+
+<span class="syntax-comment"># Análise de coeficientes</span>
+coef_df = pd.DataFrame({
+    <span class="syntax-string">'Feature'</span>: numeric_features,
+    <span class="syntax-string">'Coeficiente'</span>: modelo_multiplo.coef_,
+    <span class="syntax-string">'Coef_Abs'</span>: np.abs(modelo_multiplo.coef_)
+}).sort_values(<span class="syntax-string">'Coef_Abs'</span>, ascending=<span class="syntax-keyword">False</span>)
+
+print(<span class="syntax-string">f"\n🔍 IMPORTÂNCIA DAS FEATURES (Coeficientes Padronizados):"</span>)
+for _, row in coef_df.head(<span class="syntax-number">5</span>).iterrows():
+    print(<span class="syntax-string">f"  {row['Feature']:20s}: {row['Coeficiente']:7.3f}"</span>)
+
+<span class="syntax-comment"># VISUALIZAÇÕES</span>
+fig, axes = plt.subplots(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, figsize=(<span class="syntax-number">18</span>, <span class="syntax-number">12</span>))
+fig.suptitle(<span class="syntax-string">'Análise de Regressão Linear - Popularidade Musical'</span>, fontsize=<span class="syntax-number">16</span>)
+
+<span class="syntax-comment"># 1. Scatter plot simples</span>
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].scatter(X_test_simple, y_test_pop, alpha=<span class="syntax-number">0.6</span>, color=cores_regressao[<span class="syntax-string">'linear'</span>])
+x_range = np.linspace(X_test_simple.min(), X_test_simple.max(), <span class="syntax-number">100</span>).reshape(-<span class="syntax-number">1</span>, <span class="syntax-number">1</span>)
+y_range_pred = modelo_simples.predict(x_range)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].plot(x_range, y_range_pred, color=cores_regressao[<span class="syntax-string">'logistica'</span>], linewidth=<span class="syntax-number">2</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_xlabel(<span class="syntax-string">'Energia'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_ylabel(<span class="syntax-string">'Popularidade'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">f'Regressão Simples (R²={r2_simple:.3f})'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 2. Predito vs Real (simples)</span>
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].scatter(y_test_pop, y_pred_simple, alpha=<span class="syntax-number">0.6</span>, color=cores_regressao[<span class="syntax-string">'linear'</span>])
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].plot([y_test_pop.min(), y_test_pop.max()], [y_test_pop.min(), y_test_pop.max()], 
+                      <span class="syntax-string">'r--'</span>, linewidth=<span class="syntax-number">2</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_xlabel(<span class="syntax-string">'Popularidade Real'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_ylabel(<span class="syntax-string">'Popularidade Predita'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">'Predito vs Real (Simples)'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 3. Predito vs Real (múltipla)</span>
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].scatter(y_test_mult, y_pred_mult, alpha=<span class="syntax-number">0.6</span>, color=cores_regressao[<span class="syntax-string">'ridge'</span>])
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].plot([y_test_mult.min(), y_test_mult.max()], [y_test_mult.min(), y_test_mult.max()], 
+                      <span class="syntax-string">'r--'</span>, linewidth=<span class="syntax-number">2</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].set_xlabel(<span class="syntax-string">'Popularidade Real'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].set_ylabel(<span class="syntax-string">'Popularidade Predita'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].set_title(<span class="syntax-string">f'Predito vs Real (Múltipla, R²={r2_mult:.3f})'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 4. Resíduos vs Predito</span>
+residuos = y_test_mult - y_pred_mult
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].scatter(y_pred_mult, residuos, alpha=<span class="syntax-number">0.6</span>, color=cores_regressao[<span class="syntax-string">'residuos'</span>])
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].axhline(y=<span class="syntax-number">0</span>, color=<span class="syntax-string">'red'</span>, linestyle=<span class="syntax-string">'--'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_xlabel(<span class="syntax-string">'Valores Preditos'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_ylabel(<span class="syntax-string">'Resíduos'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">'Análise de Resíduos'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 5. Q-Q plot dos resíduos</span>
+stats.probplot(residuos, dist=<span class="syntax-string">"norm"</span>, plot=axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>])
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">'Q-Q Plot - Normalidade dos Resíduos'</span>)
+<span class="syntax-comment"># 6. Cross-validation scores distribution</span>
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].boxplot([cv_scores_reg, cv_scores_class], 
+                         labels=[<span class="syntax-string">'Regressão R²'</span>, <span class="syntax-string">'Logística AUC'</span>])
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_ylabel(<span class="syntax-string">'Score'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_title(<span class="syntax-string">'Distribuição dos Scores CV'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 7. Learning curves (simplified)</span>
+ax7 = axes[<span class="syntax-number">2</span>, <span class="syntax-number">0</span>]
+train_sizes = [<span class="syntax-number">0.1</span>, <span class="syntax-number">0.3</span>, <span class="syntax-number">0.5</span>, <span class="syntax-number">0.7</span>, <span class="syntax-number">0.9</span>]
+train_scores_reg = []
+val_scores_reg = []
+
+for size in train_sizes:
+    n_samples = int(size * <span class="syntax-function">len</span>(X_train_mult_scaled))
+    X_subset = X_train_mult_scaled[:n_samples]
+    y_subset = y_train_mult[:n_samples]
+    
+    <span class="syntax-comment"># Score de treino</span>
+    modelo_temp = LinearRegression()
+    modelo_temp.fit(X_subset, y_subset)
+    train_score = modelo_temp.score(X_subset, y_subset)
+    val_score = modelo_temp.score(X_test_mult_scaled, y_test_mult)
+    
+    train_scores_reg.append(train_score)
+    val_scores_reg.append(val_score)
+
+ax7.plot(train_sizes, train_scores_reg, <span class="syntax-string">'o-'</span>, color=cores_regressao[<span class="syntax-string">'linear'</span>], label=<span class="syntax-string">'Treino'</span>)
+ax7.plot(train_sizes, val_scores_reg, <span class="syntax-string">'o-'</span>, color=cores_regressao[<span class="syntax-string">'logistica'</span>], label=<span class="syntax-string">'Validação'</span>)
+ax7.set_xlabel(<span class="syntax-string">'Tamanho do Conjunto de Treino'</span>)
+ax7.set_ylabel(<span class="syntax-string">'R² Score'</span>)
+ax7.set_title(<span class="syntax-string">'Learning Curve - Regressão'</span>)
+ax7.legend()
+ax7.grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 8. Feature importance correlation</span>
+ax8 = axes[<span class="syntax-number">2</span>, <span class="syntax-number">1</span>]
+
+<span class="syntax-comment"># Comparar importância linear vs logística</span>
+linear_importance = np.abs(modelo_multiplo.coef_)
+logistic_importance = np.abs(logistic_simple.coef_[<span class="syntax-number">0</span>])
+
+<span class="syntax-comment"># Normalizar para comparação</span>
+linear_norm = linear_importance / linear_importance.max()
+logistic_norm = logistic_importance / logistic_importance.max()
+
+ax8.scatter(linear_norm, logistic_norm, alpha=<span class="syntax-number">0.7</span>, s=<span class="syntax-number">60</span>, color=cores_regressao[<span class="syntax-string">'elastic'</span>])
+ax8.plot([<span class="syntax-number">0</span>, <span class="syntax-number">1</span>], [<span class="syntax-number">0</span>, <span class="syntax-number">1</span>], <span class="syntax-string">'k--'</span>, alpha=<span class="syntax-number">0.5</span>)
+ax8.set_xlabel(<span class="syntax-string">'Importância Linear (normalizada)'</span>)
+ax8.set_ylabel(<span class="syntax-string">'Importância Logística (normalizada)'</span>)
+ax8.set_title(<span class="syntax-string">'Correlação de Importâncias'</span>)
+ax8.grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 9. Prediction intervals</span>
+ax9 = axes[<span class="syntax-number">2</span>, <span class="syntax-number">2</span>]
+
+<span class="syntax-comment"># Residual standard error</span>
+residual_se = np.sqrt(np.mean(residuos_diag**<span class="syntax-number">2</span>))
+prediction_interval = <span class="syntax-number">1.96</span> * residual_se  <span class="syntax-comment"># 95% CI</span>
+
+<span class="syntax-comment"># Plot prediction bands</span>
+sorted_idx = np.argsort(y_pred_diag)
+y_pred_sorted = y_pred_diag[sorted_idx]
+y_test_sorted = y_test_mult.iloc[sorted_idx]
+
+ax9.scatter(y_pred_diag, y_test_mult, alpha=<span class="syntax-number">0.6</span>, color=cores_regressao[<span class="syntax-string">'linear'</span>])
+ax9.plot([y_test_mult.min(), y_test_mult.max()], [y_test_mult.min(), y_test_mult.max()], 
+         <span class="syntax-string">'r-'</span>, linewidth=<span class="syntax-number">2</span>, label=<span class="syntax-string">'Perfeito'</span>)
+
+<span class="syntax-comment"># Prediction bands</span>
+ax9.fill_between(y_pred_sorted, 
+                 y_pred_sorted - prediction_interval, 
+                 y_pred_sorted + prediction_interval, 
+                 alpha=<span class="syntax-number">0.2</span>, color=cores_regressao[<span class="syntax-string">'ridge'</span>], 
+                 label=<span class="syntax-string">'IC 95%'</span>)
+
+ax9.set_xlabel(<span class="syntax-string">'Predições'</span>)
+ax9.set_ylabel(<span class="syntax-string">'Valores Reais'</span>)
+ax9.set_title(<span class="syntax-string">'Intervalos de Predição'</span>)
+ax9.legend()
+ax9.grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+plt.tight_layout()
+plt.show()
+
+<span class="syntax-comment"># RELATÓRIO FINAL DE DIAGNÓSTICOS</span>
+print(<span class="syntax-string">f"\n📋 RELATÓRIO FINAL DE DIAGNÓSTICOS"</span>)
+print(<span class="syntax-string">"="*60</span>)
+
+print(<span class="syntax-string">f"🔍 REGRESSÃO LINEAR:"</span>)
+print(<span class="syntax-string">f"   • R² Teste: {r2_mult:.3f}"</span>)
+print(<span class="syntax-string">f"   • RMSE: {rmse_mult:.3f}"</span>)
+print(<span class="syntax-string">f"   • Cross-val R²: {cv_scores_reg.mean():.3f} ± {cv_scores_reg.std():.3f}"</span>)
+print(<span class="syntax-string">f"   • Normalidade resíduos: {'✅' if p_jb > 0.05 else '❌'} (p={p_jb:.3f})"</span>)
+print(<span class="syntax-string">f"   • Outliers: {len(outliers_idx)} ({len(outliers_idx)/len(residuos_diag)*100:.1f}%)"</span>)
+
+print(<span class="syntax-string">f"\n🎯 REGRESSÃO LOGÍSTICA:"</span>)
+print(<span class="syntax-string">f"   • ROC-AUC: {roc_auc:.3f}"</span>)
+print(<span class="syntax-string">f"   • Acurácia: {accuracy:.3f}"</span>)
+print(<span class="syntax-string">f"   • Cross-val AUC: {cv_scores_class.mean():.3f} ± {cv_scores_class.std():.3f}"</span>)
+print(<span class="syntax-string">f"   • Calibração H-L: {'✅' if hl_p > 0.05 else '❌'} (p={hl_p:.3f})"</span>)
+
+print(<span class="syntax-string">f"\n💡 RECOMENDAÇÕES:"</span>)
+if r2_mult < <span class="syntax-number">0.7</span>:
+    print(<span class="syntax-string">f"   • Considerar features adicionais ou transformações"</span>)
+if p_jb <= <span class="syntax-number">0.05</span>:
+    print(<span class="syntax-string">f"   • Resíduos não-normais: considerar transformações"</span>)
+if <span class="syntax-function">len</span>(outliers_idx) > <span class="syntax-function">len</span>(residuos_diag) * <span class="syntax-number">0.05</span>:
+    print(<span class="syntax-string">f"   • Muitos outliers: investigar e possivelmente remover"</span>)
+if roc_auc < <span class="syntax-number">0.8</span>:
+    print(<span class="syntax-string">f"   • Performance logística moderada: mais features ou algoritmos"</span>)
+if hl_p <= <span class="syntax-number">0.05</span>:
+    print(<span class="syntax-string">f"   • Modelo mal calibrado: considerar calibração"</span>)
+
+print(<span class="syntax-string">f"\n✅ Diagnósticos completos! Modelos validados e prontos para uso."</span>)
+
+<span class="syntax-comment"># 6. Importância das features</span>
+top_features = coef_df.head(<span class="syntax-number">8</span>)
+colors = [cores_regressao[<span class="syntax-string">'lasso'</span>] if x > <span class="syntax-number">0</span> else cores_regressao[<span class="syntax-string">'elastic'</span>] for x in top_features[<span class="syntax-string">'Coeficiente'</span>]]
+bars = axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].barh(top_features[<span class="syntax-string">'Feature'</span>], top_features[<span class="syntax-string">'Coeficiente'</span>], color=colors)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].axvline(x=<span class="syntax-number">0</span>, color=<span class="syntax-string">'black'</span>, linestyle=<span class="syntax-string">'-'</span>, alpha=<span class="syntax-number">0.3</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_xlabel(<span class="syntax-string">'Coeficiente Padronizado'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_title(<span class="syntax-string">'Importância das Features'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="explanation-box">
+            <h5>📈 Interpretando os Resultados da Regressão Linear</h5>
+            <ul>
+                <li><strong>R²:</strong> porcentagem da variação em y explicada pelo modelo</li>
+                <li><strong>RMSE:</strong> erro médio em unidades da variável dependente</li>
+                <li><strong>Coeficientes:</strong> mudança em y para cada unidade de x</li>
+                <li><strong>Resíduos:</strong> devem ser aleatórios (sem padrões) e normalmente distribuídos</li>
+                <li><strong>Homocedasticidade:</strong> variância constante dos resíduos</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Passo 3 -->
+    <div class="step-container">
+        <div class="step-header">
+            <div class="step-number">3</div>
+            <h2 class="step-title">Regularização - Ridge, Lasso e Elastic Net</h2>
+        </div>
+        <div class="stats-badge">Regularization</div>
+        <p class="step-description">Implementar técnicas de regularização para combater overfitting e seleção de features.</p>
+
+        <div class="theory-box">
+            <h4>🎯 Regularização: Controlando Complexidade do Modelo</h4>
+            <p><strong>Regularização</strong> adiciona penalidade à função de custo para evitar overfitting:</p>
+            <ul>
+                <li><strong>Ridge (L2):</strong> penaliza a soma dos quadrados dos coeficientes</li>
+                <li><strong>Lasso (L1):</strong> penaliza a soma dos valores absolutos (seleção automática)</li>
+                <li><strong>Elastic Net:</strong> combina L1 + L2, balanceando seleção e redução</li>
+                <li><strong>Hiperparâmetro α:</strong> controla força da regularização</li>
+                <li><strong>Cross-validation:</strong> usado para encontrar α ótimo</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span>Modelos Regularizados</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+<pre><code><span class="syntax-comment"># PREPARAÇÃO PARA REGULARIZAÇÃO</span>
+print(<span class="syntax-string">"🎯 COMPARAÇÃO DE TÉCNICAS DE REGULARIZAÇÃO"</span>)
+print(<span class="syntax-string">"="*60</span>)
+
+<span class="syntax-comment"># Usar dataset com mais features (incluindo categóricas)</span>
+X_full = df_encoded[all_features]
+y_target = df[<span class="syntax-string">'popularidade'</span>]
+
+<span class="syntax-comment"># Split</span>
+X_train_full, X_test_full, y_train_full, y_test_full = train_test_split(
+    X_full, y_target, test_size=<span class="syntax-number">0.2</span>, random_state=<span class="syntax-number">42</span>
+)
+
+<span class="syntax-comment"># Padronização (crucial para regularização)</span>
+scaler_full = StandardScaler()
+X_train_scaled = scaler_full.fit_transform(X_train_full)
+X_test_scaled = scaler_full.transform(X_test_full)
+
+<span class="syntax-comment"># Definir range de alphas para testar</span>
+alphas = np.logspace(-<span class="syntax-number">4</span>, <span class="syntax-number">2</span>, <span class="syntax-number">50</span>)  <span class="syntax-comment"># 0.0001 to 100</span>
+
+<span class="syntax-comment"># RIDGE REGRESSION</span>
+print(<span class="syntax-string">"🔵 Testando Ridge Regression..."</span>)
+ridge_scores = []
+ridge_coefs = []
+
+for alpha in alphas:
+    ridge = Ridge(alpha=alpha)
+    <span class="syntax-comment"># Cross-validation</span>
+    scores = cross_val_score(ridge, X_train_scaled, y_train_full, cv=<span class="syntax-number">5</span>, scoring=<span class="syntax-string">'r2'</span>)
+    ridge_scores.append(scores.mean())
+    
+    <span class="syntax-comment"># Treinar para obter coeficientes</span>
+    ridge.fit(X_train_scaled, y_train_full)
+    ridge_coefs.append(ridge.coef_.copy())
+
+<span class="syntax-comment"># Melhor alpha para Ridge</span>
+best_alpha_ridge = alphas[np.argmax(ridge_scores)]
+ridge_best = Ridge(alpha=best_alpha_ridge)
+ridge_best.fit(X_train_scaled, y_train_full)
+ridge_pred = ridge_best.predict(X_test_scaled)
+ridge_r2 = r2_score(y_test_full, ridge_pred)
+
+print(<span class="syntax-string">f"  Melhor α: {best_alpha_ridge:.4f}"</span>)
+print(<span class="syntax-string">f"  R² no teste: {ridge_r2:.3f}"</span>)
+
+<span class="syntax-comment"># LASSO REGRESSION</span>
+print(<span class="syntax-string">"🟢 Testando Lasso Regression..."</span>)
+lasso_scores = []
+lasso_coefs = []
+lasso_n_features = []
+
+for alpha in alphas:
+    lasso = Lasso(alpha=alpha, max_iter=<span class="syntax-number">1000</span>)
+    <span class="syntax-comment"># Cross-validation</span>
+    scores = cross_val_score(lasso, X_train_scaled, y_train_full, cv=<span class="syntax-number">5</span>, scoring=<span class="syntax-string">'r2'</span>)
+    lasso_scores.append(scores.mean())
+    
+    <span class="syntax-comment"># Treinar para obter coeficientes</span>
+    lasso.fit(X_train_scaled, y_train_full)
+    lasso_coefs.append(lasso.coef_.copy())
+    lasso_n_features.append(np.sum(lasso.coef_ != <span class="syntax-number">0</span>))
+
+<span class="syntax-comment"># Melhor alpha para Lasso</span>
+best_alpha_lasso = alphas[np.argmax(lasso_scores)]
+lasso_best = Lasso(alpha=best_alpha_lasso, max_iter=<span class="syntax-number">1000</span>)
+lasso_best.fit(X_train_scaled, y_train_full)
+lasso_pred = lasso_best.predict(X_test_scaled)
+lasso_r2 = r2_score(y_test_full, lasso_pred)
+
+print(<span class="syntax-string">f"  Melhor α: {best_alpha_lasso:.4f}"</span>)
+print(<span class="syntax-string">f"  R² no teste: {lasso_r2:.3f}"</span>)
+print(<span class="syntax-string">f"  Features selecionadas: {np.sum(lasso_best.coef_ != 0)}/{len(all_features)}"</span>)
+
+<span class="syntax-comment"># ELASTIC NET</span>
+print(<span class="syntax-string">"🟣 Testando Elastic Net..."</span>)
+<span class="syntax-comment"># Grid search para alpha e l1_ratio</span>
+param_grid = {
+    <span class="syntax-string">'alpha'</span>: alphas[::5],  <span class="syntax-comment"># Subconjunto para velocidade</span>
+    <span class="syntax-string">'l1_ratio'</span>: [<span class="syntax-number">0.1</span>, <span class="syntax-number">0.3</span>, <span class="syntax-number">0.5</span>, <span class="syntax-number">0.7</span>, <span class="syntax-number">0.9</span>]
+}
+
+elastic = ElasticNet(max_iter=<span class="syntax-number">1000</span>)
+grid_search = GridSearchCV(elastic, param_grid, cv=<span class="syntax-number">5</span>, scoring=<span class="syntax-string">'r2'</span>, n_jobs=-<span class="syntax-number">1</span>)
+grid_search.fit(X_train_scaled, y_train_full)
+
+elastic_best = grid_search.best_estimator_
+elastic_pred = elastic_best.predict(X_test_scaled)
+elastic_r2 = r2_score(y_test_full, elastic_pred)
+
+print(<span class="syntax-string">f"  Melhor α: {grid_search.best_params_['alpha']:.4f}"</span>)
+print(<span class="syntax-string">f"  Melhor l1_ratio: {grid_search.best_params_['l1_ratio']:.1f}"</span>)
+print(<span class="syntax-string">f"  R² no teste: {elastic_r2:.3f}"</span>)
+print(<span class="syntax-string">f"  Features selecionadas: {np.sum(elastic_best.coef_ != 0)}/{len(all_features)}"</span>)
+
+<span class="syntax-comment"># MODELO LINEAR BASELINE (sem regularização)</span>
+linear_baseline = LinearRegression()
+linear_baseline.fit(X_train_scaled, y_train_full)
+linear_pred = linear_baseline.predict(X_test_scaled)
+linear_r2 = r2_score(y_test_full, linear_pred)
+
+print(<span class="syntax-string">f"\n📊 RESUMO COMPARATIVO:"</span>)
+print(<span class="syntax-string">f"  Linear Simples: R² = {linear_r2:.3f}"</span>)
+print(<span class="syntax-string">f"  Ridge:         R² = {ridge_r2:.3f}"</span>)
+print(<span class="syntax-string">f"  Lasso:         R² = {lasso_r2:.3f}"</span>)
+print(<span class="syntax-string">f"  Elastic Net:   R² = {elastic_r2:.3f}"</span>)
+
+<span class="syntax-comment"># VISUALIZAÇÕES COMPARATIVAS</span>
+fig, axes = plt.subplots(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, figsize=(<span class="syntax-number">18</span>, <span class="syntax-number">12</span>))
+fig.suptitle(<span class="syntax-string">'Análise de Regularização - Comparação de Métodos'</span>, fontsize=<span class="syntax-number">16</span>)
+
+<span class="syntax-comment"># 1. Curvas de validação - Ridge</span>
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].semilogx(alphas, ridge_scores, <span class="syntax-string">'b-'</span>, linewidth=<span class="syntax-number">2</span>, color=cores_regressao[<span class="syntax-string">'ridge'</span>])
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].axvline(best_alpha_ridge, color=<span class="syntax-string">'red'</span>, linestyle=<span class="syntax-string">'--'</span>, 
+                           label=<span class="syntax-string">f'Melhor α = {best_alpha_ridge:.4f}'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_xlabel(<span class="syntax-string">'Alpha'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_ylabel(<span class="syntax-string">'R² (CV)'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">'Ridge - Curva de Validação'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].legend()
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 2. Curvas de validação - Lasso</span>
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].semilogx(alphas, lasso_scores, <span class="syntax-string">'g-'</span>, linewidth=<span class="syntax-number">2</span>, color=cores_regressao[<span class="syntax-string">'lasso'</span>])
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].axvline(best_alpha_lasso, color=<span class="syntax-string">'red'</span>, linestyle=<span class="syntax-string">'--'</span>, 
+                           label=<span class="syntax-string">f'Melhor α = {best_alpha_lasso:.4f}'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_xlabel(<span class="syntax-string">'Alpha'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_ylabel(<span class="syntax-string">'R² (CV)'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">'Lasso - Curva de Validação'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].legend()
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 3. Número de features vs Alpha (Lasso)</span>
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].semilogx(alphas, lasso_n_features, <span class="syntax-string">'g-'</span>, linewidth=<span class="syntax-number">2</span>, color=cores_regressao[<span class="syntax-string">'lasso'</span>])
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].axvline(best_alpha_lasso, color=<span class="syntax-string">'red'</span>, linestyle=<span class="syntax-string">'--'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].set_xlabel(<span class="syntax-string">'Alpha'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].set_ylabel(<span class="syntax-string">'Número de Features'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].set_title(<span class="syntax-string">'Lasso - Seleção de Features'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 4. Comparação de coeficientes</span>
+feature_comparison = pd.DataFrame({
+    <span class="syntax-string">'Feature'</span>: all_features,
+    <span class="syntax-string">'Linear'</span>: linear_baseline.coef_,
+    <span class="syntax-string">'Ridge'</span>: ridge_best.coef_,
+    <span class="syntax-string">'Lasso'</span>: lasso_best.coef_,
+    <span class="syntax-string">'ElasticNet'</span>: elastic_best.coef_
+})
+
+<span class="syntax-comment"># Top 10 features mais importantes no Lasso</span>
+top_lasso_features = feature_comparison[feature_comparison[<span class="syntax-string">'Lasso'</span>] != <span class="syntax-number">0</span>].head(<span class="syntax-number">10</span>)
+
+x_pos = np.arange(<span class="syntax-function">len</span>(top_lasso_features))
+width = <span class="syntax-number">0.2</span>
+
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].bar(x_pos - <span class="syntax-number">1.5</span>*width, top_lasso_features[<span class="syntax-string">'Linear'</span>], width, 
+                     label=<span class="syntax-string">'Linear'</span>, color=cores_regressao[<span class="syntax-string">'linear'</span>], alpha=<span class="syntax-number">0.8</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].bar(x_pos - <span class="syntax-number">0.5</span>*width, top_lasso_features[<span class="syntax-string">'Ridge'</span>], width, 
+                     label=<span class="syntax-string">'Ridge'</span>, color=cores_regressao[<span class="syntax-string">'ridge'</span>], alpha=<span class="syntax-number">0.8</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].bar(x_pos + <span class="syntax-number">0.5</span>*width, top_lasso_features[<span class="syntax-string">'Lasso'</span>], width, 
+                     label=<span class="syntax-string">'Lasso'</span>, color=cores_regressao[<span class="syntax-string">'lasso'</span>], alpha=<span class="syntax-number">0.8</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].bar(x_pos + <span class="syntax-number">1.5</span>*width, top_lasso_features[<span class="syntax-string">'ElasticNet'</span>], width, 
+                     label=<span class="syntax-string">'Elastic'</span>, color=cores_regressao[<span class="syntax-string">'elastic'</span>], alpha=<span class="syntax-number">0.8</span>)
+
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_xlabel(<span class="syntax-string">'Features'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_ylabel(<span class="syntax-string">'Coeficiente'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">'Comparação de Coeficientes'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_xticks(x_pos)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_xticklabels(top_lasso_features[<span class="syntax-string">'Feature'</span>], rotation=<span class="syntax-number">45</span>, ha=<span class="syntax-string">'right'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].legend()
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 5. Comparação de performance</span>
+models = [<span class="syntax-string">'Linear'</span>, <span class="syntax-string">'Ridge'</span>, <span class="syntax-string">'Lasso'</span>, <span class="syntax-string">'Elastic Net'</span>]
+r2_scores = [linear_r2, ridge_r2, lasso_r2, elastic_r2]
+colors = [cores_regressao[<span class="syntax-string">'linear'</span>], cores_regressao[<span class="syntax-string">'ridge'</span>], 
+          cores_regressao[<span class="syntax-string">'lasso'</span>], cores_regressao[<span class="syntax-string">'elastic'</span>]]
+
+bars = axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].bar(models, r2_scores, color=colors, alpha=<span class="syntax-number">0.8</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_ylabel(<span class="syntax-string">'R² Score'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">'Comparação de Performance'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_ylim(<span class="syntax-number">0</span>, max(r2_scores) * <span class="syntax-number">1.1</span>)
+
+<span class="syntax-comment"># Adicionar valores nas barras</span>
+for bar, score in <span class="syntax-function">zip</span>(bars, r2_scores):
+    axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].text(bar.get_x() + bar.get_width()/<span class="syntax-number">2</span>, bar.get_height() + <span class="syntax-number">0.01</span>, 
+                             <span class="syntax-string">f'{score:.3f}'</span>, ha=<span class="syntax-string">'center'</span>, va=<span class="syntax-string">'bottom'</span>, fontweight=<span class="syntax-string">'bold'</span>)
+
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 6. Path de coeficientes (Lasso)</span>
+ridge_coefs_array = np.array(ridge_coefs)
+for i in <span class="syntax-function">range</span>(min(<span class="syntax-number">10</span>, ridge_coefs_array.shape[<span class="syntax-number">1</span>])):  <span class="syntax-comment"># Top 10 features</span>
+    axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].semilogx(alphas, ridge_coefs_array[:, i], alpha=<span class="syntax-number">0.7</span>)
+
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].axvline(best_alpha_ridge, color=<span class="syntax-string">'red'</span>, linestyle=<span class="syntax-string">'--'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_xlabel(<span class="syntax-string">'Alpha'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_ylabel(<span class="syntax-string">'Coeficientes'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_title(<span class="syntax-string">'Ridge - Path dos Coeficientes'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+    </div>
+
+    <!-- Passo 4 -->
+    <div class="step-container">
+        <div class="step-header">
+            <div class="step-number">4</div>
+            <h2 class="step-title">Regressão Logística - Classificação</h2>
+        </div>
+        <div class="stats-badge">Logistic Regression</div>
+        <p class="step-description">Implementar regressão logística para classificação binária e multiclasse.</p>
+
+        <div class="theory-box">
+            <h4>🎯 Regressão Logística: Classificação Probabilística</h4>
+            <p><strong>Regressão Logística</strong> modela probabilidades usando função logística:</p>
+            <ul>
+                <li><strong>Função Sigmoid:</strong> p = 1/(1 + e^(-z)), onde z = β₀ + β₁x₁ + ... + βₚxₚ</li>
+                <li><strong>Log-odds:</strong> ln(p/(1-p)) = z (relação linear com features)</li>
+                <li><strong>Maximum Likelihood:</strong> estima parâmetros maximizando verossimilhança</li>
+                <li><strong>Regularização:</strong> L1 (seleção) e L2 (redução) também aplicáveis</li>
+                <li><strong>Multiclasse:</strong> One-vs-Rest ou Multinomial</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span>Regressão Logística Binária e Multiclasse</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+<pre><code><span class="syntax-comment"># REGRESSÃO LOGÍSTICA BINÁRIA: Hit vs Não Hit</span>
+print(<span class="syntax-string">"🎯 REGRESSÃO LOGÍSTICA BINÁRIA"</span>)
+print(<span class="syntax-string">"="*50</span>)
+
+<span class="syntax-comment"># Preparar dados para classificação binária</span>
+X_class = df_encoded[numeric_features]  <span class="syntax-comment"># Usar só features numéricas para simplicidade</span>
+y_class = df[<span class="syntax-string">'hit'</span>]
+
+<span class="syntax-comment"># Split</span>
+X_train_class, X_test_class, y_train_class, y_test_class = train_test_split(
+    X_class, y_class, test_size=<span class="syntax-number">0.2</span>, random_state=<span class="syntax-number">42</span>, stratify=y_class
+)
+
+<span class="syntax-comment"># Padronizar</span>
+scaler_class = StandardScaler()
+X_train_class_scaled = scaler_class.fit_transform(X_train_class)
+X_test_class_scaled = scaler_class.transform(X_test_class)
+
+<span class="syntax-comment"># 1. LOGÍSTICA SIMPLES</span>
+print(<span class="syntax-string">"📊 Modelo Logístico Básico..."</span>)
+logistic_simple = LogisticRegression(random_state=<span class="syntax-number">42</span>, max_iter=<span class="syntax-number">1000</span>)
+logistic_simple.fit(X_train_class_scaled, y_train_class)
+
+<span class="syntax-comment"># Predições</span>
+y_pred_class = logistic_simple.predict(X_test_class_scaled)
+y_proba_class = logistic_simple.predict_proba(X_test_class_scaled)[:, <span class="syntax-number">1</span>]
+
+<span class="syntax-comment"># Métricas</span>
+accuracy = accuracy_score(y_test_class, y_pred_class)
+roc_auc = roc_auc_score(y_test_class, y_proba_class)
+
+print(<span class="syntax-string">f"  Acurácia: {accuracy:.3f}"</span>)
+print(<span class="syntax-string">f"  ROC-AUC: {roc_auc:.3f}"</span>)
+
+<span class="syntax-comment"># Coeficientes (log-odds)</span>
+coef_logistic = pd.DataFrame({
+    <span class="syntax-string">'Feature'</span>: numeric_features,
+    <span class="syntax-string">'Coeficiente'</span>: logistic_simple.coef_[<span class="syntax-number">0</span>],
+    <span class="syntax-string">'Odds_Ratio'</span>: np.exp(logistic_simple.coef_[<span class="syntax-number">0</span>])
+}).sort_values(<span class="syntax-string">'Coeficiente'</span>, key=<span class="syntax-keyword">lambda</span> x: np.abs(x), ascending=<span class="syntax-keyword">False</span>)
+
+print(<span class="syntax-string">f"\n🔍 TOP 5 FEATURES MAIS IMPORTANTES:"</span>)
+for _, row in coef_logistic.head(<span class="syntax-number">5</span>).iterrows():
+    print(<span class="syntax-string">f"  {row['Feature']:20s}: coef={row['Coeficiente']:7.3f}, OR={row['Odds_Ratio']:6.3f}"</span>)
+
+<span class="syntax-comment"># 2. LOGÍSTICA COM REGULARIZAÇÃO</span>
+print(<span class="syntax-string">f"\n📊 Comparando Regularização L1 vs L2..."</span>)
+
+<span class="syntax-comment"># Logística com L1 (Lasso)</span>
+logistic_l1 = LogisticRegression(penalty=<span class="syntax-string">'l1'</span>, solver=<span class="syntax-string">'liblinear'</span>, C=<span class="syntax-number">1.0</span>, random_state=<span class="syntax-number">42</span>)
+logistic_l1.fit(X_train_class_scaled, y_train_class)
+y_proba_l1 = logistic_l1.predict_proba(X_test_class_scaled)[:, <span class="syntax-number">1</span>]
+roc_auc_l1 = roc_auc_score(y_test_class, y_proba_l1)
+
+<span class="syntax-comment"># Logística com L2 (Ridge)</span>
+logistic_l2 = LogisticRegression(penalty=<span class="syntax-string">'l2'</span>, C=<span class="syntax-number">1.0</span>, random_state=<span class="syntax-number">42</span>, max_iter=<span class="syntax-number">1000</span>)
+logistic_l2.fit(X_train_class_scaled, y_train_class)
+y_proba_l2 = logistic_l2.predict_proba(X_test_class_scaled)[:, <span class="syntax-number">1</span>]
+roc_auc_l2 = roc_auc_score(y_test_class, y_proba_l2)
+
+print(<span class="syntax-string">f"  ROC-AUC L1: {roc_auc_l1:.3f} (features: {np.sum(logistic_l1.coef_[0] != 0)})"</span>)
+print(<span class="syntax-string">f"  ROC-AUC L2: {roc_auc_l2:.3f}"</span>)
+
+<span class="syntax-comment"># 3. REGRESSÃO LOGÍSTICA MULTICLASSE</span>
+print(<span class="syntax-string">f"\n🎯 REGRESSÃO LOGÍSTICA MULTICLASSE"</span>)
+print(<span class="syntax-string">"="*50</span>)
+
+<span class="syntax-comment"># Preparar dados multiclasse</span>
+y_multi = df[<span class="syntax-string">'categoria_sucesso'</span>]
+X_train_multi, X_test_multi, y_train_multi, y_test_multi = train_test_split(
+    X_class, y_multi, test_size=<span class="syntax-number">0.2</span>, random_state=<span class="syntax-number">42</span>, stratify=y_multi
+)
+
+<span class="syntax-comment"># Padronizar</span>
+X_train_multi_scaled = scaler_class.fit_transform(X_train_multi)
+X_test_multi_scaled = scaler_class.transform(X_test_multi)
+
+<span class="syntax-comment"># Modelo multiclasse</span>
+logistic_multi = LogisticRegression(multi_class=<span class="syntax-string">'multinomial'</span>, solver=<span class="syntax-string">'lbfgs'</span>, 
+                                   max_iter=<span class="syntax-number">1000</span>, random_state=<span class="syntax-number">42</span>)
+logistic_multi.fit(X_train_multi_scaled, y_train_multi)
+
+<span class="syntax-comment"># Predições</span>
+y_pred_multi = logistic_multi.predict(X_test_multi_scaled)
+y_proba_multi = logistic_multi.predict_proba(X_test_multi_scaled)
+
+<span class="syntax-comment"># Métricas</span>
+accuracy_multi = accuracy_score(y_test_multi, y_pred_multi)
+print(<span class="syntax-string">f"📊 Acurácia Multiclasse: {accuracy_multi:.3f}"</span>)
+
+<span class="syntax-comment"># VISUALIZAÇÕES</span>
+fig, axes = plt.subplots(<span class="syntax-number">2</span>, <span class="syntax-number">3</span>, figsize=(<span class="syntax-number">18</span>, <span class="syntax-number">12</span>))
+fig.suptitle(<span class="syntax-string">'Análise de Regressão Logística - Classificação Musical'</span>, fontsize=<span class="syntax-number">16</span>)
+
+<span class="syntax-comment"># 1. Distribuição de probabilidades</span>
+hit_probs = y_proba_class[y_test_class == <span class="syntax-number">1</span>]
+no_hit_probs = y_proba_class[y_test_class == <span class="syntax-number">0</span>]
+
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].hist(no_hit_probs, bins=<span class="syntax-number">30</span>, alpha=<span class="syntax-number">0.7</span>, label=<span class="syntax-string">'Não Hit'</span>, 
+                    color=cores_regressao[<span class="syntax-string">'residuos'</span>], density=<span class="syntax-keyword">True</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].hist(hit_probs, bins=<span class="syntax-number">30</span>, alpha=<span class="syntax-number">0.7</span>, label=<span class="syntax-string">'Hit'</span>, 
+                    color=cores_regressao[<span class="syntax-string">'logistica'</span>], density=<span class="syntax-keyword">True</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].axvline(<span class="syntax-number">0.5</span>, color=<span class="syntax-string">'black'</span>, linestyle=<span class="syntax-string">'--'</span>, label=<span class="syntax-string">'Threshold 0.5'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_xlabel(<span class="syntax-string">'Probabilidade Predita'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_ylabel(<span class="syntax-string">'Densidade'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">'Distribuição de Probabilidades'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].legend()
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 2. Curva ROC</span>
+fpr, tpr, _ = roc_curve(y_test_class, y_proba_class)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].plot(fpr, tpr, linewidth=<span class="syntax-number">2</span>, color=cores_regressao[<span class="syntax-string">'logistica'</span>], 
+                    label=<span class="syntax-string">f'ROC (AUC = {roc_auc:.3f})'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].plot([<span class="syntax-number">0</span>, <span class="syntax-number">1</span>], [<span class="syntax-number">0</span>, <span class="syntax-number">1</span>], <span class="syntax-string">'k--'</span>, linewidth=<span class="syntax-number">1</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_xlabel(<span class="syntax-string">'Taxa de Falsos Positivos'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_ylabel(<span class="syntax-string">'Taxa de Verdadeiros Positivos'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">'Curva ROC'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].legend()
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 3. Coeficientes (Odds Ratios)</span>
+top_coefs = coef_logistic.head(<span class="syntax-number">8</span>)
+colors = [cores_regressao[<span class="syntax-string">'lasso'</span>] if x > <span class="syntax-number">0</span> else cores_regressao[<span class="syntax-string">'elastic'</span>] 
+          for x in top_coefs[<span class="syntax-string">'Coeficiente'</span>]]
+
+bars = axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].barh(top_coefs[<span class="syntax-string">'Feature'</span>], top_coefs[<span class="syntax-string">'Odds_Ratio'</span>], color=colors)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].axvline(x=<span class="syntax-number">1</span>, color=<span class="syntax-string">'black'</span>, linestyle=<span class="syntax-string">'-'</span>, alpha=<span class="syntax-number">0.3</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].set_xlabel(<span class="syntax-string">'Odds Ratio'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].set_title(<span class="syntax-string">'Importância das Features (OR)'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 4. Matriz de Confusão</span>
+<span class="syntax-keyword">from</span> sklearn.metrics <span class="syntax-keyword">import</span> ConfusionMatrixDisplay
+cm = confusion_matrix(y_test_class, y_pred_class)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=[<span class="syntax-string">'Não Hit'</span>, <span class="syntax-string">'Hit'</span>])
+disp.plot(ax=axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>], cmap=<span class="syntax-string">'Blues'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">'Matriz de Confusão'</span>)
+
+<span class="syntax-comment"># 5. Comparação L1 vs L2</span>
+models_reg = [<span class="syntax-string">'Sem Reg.'</span>, <span class="syntax-string">'L1 (Lasso)'</span>, <span class="syntax-string">'L2 (Ridge)'</span>]
+aucs_reg = [roc_auc, roc_auc_l1, roc_auc_l2]
+colors_reg = [cores_regressao[<span class="syntax-string">'linear'</span>], cores_regressao[<span class="syntax-string">'lasso'</span>], cores_regressao[<span class="syntax-string">'ridge'</span>]]
+
+bars = axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].bar(models_reg, aucs_reg, color=colors_reg, alpha=<span class="syntax-number">0.8</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_ylabel(<span class="syntax-string">'ROC-AUC'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">'Comparação Regularização'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].set_ylim(<span class="syntax-number">0</span>, <span class="syntax-number">1</span>)
+
+for bar, auc_val in <span class="syntax-function">zip</span>(bars, aucs_reg):
+    axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].text(bar.get_x() + bar.get_width()/<span class="syntax-number">2</span>, bar.get_height() + <span class="syntax-number">0.02</span>, 
+                             <span class="syntax-string">f'{auc_val:.3f}'</span>, ha=<span class="syntax-string">'center'</span>, va=<span class="syntax-string">'bottom'</span>, fontweight=<span class="syntax-string">'bold'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 6. Matriz de Confusão Multiclasse</span>
+cm_multi = confusion_matrix(y_test_multi, y_pred_multi)
+<span class="syntax-keyword">import</span> itertools
+
+classes = logistic_multi.classes_
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].imshow(cm_multi, interpolation=<span class="syntax-string">'nearest'</span>, cmap=<span class="syntax-string">'Blues'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_title(<span class="syntax-string">'Matriz Confusão Multiclasse'</span>)
+
+tick_marks = np.arange(<span class="syntax-function">len</span>(classes))
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_xticks(tick_marks)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_yticks(tick_marks)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_xticklabels(classes, rotation=<span class="syntax-number">45</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_yticklabels(classes)
+
+<span class="syntax-comment"># Adicionar texto na matriz</span>
+thresh = cm_multi.max() / <span class="syntax-number">2</span>.
+for i, j in itertools.product(<span class="syntax-function">range</span>(cm_multi.shape[<span class="syntax-number">0</span>]), <span class="syntax-function">range</span>(cm_multi.shape[<span class="syntax-number">1</span>])):
+    axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].text(j, i, <span class="syntax-function">format</span>(cm_multi[i, j], <span class="syntax-string">'d'</span>),
+                        horizontalalignment=<span class="syntax-string">"center"</span>,
+                        color=<span class="syntax-string">"white"</span> if cm_multi[i, j] > thresh else <span class="syntax-string">"black"</span>)
+
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_ylabel(<span class="syntax-string">'Classe Real'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">2</span>].set_xlabel(<span class="syntax-string">'Classe Predita'</span>)
+
+plt.tight_layout()
+plt.show()
+
+<span class="syntax-comment"># RELATÓRIO DETALHADO</span>
+print(<span class="syntax-string">f"\n📋 RELATÓRIO DETALHADO - CLASSIFICAÇÃO"</span>)
+print(<span class="syntax-string">"="*60</span>)
+print(classification_report(y_test_class, y_pred_class))
+
+print(<span class="syntax-string">f"\n📋 RELATÓRIO MULTICLASSE"</span>)
+print(<span class="syntax-string">"="*60</span>)
+print(classification_report(y_test_multi, y_pred_multi))</code></pre>
+        </div>
+
+        <div class="explanation-box">
+            <h5>🎯 Interpretando Odds Ratios</h5>
+            <ul>
+                <li><strong>OR = 1:</strong> a feature não afeta as chances (neutro)</li>
+                <li><strong>OR > 1:</strong> aumenta as chances da classe positiva</li>
+                <li><strong>OR < 1:</strong> diminui as chances da classe positiva</li>
+                <li><strong>OR = 2:</strong> dobra as chances; OR = 0.5 reduz pela metade</li>
+                <li><strong>Coeficiente positivo:</strong> OR > 1; negativo: OR < 1</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Passo 5 -->
+    <div class="step-container">
+        <div class="step-header">
+            <div class="step-number">5</div>
+            <h2 class="step-title">Diagnósticos de Modelo e Validação</h2>
+        </div>
+        <div class="stats-badge">Model Diagnostics</div>
+        <p class="step-description">Realizar diagnósticos abrangentes para validar premissas e qualidade dos modelos.</p>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span>Diagnósticos Completos de Modelos</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+<pre><code><span class="syntax-comment"># DIAGNÓSTICOS PARA REGRESSÃO LINEAR</span>
+print(<span class="syntax-string">"🔍 DIAGNÓSTICOS DE REGRESSÃO LINEAR"</span>)
+print(<span class="syntax-string">"="*50</span>)
+
+<span class="syntax-comment"># Usar modelo múltiplo já treinado</span>
+y_pred_diag = modelo_multiplo.predict(X_test_mult_scaled)
+residuos_diag = y_test_mult - y_pred_diag
+
+<span class="syntax-comment"># 1. TESTE DE NORMALIDADE DOS RESÍDUOS</span>
+<span class="syntax-keyword">from</span> scipy.stats <span class="syntax-keyword">import</span> shapiro, jarque_bera, anderson
+
+<span class="syntax-comment"># Shapiro-Wilk (para amostras menores)</span>
+if <span class="syntax-function">len</span>(residuos_diag) <= <span class="syntax-number">5000</span>:
+    stat_shapiro, p_shapiro = shapiro(residuos_diag)
+    print(<span class="syntax-string">f"📊 Teste Shapiro-Wilk: W = {stat_shapiro:.4f}, p-value = {p_shapiro:.4f}"</span>)
+    print(<span class="syntax-string">f"   {'✅' if p_shapiro > 0.05 else '❌'} Normalidade (α = 0.05)"</span>)
+
+<span class="syntax-comment"># Jarque-Bera</span>
+stat_jb, p_jb = jarque_bera(residuos_diag)
+print(<span class="syntax-string">f"📊 Teste Jarque-Bera: JB = {stat_jb:.4f}, p-value = {p_jb:.4f}"</span>)
+print(<span class="syntax-string">f"   {'✅' if p_jb > 0.05 else '❌'} Normalidade (α = 0.05)"</span>)
+
+<span class="syntax-comment"># 2. TESTE DE HOMOCEDASTICIDADE</span>
+<span class="syntax-comment"># Breusch-Pagan test</span>
+<span class="syntax-keyword">try</span>:
+    <span class="syntax-comment"># Reconstruir para statsmodels</span>
+    X_with_const = sm.add_constant(X_test_mult_scaled)
+    stat_bp, p_bp, _, _ = het_breuschpagan(residuos_diag, X_with_const)
+    print(<span class="syntax-string">f"📊 Teste Breusch-Pagan: LM = {stat_bp:.4f}, p-value = {p_bp:.4f}"</span>)
+    print(<span class="syntax-string">f"   {'✅' if p_bp > 0.05 else '❌'} Homocedasticidade (α = 0.05)"</span>)
+<span class="syntax-keyword">except</span>:
+    print(<span class="syntax-string">"📊 Teste Breusch-Pagan: não foi possível calcular"</span>)
+
+<span class="syntax-comment"># 3. TESTE DE AUTOCORRELAÇÃO DOS RESÍDUOS</span>
+<span class="syntax-keyword">from</span> statsmodels.stats.diagnostic <span class="syntax-keyword">import</span> acorr_ljungbox
+
+<span class="syntax-comment"># Ljung-Box test</span>
+ljung_result = acorr_ljungbox(residuos_diag, lags=<span class="syntax-number">10</span>, return_df=<span class="syntax-keyword">True</span>)
+p_ljung = ljung_result[<span class="syntax-string">'lb_pvalue'</span>].iloc[-<span class="syntax-number">1</span>]  <span class="syntax-comment"># último lag</span>
+print(<span class="syntax-string">f"📊 Teste Ljung-Box: p-value = {p_ljung:.4f}"</span>)
+print(<span class="syntax-string">f"   {'✅' if p_ljung > 0.05 else '❌'} Independência (α = 0.05)"</span>)
+
+<span class="syntax-comment"># 4. DETECÇÃO DE OUTLIERS</span>
+<span class="syntax-comment"># Resíduos padronizados</span>
+residuos_std = residuos_diag / residuos_diag.std()
+outliers_idx = np.where(np.abs(residuos_std) > <span class="syntax-number">3</span>)[<span class="syntax-number">0</span>]
+print(<span class="syntax-string">f"📊 Outliers (|z| > 3): {len(outliers_idx)} de {len(residuos_diag)} ({len(outliers_idx)/len(residuos_diag)*100:.1f}%)"</span>)
+
+<span class="syntax-comment"># 5. DIAGNÓSTICOS PARA REGRESSÃO LOGÍSTICA</span>
+print(<span class="syntax-string">f"\n🔍 DIAGNÓSTICOS DE REGRESSÃO LOGÍSTICA"</span>)
+print(<span class="syntax-string">"="*50</span>)
+
+<span class="syntax-comment"># Resíduos de Pearson para logística</span>
+y_proba_diag = logistic_simple.predict_proba(X_test_class_scaled)[:, <span class="syntax-number">1</span>]
+residuos_pearson = (y_test_class - y_proba_diag) / np.sqrt(y_proba_diag * (<span class="syntax-number">1</span> - y_proba_diag))
+
+<span class="syntax-comment"># Deviance residuals</span>
+y_pred_class_diag = logistic_simple.predict(X_test_class_scaled)
+residuos_deviance = np.sqrt(-<span class="syntax-number">2</span> * (y_test_class * np.log(y_proba_diag + <span class="syntax-number">1e-15</span>) + 
+                                      (<span class="syntax-number">1</span> - y_test_class) * np.log(<span class="syntax-number">1</span> - y_proba_diag + <span class="syntax-number">1e-15</span>)))
+residuos_deviance *= np.sign(y_test_class - y_proba_diag)
+
+<span class="syntax-comment"># Teste de calibração (Hosmer-Lemeshow)</span>
+<span class="syntax-keyword">def</span> <span class="syntax-function">hosmer_lemeshow_test</span>(y_true, y_prob, n_bins=<span class="syntax-number">10</span>):
+    <span class="syntax-string">"""Implementação simplificada do teste Hosmer-Lemeshow"""</span>
+    <span class="syntax-comment"># Dividir em bins baseado nas probabilidades preditas</span>
+    bin_boundaries = np.percentile(y_prob, np.linspace(<span class="syntax-number">0</span>, <span class="syntax-number">100</span>, n_bins + <span class="syntax-number">1</span>))
+    bin_boundaries[<span class="syntax-number">0</span>] -= <span class="syntax-number">0.001</span>  <span class="syntax-comment"># Incluir valores mínimos</span>
+    bin_boundaries[-<span class="syntax-number">1</span>] += <span class="syntax-number">0.001</span>  <span class="syntax-comment"># Incluir valores máximos</span>
+    
+    chi2_stat = <span class="syntax-number">0</span>
+    
+    for i in <span class="syntax-function">range</span>(n_bins):
+        <span class="syntax-comment"># Máscara para este bin</span>
+        mask = (y_prob >= bin_boundaries[i]) & (y_prob < bin_boundaries[i + <span class="syntax-number">1</span>])
+        
+        if np.sum(mask) > <span class="syntax-number">0</span>:
+            <span class="syntax-comment"># Observado vs Esperado</span>
+            observed = np.sum(y_true[mask])
+            expected = np.sum(y_prob[mask])
+            n_bin = np.sum(mask)
             
-            navigator.clipboard.writeText(code).then(function() {
-                button.textContent = 'Copiado!';
-                button.style.background = '#28a745';
-                
-                setTimeout(function() {
-                    button.textContent = 'Copiar';
-                    button.style.background = '#667eea';
-                }, 2000);
-            });
-        }
-    </script>
-</body>
-</html>
+            if expected > <span class="syntax-number">0</span> and (n_bin - expected) > <span class="syntax-number">0</span>:
+                chi2_stat += ((observed - expected) ** <span class="syntax-number">2</span>) / expected
+                chi2_stat += (((n_bin - observed) - (n_bin - expected)) ** <span class="syntax-number">2</span>) / (n_bin - expected)
+    
+    <span class="syntax-comment"># p-value (graus de liberdade = n_bins - 2)</span>
+    p_value = <span class="syntax-number">1</span> - stats.chi2.cdf(chi2_stat, n_bins - <span class="syntax-number">2</span>)
+    
+    return chi2_stat, p_value
+
+hl_stat, hl_p = hosmer_lemeshow_test(y_test_class, y_proba_diag)
+print(<span class="syntax-string">f"📊 Teste Hosmer-Lemeshow: χ² = {hl_stat:.4f}, p-value = {hl_p:.4f}"</span>)
+print(<span class="syntax-string">f"   {'✅' if hl_p > 0.05 else '❌'} Calibração (α = 0.05)"</span>)
+
+<span class="syntax-comment"># 6. CROSS-VALIDATION DETALHADA</span>
+print(<span class="syntax-string">f"\n🔍 VALIDAÇÃO CRUZADA DETALHADA"</span>)
+print(<span class="syntax-string">"="*50</span>)
+
+<span class="syntax-keyword">from</span> sklearn.model_selection <span class="syntax-keyword">import</span> KFold, StratifiedKFold
+
+<span class="syntax-comment"># CV para Regressão</span>
+kfold = KFold(n_splits=<span class="syntax-number">5</span>, shuffle=<span class="syntax-keyword">True</span>, random_state=<span class="syntax-number">42</span>)
+cv_scores_reg = cross_val_score(modelo_multiplo, X_train_mult_scaled, y_train_mult, cv=kfold, scoring=<span class="syntax-string">'r2'</span>)
+
+print(<span class="syntax-string">f"📊 Regressão Linear (R² CV):"</span>)
+print(<span class="syntax-string">f"   Média: {cv_scores_reg.mean():.3f} ± {cv_scores_reg.std():.3f}"</span>)
+print(<span class="syntax-string">f"   Min: {cv_scores_reg.min():.3f}, Max: {cv_scores_reg.max():.3f}"</span>)
+
+<span class="syntax-comment"># CV para Classificação</span>
+skfold = StratifiedKFold(n_splits=<span class="syntax-number">5</span>, shuffle=<span class="syntax-keyword">True</span>, random_state=<span class="syntax-number">42</span>)
+cv_scores_class = cross_val_score(logistic_simple, X_train_class_scaled, y_train_class, cv=skfold, scoring=<span class="syntax-string">'roc_auc'</span>)
+
+print(<span class="syntax-string">f"📊 Regressão Logística (ROC-AUC CV):"</span>)
+print(<span class="syntax-string">f"   Média: {cv_scores_class.mean():.3f} ± {cv_scores_class.std():.3f}"</span>)
+print(<span class="syntax-string">f"   Min: {cv_scores_class.min():.3f}, Max: {cv_scores_class.max():.3f}"</span>)
+
+<span class="syntax-comment"># VISUALIZAÇÕES DE DIAGNÓSTICO</span>
+fig, axes = plt.subplots(<span class="syntax-number">3</span>, <span class="syntax-number">3</span>, figsize=(<span class="syntax-number">18</span>, <span class="syntax-number">16</span>))
+fig.suptitle(<span class="syntax-string">'Diagnósticos Completos de Modelos de Regressão'</span>, fontsize=<span class="syntax-number">16</span>)
+
+<span class="syntax-comment"># 1. Q-Q plot dos resíduos (regressão)</span>
+stats.probplot(residuos_diag, dist=<span class="syntax-string">"norm"</span>, plot=axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>])
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">'Q-Q Plot - Resíduos Regressão'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">0</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 2. Resíduos vs Fitted</span>
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].scatter(y_pred_diag, residuos_diag, alpha=<span class="syntax-number">0.6</span>, color=cores_regressao[<span class="syntax-string">'residuos'</span>])
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].axhline(y=<span class="syntax-number">0</span>, color=<span class="syntax-string">'red'</span>, linestyle=<span class="syntax-string">'--'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_xlabel(<span class="syntax-string">'Valores Fitted'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_ylabel(<span class="syntax-string">'Resíduos'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].set_title(<span class="syntax-string">'Resíduos vs Fitted Values'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">1</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 3. Scale-Location plot</span>
+sqrt_abs_residuos = np.sqrt(np.abs(residuos_std))
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].scatter(y_pred_diag, sqrt_abs_residuos, alpha=<span class="syntax-number">0.6</span>, color=cores_regressao[<span class="syntax-string">'ridge'</span>])
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].set_xlabel(<span class="syntax-string">'Valores Fitted'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].set_ylabel(<span class="syntax-string">'√|Resíduos Padronizados|'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].set_title(<span class="syntax-string">'Scale-Location Plot'</span>)
+axes[<span class="syntax-number">0</span>, <span class="syntax-number">2</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 4. Histogram dos resíduos</span>
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].hist(residuos_diag, bins=<span class="syntax-number">30</span>, color=cores_regressao[<span class="syntax-string">'linear'</span>], alpha=<span class="syntax-number">0.7</span>, 
+                     density=<span class="syntax-keyword">True</span>, edgecolor=<span class="syntax-string">'black'</span>)
+
+<span class="syntax-comment"># Overlay normal distribution</span>
+x_norm = np.linspace(residuos_diag.min(), residuos_diag.max(), <span class="syntax-number">100</span>)
+y_norm = stats.norm.pdf(x_norm, residuos_diag.mean(), residuos_diag.std())
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].plot(x_norm, y_norm, <span class="syntax-string">'r-'</span>, linewidth=<span class="syntax-number">2</span>, label=<span class="syntax-string">'Normal'</span>)
+
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_xlabel(<span class="syntax-string">'Resíduos'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_ylabel(<span class="syntax-string">'Densidade'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].set_title(<span class="syntax-string">'Distribuição dos Resíduos'</span>)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].legend()
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">0</span>].grid(<span class="syntax-keyword">True</span>, alpha=<span class="syntax-number">0.3</span>)
+
+<span class="syntax-comment"># 5. Leverage vs Residuals (Cook's Distance)</span>
+<span class="syntax-comment"># Simplificado - usar influência dos pontos</span>
+leverage = np.diagonal(X_test_mult_scaled @ np.linalg.pinv(X_train_mult_scaled.T @ X_train_mult_scaled) @ X_test_mult_scaled.T)
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].scatter(leverage, residuos_std, alpha=<span class="syntax-number">0.6</span>, color=cores_regressao[<span class="syntax-string">'elastic'</span>])
+axes[<span class="syntax-number">1</span>, <span class="syntax-number">1</span>].axhline(y=<span class="syntax-number">0</span>, color=<span class="syntax-string">'red'
