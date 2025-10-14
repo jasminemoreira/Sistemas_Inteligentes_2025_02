@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redes Neurais Artificiais - Sistemas Inteligentes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover { 
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .card h3 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin: 25px 0;
+        }
+
+        .highlight-box h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .concept-box {
+            background: rgba(118, 75, 162, 0.1);
+            border: 2px solid rgba(118, 75, 162, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .concept-box h4 {
+            color: #764ba2;
+            margin-bottom: 10px;
+        }
+
+        .success-box {
+            background: rgba(40, 167, 69, 0.1);
+            border: 2px solid rgba(40, 167, 69, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #28a745;
+        }
+
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #ffc107;
+        }
+
+        .interactive-box {
+            background: linear-gradient(135deg, #FF6B6B, #ee5a52);
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .interactive-box h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .interactive-link {
+            display: block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .interactive-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(5px);
+            border-color: white;
+        }
+
+        .interactive-link strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #e8e8e8;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .code-header {
+            background: #2d2d2d;
+            color: #fff;
+            padding: 8px 16px;
+            margin: -20px -20px 12px -20px;
+            border-radius: 12px 12px 0 0;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .step-indicator {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .neuron-diagram {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .neuron-diagram img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .formula {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+        }
+
+        .activation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .activation-card {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .activation-card h4 {
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 20px; margin: 10px; }
+            .title { font-size: 2.2rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="badge">🧠 Unidade IV - Redes Neurais Artificiais</div>
+            <h1 class="title">Redes Neurais Artificiais</h1>
+            <p class="subtitle">Fundamentos, Arquiteturas e Aplicações na Engenharia de Produção</p>
+        </div>
+
+        <div class="highlight-box">
+            <h3>🎯 Por que Redes Neurais?</h3>
+            <p>Redes neurais artificiais são a base da revolução atual em IA. Inspiradas no funcionamento do cérebro humano, elas conseguem <strong>aprender padrões complexos</strong> a partir de dados, tornando-se essenciais para tarefas como reconhecimento de padrões, previsão, classificação e otimização em ambientes industriais.</p>
+        </div>
+
+        <!-- Parte 1: Fundamentos -->
+        <div class="section">
+            <h2><span class="step-indicator">1</span>O que são Redes Neurais Artificiais?</h2>
+            <p>Uma rede neural artificial (RNA) é um modelo computacional inspirado na estrutura e funcionamento dos neurônios biológicos do cérebro humano. Ela é composta por unidades de processamento interconectadas (neurônios artificiais) que trabalham em conjunto para resolver problemas complexos.</p>
+            
+            <div class="concept-box">
+                <h4>🧬 Analogia Biológica vs. Artificial</h4>
+                <p><strong>Neurônio Biológico:</strong><br>
+                • Dendritos: Recebem sinais de entrada<br>
+                • Núcleo: Processa informações<br>
+                • Axônio: Transmite sinal de saída<br>
+                • Sinapses: Conexões com outros neurônios<br><br>
+                
+                <strong>Neurônio Artificial:</strong><br>
+                • Entradas (inputs): Valores numéricos ponderados<br>
+                • Função de soma: Agrega todas as entradas<br>
+                • Função de ativação: Processa e decide saída<br>
+                • Pesos sinápticos: Força das conexões</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🔢 Componentes Básicos</h3>
+                    <p><strong>Neurônios:</strong> Unidades de processamento<br>
+                    <strong>Pesos (Weights):</strong> Força das conexões<br>
+                    <strong>Bias:</strong> Ajuste fino da ativação<br>
+                    <strong>Função de Ativação:</strong> Transforma a soma ponderada</p>
+                </div>
+                <div class="card">
+                    <h3>🏗️ Arquitetura</h3>
+                    <p><strong>Camada de Entrada:</strong> Recebe dados<br>
+                    <strong>Camadas Ocultas:</strong> Processamento intermediário<br>
+                    <strong>Camada de Saída:</strong> Resultado final<br>
+                    <strong>Conexões:</strong> Ligam neurônios entre camadas</p>
+                </div>
+                <div class="card">
+                    <h3>📚 Aprendizado</h3>
+                    <p><strong>Supervisionado:</strong> Com dados rotulados<br>
+                    <strong>Não Supervisionado:</strong> Sem rótulos<br>
+                    <strong>Backpropagation:</strong> Ajuste de pesos<br>
+                    <strong>Gradient Descent:</strong> Otimização</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parte 2: Matemática do Neurônio -->
+        <div class="section">
+            <h2><span class="step-indicator">2</span>Matemática do Neurônio Artificial</h2>
+            <p>Entender a matemática por trás de um neurônio artificial é fundamental para compreender como a rede aprende e faz previsões.</p>
+
+            <div class="concept-box">
+                <h4>🎓 Equação do Neurônio</h4>
+                <p>Um neurônio artificial realiza duas operações principais:</p>
+                
+                <div class="formula">
+                    <strong>1. Soma Ponderada:</strong><br>
+                    z = Σ(wᵢ × xᵢ) + b<br>
+                    z = w₁x₁ + w₂x₂ + ... + wₙxₙ + b
+                </div>
+                
+                <div class="formula">
+                    <strong>2. Função de Ativação:</strong><br>
+                    y = φ(z)
+                </div>
+                
+                <p style="margin-top: 15px;">
+                <strong>Onde:</strong><br>
+                • xᵢ = valores de entrada<br>
+                • wᵢ = pesos sinápticos<br>
+                • b = bias (viés)<br>
+                • z = soma ponderada<br>
+                • φ = função de ativação<br>
+                • y = saída do neurônio</p>
+            </div>
+
+            <div class="warning-box">
+                <h4>🔍 Exemplo Numérico</h4>
+                <p>Considere um neurônio com 3 entradas:</p>
+                <div class="formula">
+                    Entradas: x₁ = 2, x₂ = 3, x₃ = 1<br>
+                    Pesos: w₁ = 0.5, w₂ = -0.3, w₃ = 0.8<br>
+                    Bias: b = 0.1<br><br>
+                    
+                    z = (0.5 × 2) + (-0.3 × 3) + (0.8 × 1) + 0.1<br>
+                    z = 1.0 - 0.9 + 0.8 + 0.1 = 1.0<br><br>
+                    
+                    Se usar ReLU: y = max(0, z) = max(0, 1.0) = 1.0<br>
+                    Se usar Sigmoid: y = 1/(1 + e⁻¹·⁰) ≈ 0.731
+                </div>
+            </div>
+        </div>
+
+        <!-- Parte 3: Funções de Ativação -->
+        <div class="section">
+            <h2><span class="step-indicator">3</span>Funções de Ativação</h2>
+            <p>As funções de ativação introduzem não-linearidade na rede, permitindo que ela aprenda padrões complexos. Sem elas, a rede seria apenas uma combinação linear, incapaz de resolver problemas complexos.</p>
+
+            <div class="activation-grid">
+                <div class="activation-card">
+                    <h4>🔹 Sigmoid</h4>
+                    <div class="formula" style="background: rgba(255,255,255,0.2); border-left: none;">
+                        σ(x) = 1 / (1 + e⁻ˣ)
+                    </div>
+                    <p>Saída: [0, 1]<br>Uso: Classificação binária</p>
+                </div>
+                <div class="activation-card" style="background: linear-gradient(135deg, #2196F3, #1976D2);">
+                    <h4>🔹 Tanh</h4>
+                    <div class="formula" style="background: rgba(255,255,255,0.2); border-left: none;">
+                        tanh(x) = (eˣ - e⁻ˣ) / (eˣ + e⁻ˣ)
+                    </div>
+                    <p>Saída: [-1, 1]<br>Uso: Redes recorrentes</p>
+                </div>
+                <div class="activation-card" style="background: linear-gradient(135deg, #FF9800, #F57C00);">
+                    <h4>🔹 ReLU</h4>
+                    <div class="formula" style="background: rgba(255,255,255,0.2); border-left: none;">
+                        ReLU(x) = max(0, x)
+                    </div>
+                    <p>Saída: [0, ∞)<br>Uso: Camadas ocultas (padrão)</p>
+                </div>
+                <div class="activation-card" style="background: linear-gradient(135deg, #9C27B0, #7B1FA2);">
+                    <h4>🔹 Leaky ReLU</h4>
+                    <div class="formula" style="background: rgba(255,255,255,0.2); border-left: none;">
+                        LReLU(x) = max(0.01x, x)
+                    </div>
+                    <p>Saída: (-∞, ∞)<br>Uso: Evita neurônios "mortos"</p>
+                </div>
+                <div class="activation-card" style="background: linear-gradient(135deg, #F44336, #D32F2F);">
+                    <h4>🔹 Softmax</h4>
+                    <div class="formula" style="background: rgba(255,255,255,0.2); border-left: none;">
+                        σ(xᵢ) = eˣⁱ / Σeˣʲ
+                    </div>
+                    <p>Saída: [0, 1] (soma = 1)<br>Uso: Multi-classificação</p>
+                </div>
+                <div class="activation-card" style="background: linear-gradient(135deg, #00BCD4, #0097A7);">
+                    <h4>🔹 ELU</h4>
+                    <div class="formula" style="background: rgba(255,255,255,0.2); border-left: none;">
+                        ELU(x) = x se x>0<br>α(eˣ-1) se x≤0
+                    </div>
+                    <p>Saída: (-α, ∞)<br>Uso: Convergência mais rápida</p>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h4>💡 Qual Função Usar?</h4>
+                <p><strong>ReLU:</strong> Primeira escolha para camadas ocultas (rápida e eficaz)<br>
+                <strong>Sigmoid:</strong> Classificação binária na saída (probabilidades 0-1)<br>
+                <strong>Softmax:</strong> Classificação multi-classe na saída<br>
+                <strong>Tanh:</strong> Quando dados centralizados em zero são importantes<br>
+                <strong>Leaky ReLU/ELU:</strong> Quando ReLU causa "neurônios mortos"</p>
+            </div>
+        </div>
+
+        <!-- Parte 4: Ferramentas Interativas -->
+        <div class="section">
+            <h2><span class="step-indicator">4</span>Ferramentas Interativas de Visualização</h2>
+            <p>A melhor forma de entender redes neurais é <strong>experimentando</strong>! Estas ferramentas permitem visualizar e manipular redes neurais em tempo real.</p>
+
+            <div class="interactive-box">
+                <h3>🎮 Playgrounds e Visualizadores</h3>
+                <p style="margin-bottom: 20px;">Clique nos links abaixo para explorar visualizações interativas de redes neurais:</p>
+
+                <a href="https://wimbiscus.com/neural-network/" target="_blank" class="interactive-link">
+                    <strong>🎯 A Neural Network Playground</strong>
+                    Experimente com diferentes arquiteturas, datasets e hiperparâmetros. Visualize como a rede aprende em tempo real!
+                </a>
+
+                <a href="https://www.cs.ryerson.ca/~aharley/vis/fc/" target="_blank" class="interactive-link">
+                    <strong>🔷 3D Fully-Connected Network Visualization</strong>
+                    Visualização 3D interativa de uma rede totalmente conectada processando dígitos manuscritos (MNIST).
+                </a>
+
+                <a href="https://www.cs.ryerson.ca/~aharley/vis/conv/" target="_blank" class="interactive-link">
+                    <strong>🔶 3D Convolutional Network Visualization</strong>
+                    Veja como uma CNN processa imagens camada por camada, extraindo features progressivamente.
+                </a>
+
+                <a href="https://www.cs.ryerson.ca/~aharley/vis/harley_vis_isvc15.pdf" target="_blank" class="interactive-link">
+                    <strong>📊 MNIST Playground - CNN</strong>
+                    Desenhe dígitos e veja como a rede neural convolucional reconhece em tempo real.
+                </a>
+
+                <a href="https://playground.tensorflow.org/" target="_blank" class="interactive-link">
+                    <strong>🧪 TensorFlow Playground</strong>
+                    Playground oficial do TensorFlow para experimentar com redes neurais simples.
+                </a>
+            </div>
+
+            <div class="warning-box">
+                <h4>🎓 Como Usar os Playgrounds</h4>
+                <p><strong>1. Comece Simples:</strong> Use datasets pequenos (círculos, XOR) primeiro<br>
+                <strong>2. Varie Arquitetura:</strong> Adicione/remova neurônios e camadas<br>
+                <strong>3. Teste Ativações:</strong> Compare ReLU, Sigmoid, Tanh<br>
+                <strong>4. Ajuste Learning Rate:</strong> Veja o impacto na convergência<br>
+                <strong>5. Observe Overfitting:</strong> Use regularização quando necessário</p>
+            </div>
+        </div>
+
+        <!-- Parte 5: Tipos de Redes -->
+        <div class="section">
+            <h2><span class="step-indicator">5</span>Tipos de Redes Neurais</h2>
+            <p>Existem diferentes arquiteturas de redes neurais, cada uma otimizada para tipos específicos de problemas.</p>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🔷 Feedforward (MLP)</h3>
+                    <p><strong>Estrutura:</strong> Camadas totalmente conectadas<br>
+                    <strong>Fluxo:</strong> Unidirecional (entrada → saída)<br>
+                    <strong>Uso:</strong> Classificação, regressão<br>
+                    <strong>Exemplo:</strong> Previsão de demanda, detecção de defeitos</p>
+                </div>
+                <div class="card">
+                    <h3>🖼️ CNN (Convolucional)</h3>
+                    <p><strong>Estrutura:</strong> Camadas convolucionais + pooling<br>
+                    <strong>Especialidade:</strong> Processamento de imagens<br>
+                    <strong>Uso:</strong> Visão computacional<br>
+                    <strong>Exemplo:</strong> Inspeção visual de qualidade, OCR</p>
+                </div>
+                <div class="card">
+                    <h3>🔄 RNN (Recorrente)</h3>
+                    <p><strong>Estrutura:</strong> Conexões recorrentes (memória)<br>
+                    <strong>Especialidade:</strong> Dados sequenciais<br>
+                    <strong>Uso:</strong> Séries temporais, NLP<br>
+                    <strong>Exemplo:</strong> Previsão de vendas, manutenção preditiva</p>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h4>🏗️ Deep Learning vs. Redes Rasas</h4>
+                <p><strong>Redes Rasas (Shallow):</strong> 1-2 camadas ocultas<br>
+                • Mais simples e rápidas de treinar<br>
+                • Boas para problemas lineares ou pouco complexos<br>
+                • Menos propensas a overfitting<br><br>
+
+                <strong>Redes Profundas (Deep):</strong> 3+ camadas ocultas<br>
+                • Aprendem representações hierárquicas<br>
+                • Capazes de capturar padrões muito complexos<br>
+                • Requerem mais dados e poder computacional<br>
+                • Podem sofrer de overfitting e vanishing gradients</p>
+            </div>
+        </div>
+
+        <!-- Parte 6: Treinamento -->
+        <div class="section">
+            <h2><span class="step-indicator">6</span>Treinamento de Redes Neurais</h2>
+            <p>O processo de treinamento é onde a "mágica" acontece: a rede ajusta seus pesos para minimizar erros.</p>
+
+            <div class="concept-box">
+                <h4>📐 Algoritmo de Backpropagation</h4>
+                <p><strong>Fase Forward (Propagação para Frente):</strong><br>
+                1. Dados entram pela camada de entrada<br>
+                2. Cada neurônio calcula sua soma ponderada<br>
+                3. Aplica função de ativação<br>
+                4. Passa resultado para próxima camada<br>
+                5. Saída final é comparada com valor real<br><br>
+
+                <strong>Fase Backward (Retropropagação):</strong><br>
+                1. Calcula erro na saída (Loss Function)<br>
+                2. Propaga erro de volta pelas camadas<br>
+                3. Calcula gradiente para cada peso<br>
+                4. Atualiza pesos usando Gradient Descent<br>
+                5. Repete processo até convergência</p>
+            </div>
+
+            <div class="formula">
+                <strong>Atualização de Pesos (Gradient Descent):</strong><br><br>
+                w_novo = w_antigo - η × ∂L/∂w<br><br>
+                Onde:<br>
+                • η (eta) = learning rate (taxa de aprendizado)<br>
+                • ∂L/∂w = derivada parcial do erro em relação ao peso<br>
+                • Valor típico de η: 0.001 a 0.1
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>📊 Funções de Loss</h3>
+                    <p><strong>MSE:</strong> Mean Squared Error - Regressão<br>
+                    <strong>Cross-Entropy:</strong> Classificação binária<br>
+                    <strong>Categorical CE:</strong> Multi-classe<br>
+                    <strong>MAE:</strong> Mean Absolute Error - Robusta a outliers</p>
+                </div>
+                <div class="card">
+                    <h3>⚙️ Otimizadores</h3>
+                    <p><strong>SGD:</strong> Stochastic Gradient Descent<br>
+                    <strong>Adam:</strong> Adaptive Moment Estimation (recomendado)<br>
+                    <strong>RMSprop:</strong> Root Mean Square Propagation<br>
+                    <strong>AdaGrad:</strong> Adaptive Gradient</p>
+                </div>
+                <div class="card">
+                    <h3>🎯 Hiperparâmetros</h3>
+                    <p><strong>Learning Rate:</strong> Velocidade de aprendizado<br>
+                    <strong>Batch Size:</strong> Amostras por atualização<br>
+                    <strong>Epochs:</strong> Passadas completas pelo dataset<br>
+                    <strong>Regularização:</strong> L1, L2, Dropout</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Problemas Comuns no Treinamento</h4>
+                <p><strong>Overfitting:</strong> Rede "decora" dados de treino<br>
+                <strong>Soluções:</strong> Dropout, regularização, mais dados, data augmentation<br><br>
+
+                <strong>Underfitting:</strong> Rede muito simples para o problema<br>
+                <strong>Soluções:</strong> Aumentar camadas/neurônios, treinar mais epochs<br><br>
+
+                <strong>Vanishing Gradient:</strong> Gradientes muito pequenos em redes profundas<br>
+                <strong>Soluções:</strong> ReLU, batch normalization, skip connections<br><br>
+
+                <strong>Exploding Gradient:</strong> Gradientes crescem exponencialmente<br>
+                <strong>Soluções:</strong> Gradient clipping, normalização, learning rate menor</p>
+            </div>
+        </div>
+
+        <!-- Parte 7: Implementação Prática -->
+        <div class="section">
+            <h2><span class="step-indicator">7</span>Implementação com Python e TensorFlow</h2>
+            <p>Vamos implementar uma rede neural simples para classificação usando TensorFlow/Keras.</p>
+
+            <div class="code-block">
+                <div class="code-header">🐍 Exemplo 1: Rede Neural Básica (MLP)</div>
+<pre><code>import numpy as np
+import tensorflow as tf
+from tensorflow import keras
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+# 1. PREPARAÇÃO DOS DADOS
+# Exemplo: Dataset de qualidade de produção
+# Features: temperatura, pressão, velocidade, umidade
+# Target: produto defeituoso (0) ou ok (1)
+
+# Gerar dados sintéticos para exemplo
+np.random.seed(42)
+n_samples = 1000
+
+X = np.random.randn(n_samples, 4)  # 4 features
+y = (X[:, 0] + X[:, 1] > 0).astype(int)  # regra simples
+
+# Split treino/teste
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Normalização
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# 2. CONSTRUÇÃO DO MODELO
+model = keras.Sequential([
+    # Camada de entrada + primeira oculta
+    keras.layers.Dense(16, activation='relu', input_shape=(4,)),
+    keras.layers.Dropout(0.2),  # Previne overfitting
+    
+    # Segunda camada oculta
+    keras.layers.Dense(8, activation='relu'),
+    keras.layers.Dropout(0.2),
+    
+    # Camada de saída
+    keras.layers.Dense(1, activation='sigmoid')  # Binária
+])
+
+# 3. COMPILAÇÃO
+model.compile(
+    optimizer='adam',
+    loss='binary_crossentropy',
+    metrics=['accuracy']
+)
+
+# Visualizar arquitetura
+model.summary()
+
+# 4. TREINAMENTO
+history = model.fit(
+    X_train, y_train,
+    epochs=50,
+    batch_size=32,
+    validation_split=0.2,
+    verbose=1
+)
+
+# 5. AVALIAÇÃO
+test_loss, test_accuracy = model.evaluate(X_test, y_test)
+print(f'\nAcurácia no teste: {test_accuracy:.4f}')
+
+# 6. PREDIÇÃO
+predictions = model.predict(X_test[:5])
+print('\nPrimeiras 5 predições:')
+print(predictions.flatten())</code></pre>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">🔥 Exemplo 2: Rede para Classificação Multi-classe</div>
+<pre><code># Problema: Classificar tipo de defeito (3 classes)
+# Classes: 0=Sem defeito, 1=Risco, 2=Mancha
+
+from tensorflow.keras.utils import to_categorical
+
+# Dados com 3 classes
+y_multi = np.random.randint(0, 3, size=n_samples)
+y_train_cat = to_categorical(y_multi[:800], num_classes=3)
+y_test_cat = to_categorical(y_multi[800:], num_classes=3)
+
+# Modelo para multi-classe
+model_multi = keras.Sequential([
+    keras.layers.Dense(32, activation='relu', input_shape=(4,)),
+    keras.layers.BatchNormalization(),  # Normaliza ativações
+    keras.layers.Dropout(0.3),
+    
+    keras.layers.Dense(16, activation='relu'),
+    keras.layers.BatchNormalization(),
+    keras.layers.Dropout(0.3),
+    
+    # Saída com 3 neurônios (uma classe por neurônio)
+    keras.layers.Dense(3, activation='softmax')  # Multi-classe
+])
+
+model_multi.compile(
+    optimizer=keras.optimizers.Adam(learning_rate=0.001),
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+# Early Stopping: Para quando não melhorar
+early_stop = keras.callbacks.EarlyStopping(
+    monitor='val_loss',
+    patience=10,
+    restore_best_weights=True
+)
+
+history = model_multi.fit(
+    X_train, y_train_cat,
+    epochs=100,
+    batch_size=32,
+    validation_split=0.2,
+    callbacks=[early_stop],
+    verbose=0
+)
+
+print(f'Melhor epoch: {early_stop.stopped_epoch - 10}')
+print(f'Melhor loss: {min(history.history["val_loss"]):.4f}')</code></pre>
+            </div>
+
+            <div class="success-box">
+                <h4>💡 Boas Práticas de Implementação</h4>
+                <p><strong>1. Sempre normalize os dados:</strong> StandardScaler ou MinMaxScaler<br>
+                <strong>2. Use validation split:</strong> 10-20% dos dados de treino<br>
+                <strong>3. Implemente Early Stopping:</strong> Evita overfitting<br>
+                <strong>4. Salve o melhor modelo:</strong> ModelCheckpoint callback<br>
+                <strong>5. Visualize o treinamento:</strong> Plote loss e accuracy<br>
+                <strong>6. Teste diferentes arquiteturas:</strong> Varie camadas e neurônios<br>
+                <strong>7. Use Dropout e BatchNorm:</strong> Melhoram generalização</p>
+            </div>
+        </div>
+
+        <!-- Parte 8: Aplicações na Engenharia -->
+        <div class="section">
+            <h2><span class="step-indicator">8</span>Aplicações na Engenharia de Produção</h2>
+            <p>Redes neurais estão revolucionando a indústria 4.0 com aplicações práticas que geram valor real.</p>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🔍 Inspeção Visual de Qualidade</h3>
+                    <p><strong>Problema:</strong> Detectar defeitos em produtos<br>
+                    <strong>Solução:</strong> CNN treinada com imagens<br>
+                    <strong>Resultado:</strong> 99%+ acurácia, 24/7<br>
+                    <strong>Exemplo Real:</strong> Bosch usa CNNs para inspeção de peças automotivas</p>
+                </div>
+                <div class="card">
+                    <h3>⚙️ Manutenção Preditiva</h3>
+                    <p><strong>Problema:</strong> Prever falhas em equipamentos<br>
+                    <strong>Solução:</strong> RNN/LSTM com dados de sensores<br>
+                    <strong>Resultado:</strong> -30% custos manutenção<br>
+                    <strong>Exemplo Real:</strong> GE Predix usa ML para turbinas</p>
+                </div>
+                <div class="card">
+                    <h3>📊 Previsão de Demanda</h3>
+                    <p><strong>Problema:</strong> Estimar vendas futuras<br>
+                    <strong>Solução:</strong> RNN com séries temporais<br>
+                    <strong>Resultado:</strong> +25% acurácia vs. modelos clássicos<br>
+                    <strong>Exemplo Real:</strong> Amazon usa DNNs para forecast</p>
+                </div>
+                <div class="card">
+                    <h3>🎯 Otimização de Processos</h3>
+                    <p><strong>Problema:</strong> Ajustar parâmetros de produção<br>
+                    <strong>Solução:</strong> MLP para predição de qualidade<br>
+                    <strong>Resultado:</strong> -15% defeitos<br>
+                    <strong>Exemplo Real:</strong> Steel manufacturing optimization</p>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">📈 Exemplo 3: Manutenção Preditiva com Dados de Sensores</div>
+<pre><code># Dataset: Sensores de temperatura, vibração, pressão
+# Target: Falha nas próximas 24h (0=Não, 1=Sim)
+
+import pandas as pd
+from tensorflow.keras.layers import LSTM, Dense
+
+# Simular dados de séries temporais
+sequence_length = 24  # 24 horas de histórico
+n_features = 3  # temp, vibração, pressão
+
+# Criar dados sequenciais
+def create_sequences(data, seq_length):
+    X, y = [], []
+    for i in range(len(data) - seq_length):
+        X.append(data[i:i+seq_length, :-1])  # Features
+        y.append(data[i+seq_length, -1])     # Target
+    return np.array(X), np.array(y)
+
+# Gerar dados sintéticos
+n_samples = 5000
+data = np.random.randn(n_samples, n_features + 1)
+data[:, -1] = (data[:, 0] > 2).astype(int)  # Regra simples
+
+X_seq, y_seq = create_sequences(data, sequence_length)
+split = int(0.8 * len(X_seq))
+X_train, X_test = X_seq[:split], X_seq[split:]
+y_train, y_test = y_seq[:split], y_seq[split:]
+
+# Modelo LSTM para séries temporais
+model_lstm = keras.Sequential([
+    LSTM(64, activation='relu', input_shape=(sequence_length, n_features),
+         return_sequences=True),
+    keras.layers.Dropout(0.2),
+    
+    LSTM(32, activation='relu'),
+    keras.layers.Dropout(0.2),
+    
+    Dense(16, activation='relu'),
+    Dense(1, activation='sigmoid')
+])
+
+model_lstm.compile(
+    optimizer='adam',
+    loss='binary_crossentropy',
+    metrics=['accuracy', keras.metrics.Precision(), keras.metrics.Recall()]
+)
+
+history = model_lstm.fit(
+    X_train, y_train,
+    epochs=30,
+    batch_size=64,
+    validation_data=(X_test, y_test),
+    verbose=0
+)
+
+# Avaliar com métricas específicas
+from sklearn.metrics import classification_report, confusion_matrix
+
+y_pred = (model_lstm.predict(X_test) > 0.5).astype(int)
+print('\nRelatório de Classificação:')
+print(classification_report(y_test, y_pred, 
+                          target_names=['Normal', 'Falha']))
+
+print('\nMatriz de Confusão:')
+print(confusion_matrix(y_test, y_pred))</code></pre>
+            </div>
+        </div>
+
+        <!-- Parte 9: Próximos Passos -->
+        <div class="section">
+            <h2><span class="step-indicator">9</span>Checkpoint 4: Projeto Prático</h2>
+            
+            <div class="interactive-box">
+                <h3>🎯 Desafio: Implementar Rede Neural para Problema Real</h3>
+                <p><strong>Objetivo:</strong> Desenvolver uma rede neural para resolver um problema de engenharia de produção</p>
+                
+                <p style="margin-top: 15px;"><strong>Requisitos do Projeto:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Escolher um problema real (inspeção, previsão, classificação, otimização)</li>
+                    <li>Coletar ou gerar dataset apropriado (mínimo 500 amostras)</li>
+                    <li>Implementar e treinar rede neural (TensorFlow/Keras)</li>
+                    <li>Avaliar performance com métricas adequadas</li>
+                    <li>Comparar com pelo menos um baseline (regressão logística, árvore de decisão)</li>
+                    <li>Documentar arquitetura, hiperparâmetros e resultados</li>
+                </ul>
+
+                <p style="margin-top: 15px;"><strong>Entregáveis (28/10):</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Notebook Jupyter com código completo e comentado</li>
+                    <li>Relatório técnico (3-5 páginas) com metodologia e resultados</li>
+                    <li>Apresentação (10 minutos) demonstrando o modelo funcionando</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h4>📚 Temas Sugeridos para o Projeto</h4>
+                <p><strong>• Classificação de Defeitos:</strong> Usar dataset Steel Plates ou similar<br>
+                <strong>• Previsão de Qualidade:</strong> Wine Quality ou Concrete Strength<br>
+                <strong>• Detecção de Anomalias:</strong> NASA Bearing ou SECOM<br>
+                <strong>• Previsão de Demanda:</strong> Retail sales ou similar<br>
+                <strong>• Reconhecimento de Padrões:</strong> MNIST ou Fashion-MNIST<br>
+                <strong>• Manutenção Preditiva:</strong> Simulação com dados de sensores</p>
+            </div>
+        </div>
+
+        <!-- Conclusão -->
+        <div class="section">
+            <h2><span class="step-indicator">10</span>Recursos Adicionais</h2>
+            
+            <div class="success-box">
+                <h4>📖 Material de Estudo Recomendado</h4>
+                <p><strong>Livros:</strong><br>
+                • "Deep Learning" - Ian Goodfellow (Bíblia do DL)<br>
+                • "Neural Networks and Deep Learning" - Michael Nielsen (online grátis)<br>
+                • "Hands-On Machine Learning" - Aurélien Géron<br><br>
+
+                <strong>Cursos Online:</strong><br>
+                • Fast.ai - Practical Deep Learning for Coders<br>
+                • Coursera - Deep Learning Specialization (Andrew Ng)<br>
+                • TensorFlow Official Tutorials<br><br>
+
+                <strong>Datasets para Prática:</strong><br>
+                • UCI Machine Learning Repository<br>
+                • Kaggle Datasets<br>
+                • TensorFlow Datasets<br>
+                • OpenML</p>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🌟 Conclusão</h3>
+                <p>Redes Neurais Artificiais representam uma das tecnologias mais transformadoras da atualidade. Na engenharia de produção, elas permitem automatizar decisões complexas, otimizar processos e extrair insights valiosos de grandes volumes de dados. O domínio desta tecnologia é essencial para o engenheiro moderno.</p>
+                
+                <p style="margin-top: 15px;"><strong>Próxima Aula (21/10):</strong> Aprofundamento em CNNs e aplicações de visão computacional para inspeção de qualidade.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
